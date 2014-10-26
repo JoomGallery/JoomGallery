@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields>
+    <fieldset
+      addfieldpath="administrator/components/com_joomgallery/models/fields"
+      addrulepath="administrator/components/com_joomgallery/models/rules"
+    >
+      <field
+        id="jg_bu_category"
+        name="category_mode"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_MODE"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_MODE_TIP"
+				default="0"
+      >
+        <option value="0">COM_JOOMGALLERY_MINI_CATEGORY_MODE_THUMBNAILS</option>
+        <option value="1">COM_JOOMGALLERY_MINI_CATEGORY_MODE_TEXTLINK</option>
+      </field>
+      <field
+        id="jg_bu_thumbnail_number"
+        name="category_limit"
+        type="text"
+        class="inputbox input-mini"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_LIMIT"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_LIMIT_TIP"
+				default="4"
+      />
+      <field
+        id="jg_bu_thumbnail_columns"
+        name="category_columns"
+        type="text"
+        class="inputbox input-mini"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_COLUMNS"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_COLUMNS_TIP"
+				default="2"
+      />
+      <field
+        id="jg_bu_thumbnail_ordering"
+        name="category_ordering"
+        type="list"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_ORDERING"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_ORDERING_TIP"
+				default="0"
+      >
+        <option value="0">COM_JOOMGALLERY_MINI_CATEGORY_ORDERING_ORDERING</option>
+        <option value="1">COM_JOOMGALLERY_MINI_CATEGORY_ORDERING_RANDOM</option>
+      </field>
+      <field
+        id="jg_bu_category_linkedtext"
+        name="category_linkedtext"
+        type="text"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_TEXTLINK"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_TEXTLINK_TIP"
+      />
+      <field
+        id="category_catid"
+        name="category_catid"
+        type="joomcategory"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_CATEGORY_SELECT"
+        description="COM_JOOMGALLERY_MINI_CATEGORY_SELECT_TIP"
+        task="filter"
+        onchange="insertCategory(document.id('category_catid').value);"
+      />
+    </fieldset>
+  </fields>
+</form>

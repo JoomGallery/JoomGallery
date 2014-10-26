@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+  <layout title="COM_JOOMGALLERY_LAYOUT_GALLERY_DEFAULT">
+    <message>
+      <![CDATA[COM_JOOMGALLERY_LAYOUT_GALLERY_DEFAULT_DESC]]>
+    </message>
+  </layout>
+  <fields name="params">
+    <fieldset name="basic">
+      <field name="spacer" type="spacer" class="text" label="COM_JOOMGALLERY_LAYOUT_COMMON_NO_ELEMENTS">
+      </field>
+    </fieldset>
+  </fields>
+</metadata>

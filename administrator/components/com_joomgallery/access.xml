@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<access component="com_joomgallery">
+	<section name="component">
+		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="joom.upload" title="COM_JOOMGALLERY_ACTION_UPLOAD" description="COM_JOOMGALLERY_ACTION_COMPONENT_UPLOAD_DESC" />
+		<action name="joom.upload.inown" title="COM_JOOMGALLERY_ACTION_UPLOAD_INOWN" description="COM_JOOMGALLERY_ACTION_COMPONENT_UPLOAD_INOWN_DESC" />
+		<action name="core.create" title="JACTION_CREATE" description="COM_JOOMGALLERY_ACTION_COMPONENT_CREATE_DESC" />
+		<action name="joom.create.inown" title="COM_JOOMGALLERY_ACTION_CREATE_INOWN" description="COM_JOOMGALLERY_ACTION_COMPONENT_CREATE_INOWN_DESC" />
+		<action name="core.delete" title="JACTION_DELETE" description="JACTION_DELETE_COMPONENT_DESC" />
+		<action name="core.edit" title="JACTION_EDIT" description="JACTION_EDIT_COMPONENT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+		<action name="core.edit.own" title="JACTION_EDITOWN" description="JACTION_EDITOWN_COMPONENT_DESC" />
+	</section>
+	<section name="category">
+		<action name="joom.upload" title="COM_JOOMGALLERY_ACTION_UPLOAD" description="COM_JOOMGALLERY_ACTION_CATEGORY_UPLOAD_DESC" />
+		<action name="joom.upload.inown" title="COM_JOOMGALLERY_ACTION_UPLOAD_INOWN" description="COM_JOOMGALLERY_ACTION_CATEGORY_UPLOAD_INOWN_DESC" />
+		<action name="core.create" title="JACTION_CREATE" description="COM_JOOMGALLERY_ACTION_CATEGORY_CREATE_DESC" />
+		<action name="joom.create.inown" title="COM_JOOMGALLERY_ACTION_CREATE_INOWN" description="COM_JOOMGALLERY_ACTION_CATEGORY_CREATE_INOWN_DESC" />
+		<action name="core.delete" title="JACTION_DELETE" description="COM_JOOMGALLERY_ACTION_CATEGORY_DELETE_DESC" />
+		<action name="core.edit" title="JACTION_EDIT" description="COM_JOOMGALLERY_ACTION_CATEGORY_EDIT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_JOOMGALLERY_ACTION_CATEGORY_EDITSTATE_DESC" />
+		<action name="core.edit.own" title="JACTION_EDITOWN" description="COM_JOOMGALLERY_ACTION_CATEGORY_EDITOWN_DESC" />
+	</section>
+	<section name="image">
+		<action name="core.delete" title="JACTION_DELETE" description="COM_JOOMGALLERY_ACTION_IMAGE_DELETE_DESC" />
+		<action name="core.edit" title="JACTION_EDIT" description="COM_JOOMGALLERY_ACTION_IMAGE_EDIT_DESC" />
+		<action name="core.edit.state" title="JACTION_EDITSTATE" description="COM_JOOMGALLERY_ACTION_IMAGE_EDITSTATE_DESC" />
+		<action name="core.edit.own" title="JACTION_EDITOWN" description="COM_JOOMGALLERY_ACTION_IMAGE_EDITOWN_DESC" />
+	</section>
+</access>

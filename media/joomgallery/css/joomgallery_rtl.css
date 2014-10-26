@@ -1,0 +1,135 @@
+/**
+ * Joomgallery RTL CSS styles
+ * Please adjust the CSS to your needs by using 'Customize CSS' in JoomGallery backend
+ * Bitte nehmen Sie Aenderungen vor, indem sie 'CSS anpassen' im Backend der JoomGallery vornehmen
+ **/
+
+.jg_floatleft {
+  float:right;
+}
+.jg_floatright{
+  float:left;
+}
+
+.jg_mygal{
+  text-align:right;
+  padding-right:5px;
+}
+.jg_back{
+  text-align:right;
+  padding-right:5px;
+}
+div.jg_my_favourites {
+  text-align:right;
+  padding-right:5px;
+}
+div.jg_search {
+  text-align:left;
+}
+
+.jg_photo_container_l,.jg_subcatelem_photo_l{
+  float:right;
+  padding-right:0.5em;
+}
+.jg_photo_container_r,.jg_subcatelem_photo_r{
+  float:left;
+  text-align:left !important;
+  padding-right:0.5em;
+}
+.jg_element_txt_r,.jg_subcatelem_txt_r{
+  text-align:left !important;
+}
+.jg_element_txt_l,.jg_subcatelem_txt_l{
+  text-align:right !important;
+}
+.jg_element_txt_subs_r{
+  float:left;
+  text-align:right !important;
+}
+.jg_element_cat{
+  float:right;
+}
+
+/*.jg-details-header h4{
+  margin:5px 3px 10px 5px;
+  text-align:center;
+}
+.jg-details-header h4.joomgallery-toggler{
+  margin:5px 3px 5px 5px;
+}*/
+
+div.jg_photo_left, div.jg_bbcode_left, div.jg_exif_left,div.jg_cmtl {
+  clear:right;
+  float:right;
+  padding-right:0.3em;
+  text-align:right !important;
+}
+
+.jg_cmtl, .jg_s2fl {
+  text-align:right;
+}
+.jg_s2fl{
+  float:right;
+  text-align:right !important;
+}
+.jg_cmtr, .jg_s2fr {
+  text-align:right;
+}
+.jg_cmtr {
+  text-align:right !important;
+}
+
+#motiongallery {
+  right:0;
+}
+#statusdiv {
+  right:-300px;
+}
+
+.jg_fav_switchlayout{
+  text-align:left;
+}
+.jg_fav_clearlist{
+  text-align:left;
+}
+
+.jg_catorderlist{
+  text-align:left;
+}
+
+dl.tabs {
+  float:right;
+}
+dl.tabs dt {
+  float:right;
+  margin-right:3px;
+}
+div.current legend {
+  padding-right:8px;
+}
+
+.jg_feed_icon{
+  float:left;
+}
+.jg_headerfavourites_icon{
+  float:left;
+}
+.jg_upload_icon{
+  float:left;
+}
+
+.jg-tooltip-wrap .tip {
+  text-align:right;
+}
+
+.jg-category-results{
+  text-align:right;
+}
+
+.jg_bu_mini{
+  float:right;
+}
+
+.jg_overlib .jg_catname{
+  margin-right:5px;
+}

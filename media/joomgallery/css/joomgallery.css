@@ -1,0 +1,641 @@
+/**
+ * Joomgallery CSS styles
+ * Please adjust the CSS to your needs by using 'Customize CSS' in JoomGallery backend
+ * Bitte nehmen Sie Änderungen vor, indem sie 'CSS anpassen' im Backend der JoomGallery vornehmen
+ **/
+
+/*commons for all views */
+.gallery .jg-header{
+  text-align:center;
+}
+.jg-footer{
+  padding:5px;
+}
+.gallery li{
+  background-image:none !important;
+  list-style-image:none !important;
+  list-style-type:none !important;
+  margin:0;
+  padding:0;
+}
+.jg_rm{
+  font-size:0.8em;
+  padding-left:2px;
+  color:#999;
+  vertical-align:middle;
+}
+.jg_back{
+  padding-left:5px;
+}
+img.jg_photo {
+  vertical-align:bottom;
+  padding:3px;
+  margin:0 0.3em 0.3em 0;
+}
+.jg_no_script {
+  color:#999;
+  font-size:0.8em;
+}
+.jg_no_access {
+  color:#777;
+}
+.jg_spinner {
+  background-image:url(../../system/images/modal/spinner.gif);
+  background-repeat:no-repeat;
+  background-position:center;  
+}
+/* Border for all images (thumbs, minis, full...) */
+img.jg_photo, .jg_minis a img {
+  border:1px solid #c0c0c0;
+  background-color:#fff;
+  background-image:none;
+}
+a:hover img.jg_photo, .jg_minis a:hover img {
+  border:1px solid #999;
+}
+.jg_pathway{
+  padding:2px;
+}
+.jg_pathway a img{
+  vertical-align:middle;
+}
+.jg_mygal{
+  text-align:left;
+  font-weight:bold;
+  padding-left:5px;
+}
+/* div around 'my favourites'-link */
+div.jg_my_favourites {
+  text-align:left;
+  font-weight:bold;
+  padding-left:5px;
+}
+
+.jg_galcountcats, .jg_catcountimg, .jg_catcountsubcats{
+  text-align: center;
+}
+
+/* Pagination */
+.jg_txtrow, .jg_toplist, .jg_gallerystats{
+  text-align:center !important;
+  padding:0.5em 0;
+}
+
+.gallery .pagination ul{
+  text-align:center !important;
+}
+.gallery .pagination li
+{
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+
+.jg_displaynone {
+  display:none;
+}
+.jg_floatleft {
+  float:left;
+}
+.jg_floatright{
+  float:right;
+}
+.jg_floatnone{
+  float:none;
+}
+.jg_clearboth{
+  clear: both;
+}
+/* div around searchbox */
+div.jg_search {
+  text-align:right;
+  margin:2px;
+  padding: 0.2em 0;
+}
+/* searchbox */
+div.jg_search .inputbox {
+  margin:0 0 0 5px;
+  background-image:url("../images/search_icon.gif");
+  background-position:5px center;
+  background-repeat:no-repeat;
+  padding:2px 5px 2px 20px;
+}
+.jg_poweredby {
+  border:#666 solid 1px;
+  padding:0.2em;
+}
+img.jg_icon{
+  width:16px;
+  height:16px;
+  border:0px;
+  margin:0 3px;
+  vertical-align:bottom;
+}
+.pngfile{
+}
+
+/* Tooltip-Styles */
+.jg-tooltip-wrap .tip {
+  background:#C64934;
+  width:250px;
+  padding:1px;
+  border:none;
+  text-align:left;
+}
+.jg-tooltip-wrap .tip-title {
+  font-family:Verdana,Arial,Helvetica,sans-serif;
+  font-size:10px;
+  font-weight:bold;
+  color:#fff;
+  padding:2px 4px;
+  margin:0;
+  background: none repeat scroll 0 0 transparent;
+}
+.jg-tooltip-wrap .tip-text {
+  background-color:#fff;
+  border:1px solid #d0d0ca;
+  padding:3px;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  font-size:10px;
+  color:#000;
+  margin:1px;
+}
+
+.jg_row {
+  overflow:hidden;
+  height:auto !important;
+  padding:0.8em 0;
+}
+.jg_element_gal, .jg_element_gal_r {
+  height:100%;
+}
+.jg_photo_container_l,.jg_subcatelem_photo_l{
+  float:left;
+  padding-right:0.5em;
+}
+.jg_photo_container_r,.jg_subcatelem_photo_r{
+  float:right;
+  text-align:right !important;
+  padding-left:0.5em;	
+}
+.jg_photo_container_c,.jg_subcatelem_photo_c{
+  text-align:center !important;			
+}
+.jg_element_img{
+  text-align:center;
+}
+.jg_element_txt_r,.jg_subcatelem_txt_r{
+  text-align:right !important;
+}
+.jg_element_txt_l,.jg_subcatelem_txt_l{
+  text-align:left !important;
+}
+.jg_element_txt_c,.jg_subcatelem_txt_c{
+  text-align:center !important;
+}
+
+.jg_element_txt_subs_r{
+  float:right;
+  text-align:right !important;
+  font-size: 0.9em;
+}
+
+.jg_element_txt ul,.jg_element_txt_r ul,.jg_element_txt_l ul,.jg_element_txt_c ul,
+.jg_element_txt_subs ul,.jg_element_txt_subs_r ul,
+.jg_subcatelem_txt_r ul,.jg_subcatelem_txt_l ul,.jg_subcatelem_txt_c ul{
+  margin:0 !important;
+  padding:0 !important;
+}
+.jg_element_txt li,.jg_element_txt_r li,.jg_element_txt_l li,.jg_element_txt_c li,
+.jg_element_txt_subs li,.jg_element_txt_subs_r li,
+.jg_subcatelem_txt_r,.jg_subcatelem_txt_l,.jg_subcatelem_txt_c li{
+  line-height:115% !important;
+}
+
+/*Detail view - Detailansicht*/
+/*commons*/
+.jg-details-header h4{
+  /*margin:5px 5px 10px 3px;*/
+  text-align:center;
+  padding:6px;
+}
+.jg-details-header h4.joomgallery-toggler{
+  /*margin:5px 5px 5px 3px;*/
+}
+.joomgallery-slider{
+  padding-top:5px;
+}
+div.jg_details, div.jg_voting, div.jg_commentsarea, div.jg_send2friend, div.jg_bbcode, div.jg_exif, div.jg_panemodule {
+  margin:0.3em 0;
+  border:1px solid #ddd;
+}
+.jg_exif .jg_row1, .jg_exif .jg_row2 {
+  overflow: auto;
+}
+div.jg_photo_left, div.jg_bbcode_left, div.jg_exif_left,div.jg_cmtl {
+  clear:left;
+  float:left;
+  width:29%;
+  font-weight:normal;
+  padding-left:0.3em;
+  text-align:left !important;
+}
+div.jg_photo_right,div.jg_photo_left,div.jg_bbcode_right,div.jg_bbcode_left,div.jg_exif_left,div.jg_exif_right,div.jg_cmtr {
+  margin-bottom:0.7em;
+  padding:0.3em;
+  overflow:hidden;
+}
+div.jg_voting{
+  text-align:center;
+}
+div.jg_voting form{
+  padding:0.5em 0 0;
+}
+#jg_geomap{
+  height:300px;
+}
+.jg_imgtitle {
+  text-align:center;
+  font-weight:bold;
+  padding-bottom: 10px;
+}
+/* Comments and send2friend cells */
+.jg_cmticons{
+  width: 50px;
+}
+.jg_cmtsmilies{
+  padding:0.5em 0 0 0.3em;
+}
+.jg_cmtl, .jg_s2fl {
+  padding:0.3em;
+  font-weight:normal;
+  text-align:left;
+  vertical-align:top;
+}
+.jg_s2fl{
+  float:left;
+  width:23%;
+  text-align:left !important;
+}
+.jg_cmtr, .jg_s2fr {
+  padding:0.2em 0;
+  text-align:left;
+}
+.jg_s2fr{
+  /* padding:0.8em; */
+}
+.jg_cmtr {
+  text-align:left !important;
+}
+td.jg_cmtf {
+  text-align:center;
+}
+/* Easy Captcha image */
+.jg_cmtr img{
+  vertical-align:bottom;
+}
+.jg_minipic {
+  border:1px solid #000;
+  padding:1px;
+}
+.jg_detailnavi {
+  overflow:hidden;
+  text-align:center !important;
+  margin-bottom:0.9em;
+}
+.jg_detailnaviprev, .jg_detailnavinext {
+  width:30%;
+}
+.jg_detailnaviprev {
+  float:left;
+  text-align:center !important;
+}
+.jg_detailnavinext {
+  float:right;
+  text-align:center !important;
+}
+.jg_detailnavislide {
+  width:100%;
+  padding:0.3em 0;
+  text-align:center !important;
+}
+.jg_iconbar {
+  float:left;
+  width:40%;
+  padding-top:5px;
+  text-align:center !important;
+}
+/* MotionGallery Styles */
+.jg_minis {
+  text-align:center;
+  padding:0.5em 0;
+}
+#jg_mini_akt {
+  border:2px solid #000;
+}
+#motiongallery {
+  position:absolute;
+  left:0;
+  top:0;
+  white-space:nowrap;
+}
+#motioncontainer {
+  margin:0 auto;  /*centers on page */
+  position:relative;
+  overflow:hidden;
+}
+#statusdiv {
+  background-color:#FFFFE0;
+  border:1px solid #7F7F7F;
+  padding:2px;
+  position:absolute; /* Stop Editing Gallery Styles */
+  left:-300px;
+  visibility:hidden;
+}
+#motioncontainer a:hover {
+  color:#F00; /* Dummy definition to overcome IE bug */
+}
+/* Nameshield */
+.nameshield {
+  font-size:10px;
+  color:#4F4F4F;
+  background-color:#E5E5E5;
+  border:1px solid #888;
+  filter:alpha(opacity=70);
+  -moz-opacity:0.7;
+  opacity:0.7;
+  padding-left:2px;
+  padding-right:2px;
+}
+/* Accordion */
+/* common for both togglers */
+.joomgallery-toggler, .joomgallery-toggler-down{
+  background-repeat:no-repeat;
+  background-position:right;
+  cursor:pointer;
+  margin:0.3em;
+}
+/* not activated toggler */
+.joomgallery-toggler {
+  background-image: url(../images/arrow_down.png);
+}
+/* activated toggler */
+.joomgallery-toggler-down {
+  background-image: url(../images/arrow_up.png);
+}
+.joomgallery-slider {
+  margin:0;
+  padding:0.2em;
+}
+.jg_exif .joomgallery-slider {
+  position: relative; 
+}
+.jg_voting .joomgallery-slider {
+  position: relative; 
+}
+.jg_voting div.controls, .jg_voting label, .jg_voting .controls > .radio:first-child{
+  display:inline-block;
+  vertical-align:middle;
+  padding-top: 0px;
+}
+/* favourites */
+.jg_fav_switchlayout{
+  text-align:right;
+}
+.jg_fav_clearlist{
+  text-align:right;
+}
+.jg_favelem_txt ul{
+  padding: 1.1em;
+}
+
+/* Create Zip */
+.jg_createzip{
+  margin-top:20px;
+  margin-bottom:20px;
+  text-align:center;
+}
+/* special view */
+/* Container and Text under top list entries */
+.jg_topelement .jg_topelem_txt {
+  margin:0;
+  padding:0;
+}
+.jg_topelem_txt ul{
+  margin:0;
+  padding:0;
+}
+/* Search view */
+/* Container and Text under search list entries */
+.jg_searchelement .jg_searchelem_txt {
+  margin:0;
+  padding:0;
+}
+.jg_searchelem_txt ul{
+  padding: 1.1em;
+}
+/* user view */
+.jg_up_head {
+  vertical-align:middle;
+  text-align:center !important;
+  padding:0.3em 0;
+}
+/*Pagination*/
+div.list-footer ul {
+  text-align:center !important;
+  padding:0.8em 0;
+}
+div.limit, div.counter {
+  text-align:center !important;
+}
+
+.jg_up_eminithumb {
+  border:0;
+  height:24px;
+  width:24px;
+}
+/*description of category under header - Kategoriebeschreibung unterhalb des Header*/
+.jg_catdescr{
+  text-align:center;
+  padding:5px;
+}
+.jg_catorderlist{
+  white-space:nowrap;
+  text-align:right;
+}
+
+.jg_catelem_txt{
+  clear:both;
+  margin-left:0.3em;
+  margin-right:0.3em;
+}
+.jg_catelem_txt ul, .jg_subcatelem_txt ul{
+  margin:0;
+  padding:0 0.5em;
+}
+
+/* Tabs of upload view */
+dl.tabs {
+  float:left;
+  margin:10px 0pt -1px;
+  z-index:50;
+}
+dl.tabs dt {
+  background:#F0F0F0 none repeat scroll 0%;
+  border-left:1px solid #CCCCCC;
+  border-right:1px solid #CCCCCC;
+  border-top:1px solid #CCCCCC;
+  color:#666666;
+  float:left;
+  margin-left:3px;
+  padding:4px 10px;
+}
+dl.tabs dt.open {
+  background:#F9F9F9 none repeat scroll 0%;
+  border-bottom:1px solid #F9F9F9;
+  color:#000000;
+  z-index:100;
+}
+div.current {
+  border:1px solid #CCCCCC;
+  clear:both;
+  margin-top:35px;
+  padding:10px;
+}
+div.current legend {
+  font-size:14px;
+  font-weight:bold;
+  color:#aa0005;
+  padding-left:8px;
+}
+div.current dd {
+  margin:0pt;
+  padding:0pt;
+}
+div.current td {
+  border-bottom:1px dotted #CCCCCC;
+}
+div.current .formu td {
+  border-style:none;
+  padding:2px;
+}
+
+#reportimageform div{
+  margin: 10px 0px;
+}
+
+.jg_feed_icon{
+  float:right;
+}
+.jg_headerfavourites_icon{
+  float:right;
+}
+.jg_upload_icon{
+  float:right;
+}
+
+/* Ajax Category Search */
+.jg-spinner {
+  background-image:url(../../system/images/modal/spinner.gif);
+  background-repeat:no-repeat;
+  background-position:right;
+}
+.jg-category-results{
+  background-color:#fff;
+  display:none;
+  width:250px;
+  text-align:left;
+  z-index:1500;
+}
+.jg-category-result{
+  padding:5px;
+}
+.jg-category-result:hover{
+	background-color:#e8f6fe;
+	cursor:pointer;
+}
+.jg-category-result-hover{
+	background-color:#e8f6fe !important;
+}
+
+.categories-results{
+  border-right:1px solid grey;
+  border-left:1px solid grey;
+  border-bottom:1px solid grey;
+}
+
+.row0{
+	background-color:#f7f7f7;
+}
+.row1{
+	background-color:#f0f0f0;
+	border-top:1px solid #ffffff;
+}
+.jg-no-results{
+  padding:5px;
+}
+.jg-category-more-results{
+  padding:5px;
+  border-right:1px solid grey;
+  border-left:1px solid grey;
+  border-bottom:1px solid grey;
+}
+.jg-category-more-results:hover{
+	background-color:#e8f6fe;
+	cursor:pointer;
+}
+
+/** New Styles since 3.0.0 Alpha */
+.sortable-handler.inactive {
+    opacity: 0.3;
+}
+
+/* Image author in upload view */
+.jg-uploader{
+  font-weight:bold;
+  padding-top:5px;
+}
+
+/* */
+#arrscreenshot input[type="file"]{
+  display:block;
+}
+
+/* MiniJoom */
+.jg_bu_filter{
+  margin-top:12px;
+}
+.jg_bu_minis{
+  margin:3px auto 0px;
+  border:solid 1px black;
+  width:500px;
+  overflow:hidden;
+}
+.jg_bu_mini{
+  float:left;
+  padding:5px;
+}
+.jg_bu_no_mini{
+  width:40px;
+  text-align:center;
+  font-size:90%;
+  line-height:13px;
+}
+.jg_bu_no_images{
+  text-align:center;
+  padding:10px;
+}
+#jg_bu_minis img{
+  height:40px;
+}
+.jg_overlib .jg_title{
+  font-weight:bold;
+}
+.jg_overlib .jg_catname{
+  margin-left:5px;
+}
+.jg_bu_minis.jg_spinner{
+  height:30px;
+}
+.jg_minicount{
+  margin:5px 0 15px 0;
+}

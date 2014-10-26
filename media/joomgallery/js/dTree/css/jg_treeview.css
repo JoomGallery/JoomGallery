@@ -1,0 +1,44 @@
+/**
+ * JoomGallery treeview CSS styles
+ **/
+.jg_treeview_l, .jg_treeview_r, .jg_treeview_c {
+  clear: both;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* border: 1px solid red; */
+}
+.jg_treeview_l table {
+  margin-left: 0px;
+  margin-right: auto;
+  /* border: 1px solid yellow; */
+}
+
+.jg_treeview_r table {
+  margin-left: auto;
+  margin-right: 0px;
+  /* border: 1px solid yellow; */
+}
+
+.jg_treeview_c table {
+  margin: auto;
+  /* border: 1px solid yellow; */
+}
+
+/* IE6 hacks */
+* html .jg_treeview_l, * html .jg_treeview_r, * html .jg_treeview_c {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 20px;
+}
+/* IE7 hacks */
+*+html .jg_treeview_l, *+html .jg_treeview_r, *+html .jg_treeview_c {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 10px;
+}
+/* IE8 hacks */
+.jg_treeview_l { padding-bottom /*\**/: 0px\9 }
+.jg_treeview_r { padding-bottom /*\**/: 0px\9 }
+.jg_treeview_c { padding-bottom /*\**/: 0px\9 }

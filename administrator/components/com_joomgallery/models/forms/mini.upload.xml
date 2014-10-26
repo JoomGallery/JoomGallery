@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields>
+    <fieldset
+      addfieldpath="administrator/components/com_joomgallery/models/fields"
+      addrulepath="administrator/components/com_joomgallery/models/rules"
+    >
+      <field
+        id="upload_categories"
+        name="catid"
+        type="joomcategory"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_COMMON_CATEGORY"
+        message="COM_JOOMGALLERY_COMMON_ALERT_YOU_MUST_SELECT_CATEGORY"
+        validate="joompositivenumeric"
+        required="true"
+        action="joom.upload"
+      />
+      <field
+        id="generictitle"
+        name="generictitle"
+        type="checkbox"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_AJAXUPLOAD_GENERICTITLE_MODE"
+        description="COM_JOOMGALLERY_AJAXUPLOAD_GENERICTITLE_MODE_DESC"
+        checked="true"
+      />      
+      <field
+        id="imgtitle"
+        name="imgtitle"
+        type="text"
+        class="inputbox span12"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_UPLOAD_GENERIC_TITLE"
+        message="COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE"
+        required="true"
+      />
+      <field
+        name="published"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        default="1"
+        label="COM_JOOMGALLERY_COMMON_PUBLISHED"
+        size="1"
+      >
+        <option value="0">
+          JNO</option>
+        <option value="1">
+          JYES</option>
+      </field>
+      <field
+        name="original_delete"
+        type="checkbox"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_UPLOAD_DELETE_ORIGINAL_AFTER_UPLOAD"
+        description="COM_JOOMGALLERY_UPLOAD_DELETE_ORIGINAL_AFTER_UPLOAD_ASTERISK"
+        value="1"
+      />
+      <field
+        name="create_special_gif"
+        type="checkbox"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_UPLOAD_CREATE_SPECIAL_GIF"
+        description="COM_JOOMGALLERY_UPLOAD_CREATE_SPECIAL_GIF_ASTERISK"
+        value="1"
+      />
+    </fieldset>
+  </fields>
+</form>
