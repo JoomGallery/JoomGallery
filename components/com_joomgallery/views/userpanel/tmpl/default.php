@@ -140,7 +140,7 @@ echo $this->loadTemplate('header');
           ?>
           <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>">
             <td class="order nowrap center hidden-phone">
-            <?php if($canChange) :
+            <?php if($canChange) {
               $disableClassName = '';
               $disabledLabel    = '';
 
@@ -152,11 +152,11 @@ echo $this->loadTemplate('header');
                 <i class="icon-menu"></i>
               </span>
               <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-            <?php else : ?>
+            <?php } else { ?>
               <span class="sortable-handler inactive" >
                 <i class="icon-menu"></i>
               </span>
-            <?php endif; ?>
+				<?php } ?>
             </td>
             <td class="center hidden-phone hidden">
               <?php echo JHtml::_('grid.id', $i, $item->id); ?>
