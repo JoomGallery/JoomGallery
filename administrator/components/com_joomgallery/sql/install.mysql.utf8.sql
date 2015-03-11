@@ -431,7 +431,8 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_orphans` (
   `type` varchar(7) NOT NULL,
   `refid` int(11) NOT NULL,
   `title` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fullpath` (`fullpath`(255))
 ) DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_users` (
