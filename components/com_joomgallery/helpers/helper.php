@@ -252,7 +252,9 @@ class JoomHelper
       $replace  = trim($replace);
       $replace2 = str_replace('[!', '\[\!', $results[0][$i]);
       $replace2 = str_replace('!]', '\!\]', $replace2);
-      $text     = preg_replace('/('.$replace2.')/ie', $replace, $text);
+      $text     = preg_replace_callback('/('.$replace2.')/i', function($matches) use ($replace){
+        return JText::_($replace);
+      }, $text);
     }
     $text = str_replace('#cat', $catname, $text);
     $text = str_replace('#img', $imgtitle, $text);
