@@ -1,6 +1,6 @@
 <?php
 // $HeadURL: https://joomgallery.org/svn/joomgallery/JG-3/JG/trunk/administrator/components/com_joomgallery/models/images.php $
-// $Id: images.php 4405 2014-07-02 07:13:31Z chraneco $
+// $Id: images.php 2015-03-23 $
 /****************************************************************************************\
 **   JoomGallery 3                                                                      **
 **   By: JoomGallery::ProjectTeam                                                       **
@@ -333,6 +333,18 @@ class JoomGalleryModelImages extends JoomGalleryModel
       if(!$this->_db->query())
       {
         JLog::add(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_DELETE_NAMETAGS', $cid), JLog::WARNING, 'jerror');
+      }
+	  
+	  // Delete the corresponding database entries of the votes
+      $query = $this->_db->getQuery(true)
+            ->delete()
+            ->from(_JOOM_TABLE_VOTES)
+            ->where('picid = '.$cid);
+
+      $this->_db->setQuery($query);
+      if(!$this->_db->query())
+      {
+        JLog::add(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_DELETE_VOTES', $cid), JLog::WARNING, 'jerror');
       }
 
       // Delete the database entry of the image
