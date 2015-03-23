@@ -1347,7 +1347,7 @@ class JoomUpload extends JObject
       $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_IMAGE_SUCCESSFULLY_ADDED').'<br />';
       $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_NEW_FILENAME', $newfilename).'<br /><br />';
 
-	    $this->_mainframe->triggerEvent('onJoomAfterUpload', array($row));
+      $this->_mainframe->triggerEvent('onJoomAfterUpload', array($row));
 	  
       unset($ftpfiles[$key]);
     }
