@@ -197,7 +197,31 @@ echo $this->loadTemplate('header'); ?>
         <div style="white-space:nowrap;" id="trueContainer">
 <?php   endif;
         if(count($this->images)):
-          foreach($this->images as $row): ?>
+
+			$image	= $this->get('Image');
+			$rows		= [];
+			$limit	= $this->_config->get('jg_motionminiLimit');
+			if ($limit != 0)
+			{
+				$limit	= (int)(($limit - 1) / 2);
+
+				for($i = -$limit; $i <= $limit; $i++)
+				{
+					$imageposition = $image->position + $i;
+
+					if ( $imageposition < 0 or $imageposition >= count($this->images) )
+					{
+						continue;
+					}
+					$rows[] = $this->images[$imageposition];
+				}
+			}
+			else
+			{
+				$rows = $this->images;
+			}
+			
+         foreach($rows as $row): ?>
           <a title="<?php echo $row->imgtitle; ?>" href="<?php echo JRoute::_('index.php?view=detail&id='.$row->id).JHTML::_('joomgallery.anchor'); ?>">
 <?php       $cssid = '';
             if($row->id == $this->image->id):
