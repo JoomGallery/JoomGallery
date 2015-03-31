@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fieldset>
+    <field
+      id="title"
+      name="name"
+      type="text"
+      class="inputbox"
+			labelclass="control-label"
+      label="COM_JOOMGALLERY_MINI_CATEGORY_NAME"
+			description="COM_JOOMGALLERY_MINI_CATEGORY_NAME_DESCRIPTION"
+      required="true"
+      message="COM_JOOMGALLERY_CATMAN_ALERT_CATEGORY_MUST_HAVE_TITLE"
+    />
+    <field 
+			id="parent_categories"
+      type="joomcategory"
+      name="parent_id"
+      class="inputbox"
+			labelclass="control-label"
+      label="COM_JOOMGALLERY_COMMON_PARENT_CATEGORY"
+      action="core.create"
+    />  
+    <field
+      id="cat_published"
+      name="published"
+      type="radio"
+      default="1"
+      class="btn-group"
+			labelclass="control-label"
+      label="COM_JOOMGALLERY_COMMON_PUBLISHED"
+      size="1"
+    >
+      <option value="0">
+        JNO</option>
+      <option value="1">
+        JYES</option>
+    </field>
+  </fieldset>
+</form>

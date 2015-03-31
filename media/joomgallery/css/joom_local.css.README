@@ -1,0 +1,88 @@
+﻿/* Joomgallery local Style - wont be overwritten by updates etc.
+ * Rename this file to "joom_local.css" to have it included in
+ * Joomgallery.
+ * You can override any Style Definition of Joomgallery
+ * Be sure to place !important behind each definition that could be
+ * defined elsewhere. 
+ * 
+ * A basic sample style is included below. Feel free to edit or 
+ * comment to your liking.
+ *
+ * 
+ * Diese Datei wird nicht von Updates o.ä. überschrieben.
+ * Benennen Sie diese in "joom_local.css" um, damit sie von der Joomgallery 
+ * erkannt und eingebunden wird.
+ *
+ * Sie können jede Style-Definition 'überschreiben', die von der Joomgallery
+ * standardmäßig in den anderen CSS-Dateien vergeben wird.
+ *
+ * Bitte fügen Sie ein '!important' in jeder Definition ein, die schon an
+ * anderer Stelle definiert ist.
+ *
+ * Ein grundlegendes Beispiel für geänderte Styles finden Sie untenstehend.
+ * Sie können diese nach Ihren Vorstellungen ändern.
+ * 
+ */
+ 
+ 
+/* Main style / Background of whole gallery */
+.gallery {
+  background:#fff;
+  color:#333;
+  padding: 5px;
+}
+
+/* Heading of the component */
+.gallery .componentheading {
+  font:12pt normal Tahoma, Verdana, Arial, Century Gothic;
+  text-align:center;
+  background-color:#FFF;
+  color:#333;
+  padding:0.8em 0;
+}
+
+.jg_pathway {
+  background-color:#F0F0F0;
+  color:#000;
+  border: #BBB solid 1px !important;
+}
+
+/* Links in pathway */
+.jg_pathway a,.jg_pathway a:visited, .jg_pathway a:link {
+  color:#c64934;
+}
+.jg_pathway a:hover {
+  color:#900;
+}
+div.gallery .jg-header {
+  font-size:1em !important;
+  font-weight:bold !important;
+  text-align:center !important;
+  background-color:#EEE !important;
+  background-image:none !important;
+  color:#333 !important;
+  border: #BBB solid 1px !important;
+  padding:0.3em !important;
+}
+
+/* box elements in detailed view */
+div.jg_details, div.jg_voting, div.jg_send2friend, div.jg_commentsarea{
+  border: 1px solid #999;  
+}
+
+/* Images displayed in the category overview   */
+/* Uncomment below e.g. to align the text left */
+.jg_catelem{
+  /* text-align:left;   */
+}
+
+/* Category elements in gallery overview */
+.jg_element_gal {
+  /* text-align:center; */ 
+}
+
+/* Subcategory elements in category view */
+.jg_element_cat {
+  /* text-align:left;   */
+}
+

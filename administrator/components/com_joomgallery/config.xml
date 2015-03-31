@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <fieldset
+    name="permissions"
+    label="JCONFIG_PERMISSIONS_LABEL"
+    description="COM_JOOMGALLERY_PERMISSIONS_DESC"
+    >
+    <field
+      name="rules"
+      type="rules"
+      label="JCONFIG_PERMISSIONS_LABEL"
+      class="inputbox"
+      validate="rules"
+      filter="rules"
+      component="com_joomgallery"
+      section="component" />
+  </fieldset>
+  <fieldset
+    name="extended"
+    label="COM_JOOMGALLERY_ADMENU_EXTENDED_LABEL"
+    description="COM_JOOMGALLERY_ADMENU_EXTENDED_DESC"
+    >
+    <field
+      name="extended_config"
+      type="radio"
+      label="COM_JOOMGALLERY_ADMENU_EXTENDED_CONFIG_LABEL"
+      description="COM_JOOMGALLERY_ADMENU_EXTENDED_CONFIG_DESC"
+      class="btn-group"
+      filter="integer"
+      default="0">
+      <option value="0">JNO</option>
+      <option value="1">JYES</option>
+    </field>
+  </fieldset>
+  <fieldset
+    name="seo"
+    label="COM_JOOMGALLERY_ADMENU_SEO_LABEL"
+    description="COM_JOOMGALLERY_ADMENU_SEO_DESC"
+    >
+    <field
+      name="sef_image"
+      type="radio"
+      label="COM_JOOMGALLERY_ADMENU_SEF_IMAGE_LABEL"
+      description="COM_JOOMGALLERY_ADMENU_SEF_IMAGE_DESC"
+      class="btn-group"
+      filter="integer"
+      default="0">
+      <option value="0">JNO</option>
+      <option value="1">JYES</option>
+      <option value="2">COM_JOOMGALLERY_ADMENU_SEF_IMAGE_EXTENDED_LABEL</option>
+    </field>
+  </fieldset>
+</config>

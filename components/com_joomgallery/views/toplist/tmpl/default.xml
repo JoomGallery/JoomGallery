@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+  <layout title="COM_JOOMGALLERY_LAYOUT_TOPLIST_DEFAULT">
+    <message>
+      <![CDATA[COM_JOOMGALLERY_LAYOUT_TOPLIST_DEFAULT_DESC]]>
+    </message>
+  </layout>
+  <fields name="request">
+    <fieldset name="request"> 
+      <field name="type" 
+        type="list"
+        label="COM_JOOMGALLERY_LAYOUT_TOPLIST_TYPE"
+        description="COM_JOOMGALLERY_LAYOUT_TOPLIST_TYPE_DESC">
+        <option value="">COM_JOOMGALLERY_LAYOUT_TOPLIST_MOST_VIEWED</option>
+        <option value="toprated">COM_JOOMGALLERY_LAYOUT_TOPLIST_TOP_RATED</option>
+        <option value="lastadded">COM_JOOMGALLERY_LAYOUT_TOPLIST_LAST_ADDED</option>
+        <option value="lastcommented">COM_JOOMGALLERY_LAYOUT_TOPLIST_LAST_COMMENTED</option>
+      </field>
+    </fieldset>
+  </fields>  
+  <fields name="params">
+    <fieldset name="basic">
+      <field name="disable_global_info"
+        type="radio"
+        default="0"
+        label="COM_JOOMGALLERY_LAYOUT_COMMON_DISABLE_GLOBAL_INFO"
+        description="COM_JOOMGALLERY_LAYOUT_COMMON_DISABLE_GLOBAL_INFO_DESC">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>        
+      </field>
+    </fieldset>
+  </fields>
+</metadata>

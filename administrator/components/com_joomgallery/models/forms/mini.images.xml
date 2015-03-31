@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields>
+    <fieldset
+      addfieldpath="administrator/components/com_joomgallery/models/fields"
+      addrulepath="administrator/components/com_joomgallery/models/rules"
+    >
+      <field
+        id="jg_bu_type"
+        name="type"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_TYPE"
+        description="COM_JOOMGALLERY_MINI_TYPE_TIP"
+        default="thumb"
+      >
+        <option value="thumb">COM_JOOMGALLERY_COMMON_THUMBNAIL</option>
+        <option value="img">COM_JOOMGALLERY_MINI_DETAIL</option>
+        <option value="orig">COM_JOOMGALLERY_MINI_ORIGINAL</option>
+      </field>
+      <field
+        id="jg_bu_position"
+        name="position"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_POSITION"
+        description="COM_JOOMGALLERY_MINI_POSITION_TIP"
+        default=""
+      >
+        <option value="">JNONE</option>
+        <option value="center">JGLOBAL_CENTER</option>
+        <option value="left">JGLOBAL_LEFT</option>
+        <option value="right">JGLOBAL_RIGHT</option>
+      </field>
+      <field
+        id="jg_bu_linked"
+        name="linked"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_LINKED"
+        description="COM_JOOMGALLERY_MINI_LINKED_TIP"
+        default="1"
+      >
+        <option value="0">JNO</option>
+        <option value="1">COM_JOOMGALLERY_MINI_DETAIL_VIEW</option>
+        <option value="2">COM_JOOMGALLERY_MINI_CATEGORY_VIEW</option>
+      </field>
+      <field
+        id="jg_bu_linked_type"
+        name="linked_type"
+        type="radio"
+        class="btn-group"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_LINKED_IMAGE_TYPE"
+        description="COM_JOOMGALLERY_MINI_LINKED_IMAGE_TYPE_TIP"
+        default="img"
+      >
+        <option value="img">COM_JOOMGALLERY_MINI_DETAIL</option>
+        <option value="orig">COM_JOOMGALLERY_MINI_ORIGINAL</option>
+      </field>
+      <field
+        id="jg_bu_alttext"
+        name="alttext"
+        type="text"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_ALTTEXT"
+        description="COM_JOOMGALLERY_MINI_ALTTEXT_TIP"
+      />
+      <field
+        id="jg_bu_class"
+        name="class"
+        type="text"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_ADD_CLASS"
+        description="COM_JOOMGALLERY_MINI_ADD_CLASS_TIP"
+      />
+      <field
+        id="jg_bu_text"
+        name="linkedtext"
+        type="text"
+        class="inputbox"
+        labelclass="control-label"
+        label="COM_JOOMGALLERY_MINI_TEXTLINK"
+        description="COM_JOOMGALLERY_MINI_TEXTLINK_TIP"
+      />
+    </fieldset>
+  </fields>
+</form>

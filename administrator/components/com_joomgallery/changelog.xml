@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+  <release version="3.2.0" published="20141026">
+    <entries date="20141026">
+      <logentry type="^">Links to Transifex languages removed because they don't work anymore</logentry>
+    </entries>
+    <entries date="20140702">
+      <logentry type="^">Images and categories for which the actual files and folders cannot be deleted for any reason are now deleted in the database anyway</logentry>
+    </entries>
+    <entries date="20140626">
+      <logentry type="#">JavaScript errors if language strings contained inverted commas</logentry>
+    </entries>
+    <entries date="20140611">
+      <logentry type="^">Upgrade to FineUploader 4.4.0</logentry>
+      <logentry type="+">Preview in Drag'n'Drop upload</logentry>
+      <logentry type="+">Allow to change file name and image title in Drag'n'Drop upload</logentry>
+      <logentry type="#">Options 'Original filename' and 'Delete original images after upload' didn't work correctly within Drag'n'Drop upload of MiniJoom (JoomPlu)</logentry>
+      <logentry type="#">Javascript errors when using Drag'n'Drop upload</logentry>
+      <logentry type="^">Change Javascript load sequence in MiniJoom (JoomPlu)</logentry>
+      <logentry type="#">Avoid 'ROOT' entry in category drop down list in the case that no category has been created yet</logentry>
+    </entries>
+    <entries date="20140608">
+        <logentry type="^">New JAVA-Applet 5.1.1 Build 1706</logentry>
+    </entries>
+    <entries date="20140511">
+      <logentry type="+">Use of JHtml::_('behavior.tabstate') to remember active tab states</logentry>    
+    </entries>
+    <entries date="20140505">
+      <logentry type="#"># Wrong calculation and display of the number of categories created by an owner in the user categories view</logentry>    
+    </entries>
+    <entries date="20140509">
+      <logentry type="#">Javascript validation in the 'Editimages' back end view did not work anymore</logentry>    
+    </entries>
+    <entries date="20140504">
+      <logentry type="#">Javascript errors in some backend views (Mootools/jQuery issue)</logentry>    
+    </entries>
+    <entries date="20140427">
+      <logentry type="#">Configuration setting 'Show owner instead of author if no author exists?' now also used for detail view</logentry>    
+      <logentry type="^">Enlarge database field lengths for 'alias' and 'catpath' in table #__joomgallery_catg</logentry>
+    </entries>
+    <entries date="20140227">
+      <logentry type="#">Support long file names up to 255 characters, shorten file names that are longer</logentry>
+      <logentry type="#">The file size limit has not been checked for frontend uploads</logentry>
+      <logentry type="#">Select button in Drag'n'Drop upload view not fully functional</logentry>
+    </entries>
+    <entries date="20140224">
+      <logentry type="^">Deprecated class JRules replaced with class JAccessRules</logentry>
+      <logentry type="^">Now using IcoMoon icon fonts in the backend toolbar titles</logentry>
+    </entries>
+    <entries date="20140217">
+      <logentry type="#">The AJAX category selection did not work for inserting images or categories in an article</logentry>
+    </entries>
+  </release>
+  <release version="3.1.1" published="20140208">
+    <entries date="20140118">
+      <logentry type="#">Inserting categories with JoomBu/JoomPlu not possible in some cases because category select box did not show any categories</logentry>
+      <logentry type="#">Call to undefined method JDate::toFormat() when storing categories or images</logentry>
+    </entries>
+    <entries date="20131122">
+      <logentry type="#">Interface configuration parameters 'hidebackend' and 'showcatlink' not always working correctly</logentry>
+    </entries>
+    <entries date="20131116">
+      <logentry type="#">Password protected categories stopped working with the release of Joomla! 3.2.0</logentry>
+    </entries>    
+    <entries date="20131113">
+      <logentry type="#">Motion gallery not moving in Google Chrome</logentry>
+    </entries>
+    <entries date="20131110">
+      <logentry type="^">Strict standards</logentry>
+      <logentry type="^">Ordering form field 'Ordering' renamed to 'Joomordering' due to conflicts with Joomla! form field 'Ordering'</logentry>
+      <logentry type="#">Fatal error in 'Openimage' form field</logentry>
+      <logentry type="#">Fatal errors in frontend models 'edit' and 'editcategory'</logentry>
+    </entries>
+    <entries date="20131103">
+      <logentry type="#">Error with PHP 5.4 and 5.5 when FTP layer is enabled</logentry>
+    </entries>
+  </release>
+  <release version="3.1.0" published="20130915">
+    <entries date="20130908">
+      <logentry type="-">MooRainbow assets removed</logentry>
+    </entries>
+    <entries date="20130904">
+      <logentry type="^">Use only bootstrap tooltips in backend</logentry>
+    </entries>
+    <entries date="20130903">
+      <logentry type="#">Missing import of 'joomla.filesystem.file' in maintenance manager</logentry>
+      <logentry type="#">Problem with 'task' parameter when using it in a system plugin</logentry>
+    </entries>
+    <entries date="20130827">
+      <logentry type="#">Syntax error in database query when creating zip archives of favourites</logentry>
+    </entries>
+    <entries date="20130818">
+      <logentry type="#">Wrong variable used in JoomGallery router</logentry>
+      <logentry type="#">SQL errors when synchronizing votes and nametags</logentry>
+      <logentry type="#">Missing import of 'joomla.filesystem.file' when synchronizing favourites</logentry>
+    </entries>
+  </release>
+  <release version="3.1.0 BETA" published="20130616">
+    <entries date="20130527">
+      <logentry type="+">Improved display of EXIF data for devices with low resolution</logentry>
+    </entries>
+    <entries date="20130523">
+      <logentry type="+">Support of unicode aliases added</logentry>
+    </entries>
+    <entries date="20130510">
+      <logentry type="+">Timespan for upload limit</logentry>
+    </entries>
+    <entries date="20130509">
+      <logentry type="^">Performance optimization for back end image deletion</logentry>
+    </entries>
+    <entries date="20130507">
+      <logentry type="^">Consider only published menu items for Itemid</logentry>
+    </entries>
+    <entries date="20130506">
+      <logentry type="^">Consider settings for image title and description in interface</logentry>
+    </entries>
+    <entries date="20130505">
+      <logentry type="+">Possibility to exclude images from toplists and the search</logentry>
+    </entries>
+    <entries date="20130502">
+      <logentry type="+">Password-protected categories</logentry>
+      <logentry type="+">Possibility to explicitly reject images and to send message about rejection reason</logentry>
+    </entries>
+    <entries date="20130427">
+      <logentry type="^">Colorpickers now using jQuery minicolors.js instead of Mootools mooRainbow.js</logentry>
+      <logentry type="-">JFormField 'color' removed</logentry>
+    </entries>
+    <entries date="20130426">
+      <logentry type="+">Possibility to view the 'Changelog' after extension update and in the 'Help and Information' view</logentry>
+    </entries>
+    <entries date="20130425">
+      <logentry type="#">Error 'JPath::clean: $path is not a string' in FTP Upload view fixed</logentry>
+    </entries>
+    <entries date="20130422">
+      <logentry type="+">Counting image downloads, display statistics and number of downloads in front and back end</logentry>
+      <logentry type="-">Configuration option 'jg_wrongvaluecolor' removed</logentry>
+    </entries>
+    <entries date="20130421">
+      <logentry type="+">Option for selecting whether sent mails should use only the site e-mail address as sender</logentry>
+      <logentry type="^">Recipients of mails sent by JoomGallery are included as BCC from now on</logentry>
+      <logentry type="#">Wrong filters were applied to image and category descriptions</logentry>
+    </entries>
+    <entries date="20130420">
+      <logentry type="#">Number of images and categories were not displayed if only one page exists</logentry>
+    </entries>
+    <entries date="20130416">
+      <logentry type="^">Use of FineUploader in MiniJoom for improved user experience</logentry>
+      <logentry type="+">Quick upload buttons in gallery, category and sub-category view</logentry>
+      <logentry type="#">Image title and description was not always displayed as configured in popup boxes</logentry>
+    </entries>
+    <entries date="20130402">
+      <logentry type="^">Update Fineuploader JS/CSS (AJAX Upload) to version 3.4.1 (now GPLv3)</logentry>
+    </entries>
+    <entries date="20130331">
+      <logentry type="^">Resolving naming conflict between fields 'Hidden' and 'Unpublished' in the german language</logentry>
+      <logentry type="-">JFormFields 'owner' and 'cbowner' deleted because they aren't used anymore</logentry>
+    </entries>    
+    <entries date="20130330">
+      <logentry type="#">Error in detail view when option 'Use real paths' is enabled</logentry>
+    </entries>
+    <entries date="20130328">
+      <logentry type="#">Error while sending messages via e-mail</logentry>
+    </entries>
+  </release>
+  <release version="3.0.0 BETA" published="20130314">
+  </release>
+</changelog>

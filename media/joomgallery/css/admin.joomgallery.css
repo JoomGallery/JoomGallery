@@ -1,0 +1,324 @@
+/* $HeadURL: https://joomgallery.org/svn/joomgallery/JG-3/JG/trunk/media/joomgallery/css/admin.joomgallery.css $*/
+/* $Id: admin.joomgallery.css 4373 2014-03-05 09:07:31Z erftralle $*/
+/****************************************************************************************\
+**   JoomGallery 3                                                                      **
+**   By: JoomGallery::ProjectTeam                                                       **
+**   Copyright (C) 2008 - 2013  JoomGallery::ProjectTeam                                **
+**   Based on: JoomGallery 1.0.0 by JoomGallery::ProjectTeam                            **
+**   Released under GNU GPL Public License                                              **
+**   License: http://www.gnu.org/copyleft/gpl.html or have a look                       **
+**   at administrator/components/com_joomgallery/LICENSE.TXT                            **
+\****************************************************************************************/
+
+/**
+ * Joomgallery Admin CSS styles
+ **/
+
+.icon-joomgallery{
+  background-image:url("../../joomgallery/images/joom_logo.png");
+  background-size: 16px 16px;
+}
+
+.jg_clearboth{
+  clear: both;
+}
+.jg_displaynone{
+  display:none;
+}
+
+.jg-poweredby {
+  border:#666 solid 1px;
+  padding:2px;
+}
+
+/* admin menu available extensions */
+.jg_extavail hr{
+  margin: 9px 0;
+}
+.jg_extavaildownload{
+  font-weight:bold;
+  margin-bottom: 9px;
+}
+.jg_extavailversions, .jg_updexistversion{
+  margin-left:10px;
+  margin-right:10px;
+}
+#jg_tab_dated-extensions hr{
+  margin-top: 9px;
+}
+.jg_updexistpanel{
+  padding:0 10px;
+}
+.jg_updexisthead{
+  margin-bottom: 9px;
+}
+.jg_updexistdownload, .jg_updexistautolink, .jg_updexistformsubmit{
+  font-weight:bold;
+}
+.jg_updexistdownload{
+  margin-bottom:18px;
+}
+.jg_updexistauto, .jg_updexistautoform, .jg_updexistautonot, .jg_updexistlabel{
+  margin:5px 0px;
+}
+.jg_updexistautoform form {
+	margin: 0;
+}
+.jg_updexistversion table{
+  margin-bottom: 9px;
+}	
+
+/* MiniJoom */
+.jg_bu_filter{
+  margin-top:12px;
+}
+.jg_bu_minis{
+  margin:3px auto 0px;
+  border:solid 1px black;
+  width:500px;
+  overflow:hidden;
+}
+.jg_bu_mini{
+  float:left;
+  padding:5px;
+}
+.jg_bu_no_mini{
+  width:40px;
+  text-align:center;
+  font-size:90%;
+  line-height:13px;
+}
+.jg_bu_no_images{
+  text-align:center;
+  padding:10px;
+}
+#jg_bu_minis img{
+  height:40px;
+}
+.jg_overlib .jg_title{
+  font-weight:bold;
+}
+.jg_overlib .jg_catname{
+  margin-left:5px;
+}
+.jg_minicount{
+  margin:5px 0 15px 0;
+}
+.minigallery .thumbnail{
+  display:inline;
+  margin: 0 10px;
+}
+.minigallery .buttons{
+  margin-top:10px;
+}
+
+/* Refresher */
+.jg-refresher-container{
+  width:600px;
+  margin:auto;
+  border: 1px dashed silver;
+  padding: 5px;
+}
+.jg-refresher-text{
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.jg-refresher-name{
+  color:green;
+}
+.jg-refresher-spinnercontainer{
+  text-align:center;
+  margin-bottom:5px;
+}
+.jg-refresher-container .small{
+  text-align:center;
+  color:grey;
+}
+
+/* Mini thumbnails */
+.jg_minithumb {
+  border:0;
+  height:24px;
+  width:24px;
+}
+
+.jg_spinner {
+  background-image:url(../../system/images/modal/spinner.gif);
+  background-repeat:no-repeat;
+  background-position:center;
+  height:30px;
+}
+
+label#rules-lbl {
+    display: none;
+    float: none;
+    white-space: nowrap;
+}
+
+#notice-lbl {
+  color:red;
+  font-weight:bold;
+}
+#notice {
+  float:left;
+  width:355px;
+}
+
+.jg_imgpreview{
+	max-width:500px;
+}
+
+/* Ajax Category Search */
+.jg-spinner {
+  background-image:url(../../system/images/modal/spinner.gif);
+  background-repeat:no-repeat;
+  background-position:right;
+}
+.jg-category-results{
+  background-color:#fff;
+  display:none;
+  width:250px;
+  z-index:1500;
+}
+.jg-category-result{
+  padding:5px;
+}
+.jg-category-result:hover{
+	background-color:#e8f6fe;
+	cursor:pointer;
+}
+.jg-category-result-hover{
+	background-color:#e8f6fe !important;
+}
+
+.categories-results{
+  border-right:1px solid grey;
+  border-left:1px solid grey;
+  border-bottom:1px solid grey;
+}
+
+.row0{
+	background-color:#f7f7f7;
+}
+.row1{
+	background-color:#f0f0f0;
+	border-top:1px solid #ffffff;
+}
+.jg-no-results{
+  padding:5px;
+}
+.jg-category-more-results{
+  padding:5px;
+  border-right:1px solid grey;
+  border-left:1px solid grey;
+  border-bottom:1px solid grey;
+}
+.jg-category-more-results:hover{
+	background-color:#e8f6fe;
+	cursor:pointer;
+}
+
+/** New Styles since 3.0.0 Alpha */
+.legend{
+  border-bottom: 1px solid #E5E5E5;
+  font-size: 19.5px;
+  line-height: 36px;
+  margin-bottom: 18px;
+  padding: 0;
+}
+
+#editimages-form input[type="checkbox"] {
+  margin: 0 4px 4px 4px;
+}
+
+#editimages-form #imgtitlestartcounter,
+#editimages-form #txtclearvotes,
+#editimages-form #txtclearhits,
+#editimages-form #txtcleardownloads {
+  width: auto;  
+}
+
+#jg-new-popup .modal-body{
+  min-height:250px;
+}
+/* This is not perfect: */
+#jg-new-popup .chzn-container{
+  margin-left:100px;
+}
+
+/* Workaround for the bootstrap accordion to work in IE9 */
+/* should be removed with bootstrap 2.1.1 */ 
+.collapse {
+  overflow: hidden !important;
+}
+
+/* Edit images view: Space between boxes */
+#jg_movecopy{
+  padding:0px 10px;
+}
+
+/* -- TAB STYLES ----------------------------- */
+dl.tabs {
+	float: left;
+	margin: 10px 0 -1px 0;
+	z-index: 50;
+}
+
+dl.tabs dt {
+	float: left;
+	padding: 4px 10px;
+	border: 1px solid #ccc;
+	margin-left: 3px;
+	background: #e9e9e9;
+	color: #666;
+}
+
+dl.tabs dt.open {
+	background: #F9F9F9;
+	border-bottom: 1px solid #f9f9f9;
+	z-index: 100;
+	color: #000;
+}
+
+div.current {
+	clear: both;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+}
+
+div.current dd {
+	padding: 0;
+	margin: 0;
+}
+
+dl#content-pane.tabs {
+	margin: 1px 0 0 0;
+}
+
+div.current fieldset {
+	border: none 0;
+}
+
+div.current fieldset.adminform {
+	border: 1px #ccc solid;
+}
+
+p.tab-description {
+	font-size: 1.091em;
+	margin-left: 0;
+	margin-top: 5px;
+}
+
+/* Tab changes for accessibility */
+dl.tabs dt h3 {
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+	font-weight: normal;
+}
+
+dl.tabs dt h3 a:link {
+	color:#333333;
+	outline:medium none;
+	text-decoration:none;
+}
