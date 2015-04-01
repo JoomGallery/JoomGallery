@@ -334,8 +334,8 @@ class JoomGalleryModelImages extends JoomGalleryModel
       {
         JLog::add(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_DELETE_NAMETAGS', $cid), JLog::WARNING, 'jerror');
       }
-	  
-	  // Delete the corresponding database entries of the votes
+
+      // Delete the corresponding database entries of the votes
       $query = $this->_db->getQuery(true)
             ->delete()
             ->from(_JOOM_TABLE_VOTES)
