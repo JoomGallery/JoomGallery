@@ -502,8 +502,8 @@ class JoomGalleryModelEdit extends JoomGalleryModel
     {
       JLog::add(JText::sprintf('COM_JOOMGALLERY_EDITIMAGE_MSG_COULD_NOT_DELETE_NAMETAGS', $this->_id), JLog::WARNING, 'jerror');
     }
-	
-	// Delete the corresponding database entries of the Votes
+
+    // Delete the corresponding database entries of the Votes
     $query->clear();
     $query->delete(_JOOM_TABLE_VOTES)
           ->where('picid = '.$this->_id);
