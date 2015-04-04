@@ -1,4 +1,49 @@
-<?php defined('_JEXEC') or die('Direct Access to this location is not allowed.');
+<?php
+defined('_JEXEC') or die('Direct Access to this location is not allowed.');
+
+$jinput = JFactory::getApplication()->input;
+
+if ($jinput->get('ajaxeditimg', '', 'STRING') == "edit")
+{
+  try
+  {
+    $db               = JFactory::getDBO();
+    $user             = JFactory::getUser();
+    $user_id          = $user->get('id');
+    $ImgDataToUpdate  = json_decode($jinput->post->get('jsonData', '', 'RAW'));
+
+    if ($db->query() and is_object($ImgDataToUpdate))
+    {
+      foreach ($ImgDataToUpdate as $key => $val)
+      {
+        $query = "UPDATE #__joomgallery SET
+              imgtitle		= '".strip_tags($val->imgtitle)."',
+              imgauthor   = '".strip_tags($val->imgauthor)."',
+              metadesc		= '".strip_tags($val->metadesc)."',
+              imgtext     = '".htmlspecialchars($val->imgtext)."'
+              WHERE id		= '$key'
+              AND access IN (" . implode(',', $user->getAuthorisedViewLevels()) . ")
+              AND owner   = '$user_id'";
+        $db->setQuery($query);
+        $db->query();
+      }
+      $result = true;
+    }
+    else
+    {
+      $result = JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_ERROR');
+    }
+
+    echo new JResponseJson($result);
+  }
+  catch(Exception $e)
+  {
+    echo new JResponseJson(JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_ERROR'));
+  }
+	exit;
+}
+else
+{
 
 JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
@@ -8,6 +53,7 @@ $listOrder                = $this->escape($this->state->get('list.ordering'));
 $listDirn                 = $this->escape($this->state->get('list.direction'));
 $saveOrder                = (($listOrder == 'ordering') && (strtoupper($listDirn) == 'ASC' || !$listDirn) && !$this->state->get('filter.inuse'));
 $display_hidden_asterisk  = false;
+$name_editor              = JFactory::getConfig()->get( 'editor' );
 
 if($saveOrder):
   $saveOrderingUrl = 'index.php?option='._JOOM_OPTION.'&task=images.saveorder&format=json';
@@ -18,6 +64,89 @@ $sortFields = $this->getSortFields();
 
 echo $this->loadTemplate('header');
 ?>
+  <script type="text/javascript">
+		jQuery(function ($) {
+      function save(){
+        $(".image_data_row.changed").each(function () {
+          var image_title = $(this).find("input[name='imgtitle']").val();
+          $(this).find('.image_title').html(image_title);
+          $(this).removeClass("changed");
+        });
+      }
+
+      $(".blinker-btn .edit_image").click(function () {
+				var imagedata = {};
+
+				$(".image_data_row.changed").each(function () {
+
+					var id = $(this).attr('id');
+
+          <?php
+          switch ($name_editor) {
+            case 'tinymce':
+            case 'jce':
+              echo 'var FRAM = document.getElementById("imgtext_"+id+"_ifr");';
+              echo 'var imgtext = FRAM.contentDocument.body.innerHTML;';
+              break;
+            default:
+              echo 'var imgtext = $(this).find("#imgtext_" + id).val();';
+          }
+          ?>
+
+					imagedata[id] = {
+						"imgtitle"  : $(this).find('#imgtitle_' + id).val(),
+						"imgauthor" : $(this).find('#imgauthor_' + id).val(),
+						"metadesc"  : $(this).find('#metadesc_' + id).val(),
+						"imgtext"   : imgtext
+					};
+				});
+
+				$.ajax({
+					url: '<?= JURI::current() ?>',
+					type: "POST",
+					data: {
+						ajaxeditimg: "edit",
+						jsonData: JSON.stringify(imagedata)
+					},
+					success: function (msg) {
+            var data = jQuery.parseJSON(msg).data;
+						if (data === true) {
+							$('.blinker-msg').css('display', 'block').delay(1000).fadeOut(2000);
+              save();
+						}	else {
+              alert(data);
+						}
+					},
+					response: 'text',
+					dataType: 'text'
+				});
+			});
+
+      $(window).load(function () {
+        $(".image_data_row input").keyup(function() {
+          $(this).closest(".image_data_row").addClass("changed");
+        });
+
+        <?php
+        switch ($name_editor) {
+          case 'tinymce':
+          case 'jce':
+            echo '$(".image_data_row").each(function () {
+                    var id = $(this).attr("id");
+                    $(this).find("iframe").contents().keyup(function() {
+                      $("#"+id).addClass("changed");
+                    });
+                  });';
+            break;
+          default: 
+            echo '$(".image_data_row textarea").keyup(function() {
+                    $(this).closest(".image_data_row").addClass("changed");
+                  });';
+        }
+        ?>
+      });
+		});
+	</script>
   <script type="text/javascript">
     Joomla.orderTable = function() {
       table = document.getElementById("sortTable");
@@ -31,6 +160,8 @@ echo $this->loadTemplate('header');
       Joomla.tableOrdering(order, dirn, '');
     }
   </script>
+  <style type="text/css">.toggle-editor{display:none;}</style>
+
   <div class="jg_userpanelview">
     <div class="jg_up_head btn-toolbar">
 <?php if($this->params->get('show_upload_button')): ?>
@@ -86,48 +217,9 @@ echo $this->loadTemplate('header');
         <div class="btn-group pull-right hidden-phone">
           <?php echo JHtml::_('joomselect.categorylist', $this->state->get('filter.category'), 'filter_category', 'onchange="document.id(\'adminForm\').submit()"', null, '- ', 'filter'); ?>
         </div>
+        <div class="clearfix"> </div>
       </div>
-      <div class="clearfix"> </div>
-      <table class="table table-striped" id="imageList">
-        <thead>
-          <tr>
-            <th width="1%" class="nowrap center hidden-phone">
-              <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'ordering', $listDirn, $listOrder, null, 'asc', 'COM_JOOMGALLERY_COMMON_REORDER'); ?>
-            </th>
-            <th width="1%" class="hidden-phone hidden">
-              <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
-            </th>
-<?php       if($this->_config->get('jg_showminithumbs')): ?>
-            <th class="center" width="25"></th>
-<?php       endif ?>
-            <th class="nowrap">
-              <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_IMAGE_NAME', 'imgtitle', $listDirn, $listOrder); ?>
-            </th>
-            <th class="nowrap" width="5%">
-              <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_HITS', 'hits', $listDirn, $listOrder); ?>
-            </th>
-            <th class="nowrap" width="7%">
-              <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_DOWNLOADS', 'downloads', $listDirn, $listOrder); ?>
-            </th>
-            <th class="nowrap hidden-phone" width="30%">
-              <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_CATEGORY', 'catid', $listDirn, $listOrder); ?>
-            </th>
-            <th class="nowrap" width="10%">
-              <?php echo JText::_('COM_JOOMGALLERY_COMMON_ACTION'); ?>
-            </th>
-<?php       if(!$this->_config->get('jg_approve')): ?>
-            <th class="nowrap" width="5%">
-              <?php echo JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED'); ?>
-            </th>
-<?php       endif; ?>
-<?php       if($this->_config->get('jg_approve')): ?>
-            <th class="nowrap center" width="10%" colspan="2">
-              <?php echo JText::_('COM_JOOMGALLERY_COMMON_STATES'); ?>
-            </th>
-<?php       endif; ?>
-          </tr>
-        </thead>
-        <tbody>
+
 <?php   $allowed_categories = $this->_ambit->getCategoryStructure();
         foreach($this->items as $i => $item):
           $canEdit    = $this->_user->authorise('core.edit', _JOOM_OPTION.'.image.'.$item->id);
@@ -138,117 +230,150 @@ echo $this->loadTemplate('header');
                         && in_array($item->access, $this->_user->getAuthorisedViewLevels())
                         && isset($allowed_categories[$item->catid]);
           ?>
-          <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>">
-            <td class="order nowrap center hidden-phone">
-            <?php if($canChange) :
-              $disableClassName = '';
-              $disabledLabel    = '';
+          <div class="row<?= $i % 2; ?> image_data_row" id="<?= $item->id; ?>" sortable-group-id="<?= $item->catid ?>">
 
-              if (!$saveOrder) :
-                $disabledLabel    = JText::_('COM_JOOMGALLERY_COMMON_ORDERING_DISABLED');
-                $disableClassName = 'inactive tip-top';
-              endif; ?>
-              <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-                <i class="icon-menu"></i>
-              </span>
-              <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-            <?php else : ?>
-              <span class="sortable-handler inactive" >
-                <i class="icon-menu"></i>
-              </span>
-            <?php endif; ?>
-            </td>
-            <td class="center hidden-phone hidden">
-              <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-            </td>
-<?php       if($this->_config->get('jg_showminithumbs')): ?>
-            <td class="center">
-              <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_up_eminithumb', $canView, true); ?>
-            </td>
-<?php       endif ?>
-            <td>
-<?php       if($canView):
-              $link = JHTML::_('joomgallery.openImage', $this->_config->get('jg_detailpic_open'), $item);
-?>
-              <a <?php echo $item->atagtitle; ?> href="<?php echo $link; ?>">
-<?php       endif; ?>
-            <?php echo $item->imgtitle; ?>
-<?php       if($canView): ?>
-              </a>
-<?php       endif; ?>
-            </td>
-          <td>
-            <?php echo $item->hits; ?>
-          </td>
-          <td>
-            <?php echo $item->downloads; ?>
-          </td>
-          <td class="hidden-phone">
-            <?php echo JHtml::_('joomgallery.categorypath', $item->catid, true, ' &raquo; ', true, false, true); ?>
-          </td>
-          <td class="nowrap">
-<?php       if($item->show_edit_icon): ?>
-            <div class="pull-left<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_EDIT_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_EDIT_IMAGE_TIPCAPTION'); ?>">
-              <a href="<?php echo JRoute::_('index.php?view=edit&id='.$item->id.$this->slimitstart); ?>">
-                <?php echo JHTML::_('joomgallery.icon', 'edit.png', 'COM_JOOMGALLERY_COMMON_EDIT_CATEGORY_TIPCAPTION'); ?></a>
-            </div>
-<?php       endif;
-            if($item->show_delete_icon): ?>
-            <div class="pull-left<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DELETE_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DELETE_IMAGE_TIPCAPTION'); ?>">
-              <a href="javascript:if(confirm('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_SURE_DELETE_SELECTED_ITEM', true); ?>')){ location.href='<?php echo JRoute::_('index.php?task=image.delete&id='.$item->id.$this->slimitstart, false);?>';}">
-                <?php echo JHTML::_('joomgallery.icon', 'edit_trash.png', 'COM_JOOMGALLERY_COMMON_DELETE'); ?></a>
-            </div>
-<?php       endif; ?>
-          </td>
-          <td class="nowrap center">
-<?php       $p_img    = 'cross';
-            if($item->published):
-              $p_img = 'tick';
-            endif; ?>
-<?php       if($canChange):
-              $p_title  = JText::_('COM_JOOMGALLERY_COMMON_PUBLISH_IMAGE_TIPCAPTION');
-              $p_text   = JText::_('COM_JOOMGALLERY_COMMON_PUBLISH_IMAGE_TIPTEXT');
-              if($item->published):
-                $p_title = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH_IMAGE_TIPCAPTION');
-                $p_text  = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH_IMAGE_TIPTEXT');
-              endif; ?>
-            <a href="<?php echo JRoute::_('index.php?task=image.publish&id='.$item->id.$this->slimitstart); ?>"<?php echo JHTML::_('joomgallery.tip', $p_text, $p_title, true, false); ?>>
-              <?php echo JHTML::_('joomgallery.icon', $p_img.'.png', $p_img, null, null, false); ?></a>
-<?php       else:
-              $p_title  = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISHED');
-              if($item->published):
-                $p_title = JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED');
-              endif; ?>
-            <div class="<?php echo JHTML::_('joomgallery.tip', '', $p_title); ?>">
-              <?php echo JHTML::_('joomgallery.icon', $p_img.'.png', $p_img, null, null, false); ?>
-            </div>
-<?php       endif;
-            if($item->published && $item->hidden):
-              $h_title = JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK');
-              $h_text  = JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN');
-              echo '<span'.JHTML::_('joomgallery.tip', $h_text, $h_title, true, false).'>'.JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK').'</span>';
-              $display_hidden_asterisk = true;
-            endif; ?>
-          </td>
-<?php     if($this->_config->get('jg_approve')): ?>
-          <td class="nowrap center">
-<?php       $a_img = 'cross';
-            $a_title = 'COM_JOOMGALLERY_COMMON_REJECTED';
-            if($item->approved == 1):
-              $a_img = 'tick';
-              $a_title = 'COM_JOOMGALLERY_COMMON_APPROVED';
-            endif; ?>
-            <div class="<?php echo JHTML::_('joomgallery.tip', '', $a_title); ?>">
-              <?php echo JHTML::_('joomgallery.icon', $a_img.'.png', $a_img, null, null, false); ?>
-            </div>
-          </td>
-<?php     endif?>
-          </tr>
-<?php   endforeach; ?>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="9">
+					<div class="title">
+						<?php
+						if ($canView)
+						{
+							$link = JHTML::_('joomgallery.openImage', $this->_config->get('jg_detailpic_open'), $item);
+							echo '<a class="image_title" ' . $item->atagtitle . ' href="' . $link . '">' . $item->imgtitle . '</a>';
+						}
+						?>
+					</div>
+          <div class="image_data">
+            <span class="image_hits">
+              <?= JText::_('COM_JOOMGALLERY_COMMON_HITS')?>: <?= $item->hits; ?>
+            </span>
+            <span class="image_category">
+              <?= JText::_('COM_JOOMGALLERY_COMMON_CATEGORY')?>: <?= JHtml::_('joomgallery.categorypath', $item->catid, true, ' &raquo; ', true, false, true); ?>
+            </span>
+          </div>
+
+					<div class="left_block">
+						<div>
+							<?= JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', $canView, true); ?>
+						</div>
+
+						<div class="nowrap">
+							<?php if ($item->show_edit_icon): ?>
+								<div class="pull-left<?= JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_EDIT_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_EDIT_IMAGE_TIPCAPTION'); ?>">
+									<a href="<?= JRoute::_('index.php?view=edit&id=' . $item->id . $this->slimitstart); ?>">
+										<?= JHTML::_('joomgallery.icon', 'edit.png', 'COM_JOOMGALLERY_COMMON_EDIT_CATEGORY_TIPCAPTION'); ?>
+									</a>
+								</div>
+								<?php
+							endif;
+							if ($item->show_delete_icon):
+								?>
+								<div class="pull-left<?= JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DELETE_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DELETE_IMAGE_TIPCAPTION'); ?>">
+									<a href="javascript:if(confirm('<?= JText::_('COM_JOOMGALLERY_COMMON_ALERT_SURE_DELETE_SELECTED_ITEM', true); ?>')){ location.href='<?php echo JRoute::_('index.php?task=image.delete&id=' . $item->id . $this->slimitstart, false); ?>';}">
+										<?= JHTML::_('joomgallery.icon', 'edit_trash.png', 'COM_JOOMGALLERY_COMMON_DELETE'); ?>
+									</a>
+								</div>
+							<?php endif; ?>
+						</div>
+
+						<div class="nowrap center pull-left">
+							<?php
+							$p_img = 'cross';
+							if ($item->published):
+								$p_img = 'tick';
+							endif;
+							?>
+							<?php
+							if ($canChange):
+								$p_title = JText::_('COM_JOOMGALLERY_COMMON_PUBLISH_IMAGE_TIPCAPTION');
+								$p_text = JText::_('COM_JOOMGALLERY_COMMON_PUBLISH_IMAGE_TIPTEXT');
+								if ($item->published):
+									$p_title = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH_IMAGE_TIPCAPTION');
+									$p_text = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH_IMAGE_TIPTEXT');
+								endif;
+								?>
+								<a href="<?= JRoute::_('index.php?task=image.publish&id=' . $item->id . $this->slimitstart); ?>"<?= JHTML::_('joomgallery.tip', $p_text, $p_title, true, false); ?>>
+									<?= JHTML::_('joomgallery.icon', $p_img . '.png', $p_img, null, null, false); ?></a>
+								<?php
+							else:
+								$p_title = JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISHED');
+								if ($item->published):
+									$p_title = JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED');
+								endif;
+								?>
+								<div class="<?= JHTML::_('joomgallery.tip', '', $p_title); ?> ">
+									<?= JHTML::_('joomgallery.icon', $p_img . '.png', $p_img, null, null, false); ?>
+								</div>
+							<?php
+							endif;
+							if ($item->published && $item->hidden):
+								$h_title = JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK');
+								$h_text = JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN');
+								echo '<span' . JHTML::_('joomgallery.tip', $h_text, $h_title, true, false) . '>' . JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK') . '</span>';
+								$display_hidden_asterisk = true;
+							endif;
+							?>
+						</div>
+					</div>
+
+					<div class="right_block">
+						<input type="hidden" value="<?= $item->id; ?>" name="id" />
+						<input type="hidden" value="1" name="ajax" />
+						<div class="input_block">
+							<label for="imgtitle_<?= $item->id; ?>"><?= JText::_('COM_JOOMGALLERY_COMMON_IMAGE_NAME'); ?></label>
+							<input type="text" value="<?= $item->imgtitle; ?>" name="imgtitle" id="imgtitle_<?= $item->id; ?>" />
+						</div>
+						<div class="input_block">
+							<label for="imgauthor_<?= $item->id; ?>"><?= JText::_('COM_JOOMGALLERY_DETAIL_AUTHOR'); ?>:</label>
+							<input type="text" value="<?= $item->imgauthor; ?>" name="imgauthor" id="imgauthor_<?= $item->id; ?>" />
+						</div>
+						<div class="input_block">
+							<label for="metadesc_<?= $item->id; ?>"><?= JText::_('COM_JOOMGALLERY_COMMON_METADESC'); ?>:</label>
+							<input type="text" value="<?= $item->metadesc; ?>" name="metadesc" id="metadesc_<?= $item->id; ?>" />
+						</div>
+						<div class="input_block">
+							<label for="imgtext_<?= $item->id; ?>"><?= JText::_('COM_JOOMGALLERY_COMMON_DESCRIPTION'); ?>:</label>
+              <?php
+                switch ($name_editor) {
+                  case 'tinymce':
+                    $editor =& JFactory::getEditor('tinymce');
+                    $params = array( 'mode'=> "0" );
+                    echo $editor->display('imgtext_'.$item->id, $item->imgtext, '65%', '168', '5', '5', false, null, null, null, $params);
+                    break;
+                  case 'jce':
+                    $editor =& JFactory::getEditor('jce');
+                    echo $editor->display('imgtext_'.$item->id, $item->imgtext, '65%', '168', '5', '5', false);
+                    break;
+                  default:
+                    $editor =& JFactory::getEditor('none');
+                    echo $editor->display('imgtext_'.$item->id, $item->imgtext, '65%', '168', '5', '5', false);
+                }
+              ?>
+						</div>
+					</div>
+
+					<div class="center hidden-phone hidden">
+						<?php //echo JHtml::_('grid.id', $i, $item->id);  ?>
+					</div>
+
+
+					<?php if ($this->_config->get('jg_approve')): ?>
+						<div class="nowrap center">
+							<?php
+							$a_img = 'cross';
+							$a_title = 'COM_JOOMGALLERY_COMMON_REJECTED';
+							if ($item->approved == 1):
+								$a_img = 'tick';
+								$a_title = 'COM_JOOMGALLERY_COMMON_APPROVED';
+							endif;
+							?>
+							<div class="<?= JHTML::_('joomgallery.tip', '', $a_title); ?>">
+								<?= JHTML::_('joomgallery.icon', $a_img . '.png', $a_img, null, null, false); ?>
+							</div>
+						</div>
+					<?php endif ?>
+				</div>
+			<?php endforeach; //end foreach($this->items as $i => $item)   ?>
+
+      <div>
 <?php         if($this->pagination->get('pagesTotal') > 1): ?>
                 <?php echo $this->pagination->getListFooter();
               endif;
@@ -257,10 +382,8 @@ echo $this->loadTemplate('header');
                 <?php echo JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK'); ?> <?php echo JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN'); ?>
               </div>
 <?php         endif; ?>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      </div>
+
       <input type="hidden" name="task" value="" />
       <input type="hidden" name="boxchecked" value="0" />
       <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
@@ -268,4 +391,16 @@ echo $this->loadTemplate('header');
       <?php echo JHtml::_('form.token'); ?>
     </form>
   </div>
+
+  <div class="blinker-msg">
+		<p><?= JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_SUCCESS'); ?></p>
+	</div>
+	<div class="blinker-btn btn-toolbar">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary edit_image">
+        <i class="icon-ok"></i><?= JText::_('COM_JOOMGALLERY_MINI_SAVE'); ?>
+      </button>
+    </div>
+	</div>
 <?php echo $this->loadTemplate('footer');
+} // End if (JRequest::getVar('ajax', '', 'POST')) else
