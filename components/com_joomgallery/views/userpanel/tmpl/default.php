@@ -66,11 +66,21 @@ echo $this->loadTemplate('header');
 ?>
   <script type="text/javascript">
 		jQuery(function ($) {
-			$(".blinker-btn .edit_image").click(function () {
+      function save(){
+        $(".image_data_row.changed").each(function () {
+          var image_title = $(this).find("input[name='imgtitle']").val();
+          $(this).find('.image_title').html(image_title);
+          $(this).removeClass("changed");
+        });
+      }
+
+      $(".blinker-btn .edit_image").click(function () {
 				var imagedata = {};
 
-				$(".image_data_row").each(function () {
+				$(".image_data_row.changed").each(function () {
+
 					var id = $(this).attr('id');
+
           <?php
           switch ($name_editor) {
             case 'tinymce':
@@ -102,6 +112,7 @@ echo $this->loadTemplate('header');
             var data = jQuery.parseJSON(msg).data;
 						if (data === true) {
 							$('.blinker-msg').css('display', 'block').delay(1000).fadeOut(2000);
+              save();
 						}	else {
               alert(data);
 						}
@@ -110,6 +121,30 @@ echo $this->loadTemplate('header');
 					dataType: 'text'
 				});
 			});
+
+      $(window).load(function () {
+        $(".image_data_row input").keyup(function() {
+          $(this).closest(".image_data_row").addClass("changed");
+        });
+
+        <?php
+        switch ($name_editor) {
+          case 'tinymce':
+          case 'jce':
+            echo '$(".image_data_row").each(function () {
+                    var id = $(this).attr("id");
+                    $(this).find("iframe").contents().keyup(function() {
+                      $("#"+id).addClass("changed");
+                    });
+                  });';
+            break;
+          default: 
+            echo '$(".image_data_row textarea").keyup(function() {
+                    $(this).closest(".image_data_row").addClass("changed");
+                  });';
+        }
+        ?>
+      });
 		});
 	</script>
   <script type="text/javascript">

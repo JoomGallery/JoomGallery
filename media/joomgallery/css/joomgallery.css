@@ -683,6 +683,10 @@ div.current .formu td {
 .image_data_row {
 	padding:10px 10px 20px;
 }
+.image_data_row.changed {
+	padding-right:6px;
+  border-right: 4px solid #3D88CC;
+}
 .image_data_row .title{
 	margin-bottom:15px;
 }
