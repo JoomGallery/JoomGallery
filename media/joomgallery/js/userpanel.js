@@ -18,10 +18,10 @@
 
     $(".blinker-btn .hide_editing_unit").click(function () {
       $('.image_data_row').toggle("slow");
-      $(".image_data_row").each(function () {
+      //$(".image_data_row").each(function () {
         var id = $(this).attr("id");
-        $('#title_row_' + id).prependTo("#imageList tbody");
-      });
+        $('.title_row').appendTo("#imageList tbody");
+      //});
       $(".hidden-if-edit").removeAttr("style");
       $(".blinker-btn .save_edited_data").attr("disabled", "disabled");
       $(".blinker-btn .hide_editing_unit").hide();

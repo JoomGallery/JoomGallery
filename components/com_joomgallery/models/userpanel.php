@@ -393,7 +393,6 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
       $jinput           = JFactory::getApplication()->input;
       $ImgDataToUpdate  = json_decode($jinput->post->get('jsonData', '', 'RAW'));
       $db               = JFactory::getDBO();
-      $query            = $db->getQuery(true);
       $user             = JFactory::getUser();
       $user_id          = $user->get('id');
 
@@ -401,6 +400,7 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
       {
         foreach ($ImgDataToUpdate as $key => $val)
         {
+          $query = $db->getQuery(true);
           // Fields to update.
           $fields = array(
               $db->quoteName('imgtitle')  ."='".strip_tags($val->imgtitle)."'",
@@ -410,9 +410,9 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
           );
           // Conditions for which records should be updated.
           $conditions = array(
-              $db->quoteName('id')    . "='" .$key."'", 
+              $db->quoteName('id')    . "=" .$key, 
               $db->quoteName('access'). "IN (" . implode(',', $user->getAuthorisedViewLevels()) . ")", 
-              $db->quoteName('owner') . "='" . $user_id."'"
+              $db->quoteName('owner') . "=" . $user_id
           );
 
           $query->update($db->quoteName('#__joomgallery'))->set($fields)->where($conditions);

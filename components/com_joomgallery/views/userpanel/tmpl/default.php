@@ -154,7 +154,7 @@ echo $this->loadTemplate('header');
                         && in_array($item->access, $this->_user->getAuthorisedViewLevels())
                         && isset($allowed_categories[$item->catid]);
           ?>
-          <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>" id="title_row_<?= $item->id ?>" >
+          <tr class="row<?php echo $i % 2; ?> title_row" sortable-group-id="<?php echo $item->catid ?>" id="title_row_<?= $item->id ?>" >
             <td class="order nowrap center hidden-phone hidden-if-edit">
             <?php if($canChange) :
               $disableClassName = '';
