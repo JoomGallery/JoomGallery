@@ -1,6 +1,6 @@
 <?php
 // $HeadURL: https://joomgallery.org/svn/joomgallery/JG-3/JG/trunk/components/com_joomgallery/models/edit.php $
-// $Id: edit.php 2015-03-23 $
+// $Id: edit.php 2015-04-10 $
 /****************************************************************************************\
 **   JoomGallery 3                                                                      **
 **   By: JoomGallery::ProjectTeam                                                       **
@@ -510,7 +510,7 @@ class JoomGalleryModelEdit extends JoomGalleryModel
     $this->_db->setQuery($query);
     if(!$this->_db->query())
     {
-      JLog::add(JText::sprintf('COM_JOOMGALLERY_EDITIMAGE_MSG_COULD_NOT_DELETE_VOTES', $this->_id), JLog::WARNING, 'jerror');
+      JLog::add(JText::_('COM_JOOMGALLERY_EDITIMAGE_MSG_COULD_NOT_DELETE_VOTES'), JLog::WARNING, 'jerror');
     }
 
     // Delete the database entry of the image
