@@ -189,6 +189,9 @@ class JoomGalleryViewUserpanel extends JoomGalleryView
       }
     }
 
+    // Quick editing
+    $this->name_editor = JFactory::getConfig()->get( 'editor' );
+
     $this->params = $params;
 
     parent::display($tpl);

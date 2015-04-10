@@ -4,10 +4,15 @@ JHtml::_('bootstrap.tooltip');
 JHtml::_('behavior.multiselect');
 JHtml::_('formbehavior.chosen', 'select');
 
+$doc = JFactory::getDocument();
+$doc->addStyleDeclaration( '.toggle-editor{display:none;}');
+$doc->addScript($this->_ambit->getScript("userpanel.js"));
+
 $listOrder                = $this->escape($this->state->get('list.ordering'));
 $listDirn                 = $this->escape($this->state->get('list.direction'));
 $saveOrder                = (($listOrder == 'ordering') && (strtoupper($listDirn) == 'ASC' || !$listDirn) && !$this->state->get('filter.inuse'));
 $display_hidden_asterisk  = false;
+$editingforms             = "";
 
 if($saveOrder):
   $saveOrderingUrl = 'index.php?option='._JOOM_OPTION.'&task=images.saveorder&format=json';
@@ -18,6 +23,17 @@ $sortFields = $this->getSortFields();
 
 echo $this->loadTemplate('header');
 ?>
+  <script language="javascript" type="text/javascript">
+	(function($){
+    $(window).load(function () {
+				$.QuickEditingData({
+						name_editor: '<?= $this->name_editor ?>',
+            url: '<?= JURI::current() ?>'
+				});
+        $('.blinker-btn').fadeIn("slow");
+		});
+	})(jQuery);
+	</script>
   <script type="text/javascript">
     Joomla.orderTable = function() {
       table = document.getElementById("sortTable");
@@ -91,7 +107,7 @@ echo $this->loadTemplate('header');
       <table class="table table-striped" id="imageList">
         <thead>
           <tr>
-            <th width="1%" class="nowrap center hidden-phone">
+            <th width="1%" class="nowrap center hidden-phone hidden-if-edit">
               <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'ordering', $listDirn, $listOrder, null, 'asc', 'COM_JOOMGALLERY_COMMON_REORDER'); ?>
             </th>
             <th width="1%" class="hidden-phone hidden">
@@ -138,8 +154,8 @@ echo $this->loadTemplate('header');
                         && in_array($item->access, $this->_user->getAuthorisedViewLevels())
                         && isset($allowed_categories[$item->catid]);
           ?>
-          <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>">
-            <td class="order nowrap center hidden-phone">
+          <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>" id="title_row_<?= $item->id ?>" >
+            <td class="order nowrap center hidden-phone hidden-if-edit">
             <?php if($canChange) :
               $disableClassName = '';
               $disabledLabel    = '';
@@ -157,10 +173,10 @@ echo $this->loadTemplate('header');
                 <i class="icon-menu"></i>
               </span>
             <?php endif; ?>
-            </td>
-            <td class="center hidden-phone hidden">
-              <?php echo JHtml::_('grid.id', $i, $item->id); ?>
-            </td>
+          </td>
+          <td class="center hidden-phone hidden hidden-if-edit">
+            <?php echo JHtml::_('grid.id', $i, $item->id); ?>
+          </td>
 <?php       if($this->_config->get('jg_showminithumbs')): ?>
             <td class="center">
               <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_up_eminithumb', $canView, true); ?>
@@ -172,7 +188,7 @@ echo $this->loadTemplate('header');
 ?>
               <a <?php echo $item->atagtitle; ?> href="<?php echo $link; ?>">
 <?php       endif; ?>
-            <?php echo $item->imgtitle; ?>
+              <span class="image_title"><?php echo $item->imgtitle; ?></span>
 <?php       if($canView): ?>
               </a>
 <?php       endif; ?>
@@ -244,7 +260,54 @@ echo $this->loadTemplate('header');
           </td>
 <?php     endif?>
           </tr>
+<?php
+switch ($this->name_editor) {
+  case 'tinymce':
+    $editor =& JFactory::getEditor('tinymce');
+    $params = array( 'mode'=> "0" );
+    $editorblock = $editor->display('imgtext_'.$item->id, $item->imgtext, '100%', '168', '5', '5', false, null, null, null, $params);
+    break;
+  case 'jce':
+    $editor =& JFactory::getEditor('jce');
+    $editorblock = $editor->display('imgtext_'.$item->id, $item->imgtext, '100%', '168', '5', '5', false);
+    break;
+  default:
+    $editor =& JFactory::getEditor('none');
+    $editorblock = $editor->display('imgtext_'.$item->id, $item->imgtext, '95%', '168', '5', '5', false);
+}
+$editingforms .=
+'<tr id="'. $item->id .'" class="row'. $i % 2 .' image_data_row" style="display:none">
+  <td colspan="9">
+    <div id="editing_unit_'. $item->id .'">
+      <div class="left_block">
+        '. JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', $canView, false) .'
+      </div>
+      <div class="right_block">
+        <div class="input_block">
+          <label for="imgtitle_'. $item->id .'">'. JText::_('COM_JOOMGALLERY_COMMON_IMAGE_NAME') .'</label>
+          <input type="text" value="'. $item->imgtitle .'" name="imgtitle" id="imgtitle_'. $item->id .'" />
+        </div>
+        <div class="input_block">
+          <label for="imgauthor_'. $item->id .'">'. JText::_('COM_JOOMGALLERY_DETAIL_AUTHOR') .':</label>
+          <input type="text" value="'. $item->imgauthor .'" name="imgauthor" id="imgauthor_'. $item->id .'" />
+        </div>
+        <div class="input_block">
+          <label for="metadesc_'. $item->id .'">'. JText::_('COM_JOOMGALLERY_COMMON_METADESC') .':</label>
+          <input type="text" value="'. $item->metadesc .'" name="metadesc" id="metadesc_'. $item->id .'" />
+        </div>
+        <div class="input_block">
+          <label for="imgtext_'. $item->id .'">'. JText::_('COM_JOOMGALLERY_COMMON_DESCRIPTION') .':</label>
+          <div class="wraper_editor">
+            '.$editorblock.'
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>';
+?>
 <?php   endforeach; ?>
+        <?php echo $editingforms ?>
         </tbody>
         <tfoot>
           <tr>
@@ -268,4 +331,20 @@ echo $this->loadTemplate('header');
       <?php echo JHtml::_('form.token'); ?>
     </form>
   </div>
+  <div class="blinker-msg">
+		<p><?= JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_SUCCESS'); ?></p>
+	</div>
+	<div class="blinker-btn">
+    <div>
+      <button type="button" class="btn btn-primary save_edited_data" disabled="disabled">
+        <i class="icon-ok"></i><?= JText::_('COM_JOOMGALLERY_MINI_SAVE'); ?>
+      </button>
+      <button type="button" class="btn btn-info hide_editing_unit">
+        <i class="icon-edit"></i><?= JText::_('COM_JOOMGALLERY_COMMON_HIDE_EDITING_UNIT'); ?>
+      </button>
+      <button type="button" class="btn btn-info show_editing_unit">
+        <i class="icon-edit"></i><?= JText::_('COM_JOOMGALLERY_COMMON_SHOW_EDITING_UNIT'); ?>
+      </button>
+    </div>
+	</div>
 <?php echo $this->loadTemplate('footer');
