@@ -323,6 +323,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_motionminis` int(1) NOT NULL,
   `jg_motionminiWidth` int(3) NOT NULL,
   `jg_motionminiHeight` int(3) NOT NULL,
+  `jg_motionminiLimit` int(2) NOT NULL default '0',
   `jg_miniWidth` int(3) NOT NULL,
   `jg_miniHeight` int(3) NOT NULL,
   `jg_minisprop` int(1) NOT NULL,

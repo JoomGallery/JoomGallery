@@ -196,8 +196,25 @@ echo $this->loadTemplate('header'); ?>
       <div id="motiongallery">
         <div style="white-space:nowrap;" id="trueContainer">
 <?php   endif;
-        if(count($this->images)):
-          foreach($this->images as $row): ?>
+          $rows	 = [];
+          $limit = $this->_config->get('jg_motionminiLimit');          
+          
+          if ($limit > 0)
+          {
+            if( $limit % 2 == 0 ) {
+              $limit = $limit + 1;
+            }
+            
+            $imageposition = ($this->image->position + 1) - $limit/2;
+            $imageposition = min($imageposition, count($this->images) - $limit);
+            $rows = array_splice($this->images, max(0, $imageposition), $limit);
+          }
+          else
+          {
+            $rows = $this->images;
+          }
+			
+          foreach($rows as $row): ?>
           <a title="<?php echo $row->imgtitle; ?>" href="<?php echo JRoute::_('index.php?view=detail&id='.$row->id).JHTML::_('joomgallery.anchor'); ?>">
 <?php       $cssid = '';
             if($row->id == $this->image->id):
@@ -205,7 +222,6 @@ echo $this->loadTemplate('header'); ?>
             endif; ?>
             <img src="<?php echo $this->_ambit->getImg('thumb_url', $row); ?>"<?php echo $cssid; ?> class="jg_minipic" alt="<?php echo $row->imgtitle; ?>" /></a>
 <?php     endforeach;
-        endif;
         if($this->_config->get('jg_motionminis') == 2): ?>
         </div>
       </div>
