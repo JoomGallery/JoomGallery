@@ -201,10 +201,6 @@ echo $this->loadTemplate('header'); ?>
           
           if ($limit > 0)
           {
-            if( $limit % 2 == 0 ) {
-              $limit = $limit + 1;
-            }
-            
             $imageposition = ($this->image->position + 1) - $limit/2;
             $imageposition = min($imageposition, count($this->images) - $limit);
             $rows = array_splice($this->images, max(0, $imageposition), $limit);

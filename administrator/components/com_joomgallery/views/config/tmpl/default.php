@@ -651,7 +651,7 @@ JHTML::_('joomconfig.start', 'page19');
     $mc_jg_motionminis = JHTML::_('select.genericlist', $joom_ShowMotionMinis, 'jg_motionminis', 'class="inputbox" size="2"', 'value', 'text', $this->_config->jg_motionminis);
     JHTML::_('joomconfig.row', 'jg_motionminis', 'custom', 'COM_JOOMGALLERY_CONFIG_DV_MG_DISPLAYMODE', $mc_jg_motionminis);
     JHTML::_('joomconfig.row', 'jg_motionminiWidth', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_WIDTH', $this->_config->jg_motionminiWidth);
-	 JHTML::_('joomconfig.row', 'jg_motionminiLimit', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_LIMIT', $this->_config->jg_motionminiLimit);
+    JHTML::_('joomconfig.row', 'jg_motionminiLimit', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_LIMIT', $this->_config->jg_motionminiLimit);
     JHTML::_('joomconfig.row', 'jg_motionminiHeight', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_HEIGHT', $this->_config->jg_motionminiHeight);
     JHTML::_('joomconfig.row', 'jg_miniWidth', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_MINIS_MAXWIDTH', $this->_config->jg_miniWidth);
     JHTML::_('joomconfig.row', 'jg_miniHeight', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_MINIS_MAXHEIGHT', $this->_config->jg_miniHeight);
