@@ -189,6 +189,7 @@
           if(jQuery('#ajax_generictitle').length > 0) {
             jQuery('#ajax_generictitle').change(function() {
               if(jQuery(this).prop('checked')) {
+                jQuery('#ajax_imgtitle').addClass('required');
                 jQuery('#ajax_imgtitle').attr('aria-required', 'true').attr('required', 'required');
                 jQuery('#ajax_imgtitle-lbl').attr('aria-invalid', 'false');
                 jQuery('#ajax_imgtitle').parent().parent().show(750);
@@ -205,6 +206,7 @@
                 if(jQuery('#ajax_filecounter').length > 0 ) {
                   jQuery('#ajax_filecounter').val('');
                 }
+                jQuery('#ajax_imgtitle').removeClass('required');
                 jQuery('#ajax_imgtitle').removeAttr('aria-required').removeAttr('aria-invalid').removeAttr('required');
                 jQuery('#ajax_imgtitle-lbl').removeAttr('aria-invalid');
                 jQuery('#ajax_imgtitle').removeClass('invalid');

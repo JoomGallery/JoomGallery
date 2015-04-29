@@ -191,6 +191,7 @@ JHtml::_('bootstrap.tooltip'); ?>
           if(jQuery('#generictitle').length > 0) {
             jQuery('#generictitle').change(function() {
               if(jQuery(this).prop('checked')) {
+                jQuery('#imgtitle').addClass('required');
                 jQuery('#imgtitle').attr('aria-required', 'true').attr('required', 'required');
                 jQuery('#imgtitle-lbl').attr('aria-invalid', 'false');
                 jQuery('#imgtitle').parent().parent().show(750);
@@ -207,6 +208,7 @@ JHtml::_('bootstrap.tooltip'); ?>
                 if(jQuery('#filecounter').length > 0 ) {
                   jQuery('#filecounter').val('');
                 }
+                jQuery('#imgtitle').removeClass('required');
                 jQuery('#imgtitle').removeAttr('aria-required').removeAttr('aria-invalid').removeAttr('required');
                 jQuery('#imgtitle-lbl').removeAttr('aria-invalid');
                 jQuery('#imgtitle').removeClass('invalid');

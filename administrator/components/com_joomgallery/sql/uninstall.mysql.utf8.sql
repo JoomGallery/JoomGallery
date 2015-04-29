@@ -34,4 +34,5 @@ DROP TABLE `#__joomgallery_maintenance`;
 DELETE FROM `#__joomgallery_orphans`;
 DROP TABLE `#__joomgallery_orphans`;
 
-DELETE FROM #__modules WHERE position = 'joom_cpanel';
+DELETE FROM `#__modules_menu` WHERE `moduleid` IN (SELECT id FROM `#__modules` WHERE `position` = 'joom_cpanel');
+DELETE FROM `#__modules` WHERE `position` = 'joom_cpanel';

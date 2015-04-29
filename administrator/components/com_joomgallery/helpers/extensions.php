@@ -288,9 +288,8 @@ class JoomExtensions
     $ch = curl_init(strtolower($url));
 
     // Some settings for curl
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, array());
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('User-Agent: JoomGallery v3'));
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     // Create the zip file
