@@ -69,6 +69,7 @@ div.jg_photo_left, div.jg_bbcode_left, div.jg_exif_left,div.jg_cmtl {
   text-align:right;
 }
 .jg_s2fl{
+  clear:right;
   float:right;
   text-align:right !important;
 }

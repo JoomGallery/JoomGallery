@@ -272,6 +272,7 @@ div.jg_voting form{
   vertical-align:top;
 }
 .jg_s2fl{
+  clear:left;
   float:left;
   width:23%;
   text-align:left !important;
