@@ -113,8 +113,8 @@ class JoomPagination extends JPagination
     }
 
     // Set the start and previous data objects
-    $data->start    = new JPaginationObject(JText::_('COM_JOOMGALLERY_COMMON_PAGENAVIGATION_BEGIN'), $this->prefix);
-    $data->previous = new JPaginationObject(JText::_('COM_JOOMGALLERY_COMMON_PAGENAVIGATION_PREVIOUS'), $this->prefix);
+    $data->start    = new JPaginationObject(JText::_('JLIB_HTML_START'), $this->prefix);
+    $data->previous = new JPaginationObject(JText::_('JPREV'), $this->prefix);
 
     if($currentPage > 1)
     {
@@ -127,8 +127,8 @@ class JoomPagination extends JPagination
     }
 
     // Set the next and end data objects
-    $data->next = new JPaginationObject(JText::_('COM_JOOMGALLERY_COMMON_PAGENAVIGATION_NEXT'), $this->prefix);
-    $data->end  = new JPaginationObject(JText::_('COM_JOOMGALLERY_COMMON_PAGENAVIGATION_END'), $this->prefix);
+    $data->next = new JPaginationObject(JText::_('JNEXT'), $this->prefix);
+    $data->end  = new JPaginationObject(JText::_('JLIB_HTML_END'), $this->prefix);
 
     if($currentPage < $pageCount)
     {
