@@ -40,6 +40,7 @@ class JoomGalleryViewMini extends JoomGalleryView
 
     $this->extended     = $this->_mainframe->getUserStateFromRequest('joom.mini.extended', 'extended', 1, 'int');
     $this->upload_catid = $this->_mainframe->input->getInt('upload_category');
+    $this->prefix       = $this->_mainframe->getUserStateFromRequest('joom.mini.prefix', 'prefix', 'joom', 'cmd');
 
     // Decide which tabs have to be displayed
     $this->tabs = array('images' => true);
@@ -183,6 +184,7 @@ class JoomGalleryViewMini extends JoomGalleryView
     {
       $this->categories_form = JForm::getInstance(_JOOM_OPTION.'.mini.categories', 'mini.categories');
 
+      $this->categories_form->setFieldAttribute('category_catid', 'onchange', str_replace('joom_', $this->prefix.'_', $this->categories_form->getFieldAttribute('category_catid', 'onchange')));
       $categories_fields = array('category_mode', 'category_limit', 'category_columns', 'category_ordering', 'category_linkedtext');
       foreach($categories_fields as $field)
       {
