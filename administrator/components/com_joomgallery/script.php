@@ -28,7 +28,7 @@ class Com_JoomGalleryInstallerScript
    *
    * @var string
    */
-  private $version = '3.2.0';
+  private $version = '3.2.1';
 
   /**
    * Preflight method
@@ -267,6 +267,8 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/administrator/components/com_joomgallery/changelog.php';
     // Old ordering form field
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/ordering.php';
+    // Old view file of MiniJoom
+    $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/views/mini/view.html.php';
 
     foreach($delete_files as $delete_file)
     {

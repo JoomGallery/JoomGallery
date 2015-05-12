@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.2.1" published="20150512">
+    <entries date="20150512">
+      <logentry type="+">MiniJoom popup could not be used for multiple purposes on the same page</logentry>
+    </entries>
+    <entries date="20150428">
+      <logentry type="^">Use Bootstrap styled buttons in detail view</logentry>
+    </entries>
+    <entries date="20150422">
+      <logentry type="#">Corrected language file download links</logentry>
+    </entries>
+    <entries date="20150420">
+      <logentry type="#">Fatal error when trying to install invalid package</logentry>
+    </entries>
+    <entries date="20150401">
+      <logentry type="#">Delete the corresponding votes if an image is deleted</logentry>
+    </entries>
+    <entries date="20150331">
+      <logentry type="#">Clean table #__modules_menu on component uninstall</logentry>
+    </entries>
+    <entries date="20150326">
+      <logentry type="^">Enable possibility for future direct one-click-update through GitHub</logentry>
+    </entries>
+    <entries date="20150311">
+      <logentry type="+">Improving performance of maintenance manager by adding an index</logentry>
+    </entries>
+    <entries date="20150205">
+      <logentry type="#">Fix /e modified deprecated errors</logentry>
+    </entries>
+    <entries date="20141228">
+      <logentry type="+">Added onJoomAfterUpload event to FTP upload</logentry>
+    </entries>
+    <entries date="20141219">
+      <logentry type="#">Several fixes in language files</logentry>
+    </entries>
+  </release>
   <release version="3.2.0" published="20141026">
     <entries date="20141026">
       <logentry type="^">Links to Transifex languages removed because they don't work anymore</logentry>
