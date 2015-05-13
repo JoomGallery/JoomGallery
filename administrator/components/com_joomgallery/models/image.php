@@ -232,7 +232,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     }
     else
     {
-      // No validation in case of e.g. 'editimage' view
+      // No validation in case of e.g. 'editimages' view
       $validate = false;
     }
     if(is_null($params))
@@ -552,7 +552,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
       $row->reorder('catid = '.$catid_old);
     }
 
-    $this->_mainframe->triggerEvent('onContentAfterSave', array(_JOOM_OPTION.'.image', &$row, false));
+    $this->_mainframe->triggerEvent('onContentAfterSave', array(_JOOM_OPTION.'.image'.(!$validate ? '.batch' : ''), &$row, false));
 
     return $row->id;
   }
