@@ -70,6 +70,14 @@ abstract class JoomMigration
   protected $_ambit;
 
   /**
+   * Determines whether this script is executed from the command line
+   *
+   * @var   boolean
+   * @since 3.2
+   */
+  protected $isCli;
+
+  /**
    * The name of the migration
    * (should be unique)
    *
@@ -140,6 +148,8 @@ abstract class JoomMigration
     $this->copyImages = $this->getStateFromRequest('copy_images', 'copy_images', $this->copyImages, 'boolean');
     $this->checkOwner = $this->getStateFromRequest('check_owner', 'check_owner', $this->checkOwner, 'boolean');
 
+    $this->isCli      = $this->getStateFromRequest('is_cli', 'is_cli', $this->isCli, 'boolean');
+
     // Connect to second database if necessary
     $db = $this->getStateFromRequest('db2', 'db', array(), 'array');
     if(JArrayHelper::getValue($db, 'enabled', false, 'boolean'))
@@ -169,9 +179,9 @@ abstract class JoomMigration
   }
 
   /**
-   * Opens the logfile and puts first comments into it.
+   * Opens the log file and puts first comments into it.
    *
-   * @return  void
+   * @return  boolean True on success, false if errors occurred.
    * @since   1.5.0
    */
   public function start()
@@ -179,24 +189,42 @@ abstract class JoomMigration
     $this->_mainframe->setUserState('joom.migration.internal', null);
     $this->writeLogfile('Migration Step started');
     $this->writeLogfile('max. execution time: '.@ini_get('max_execution_time').' seconds');
-    $this->writeLogfile('calculated refresh time: '.(@ini_get('max_execution_time') * 0.8).' seconds');
+    $this->writeLogfile('calculated refresh time: '.$this->refresher->getMaxTime().' seconds');
     $this->writeLogfile('*****************************');
-    $this->doMigration();
-    $this->end();
+
+    try
+    {
+      $this->doMigration();
+    }
+    catch(Exception $e)
+    {
+      $this->setError($e->getMessage());
+    }
+
+    return $this->end();
   }
 
   /**
    * Continues the migration
    *
-   * @return  void
+   * @return  boolean True on success, false if errors occurred.
    * since    2.0
    */
   public function migrate()
   {
     $this->writeLogfile('*****************************');
     $this->writeLogfile('Migration Step started');
-    $this->doMigration();
-    $this->end();
+
+    try
+    {
+      $this->doMigration();
+    }
+    catch(Exception $e)
+    {
+      $this->setError($e->getMessage());
+    }
+
+    return $this->end();
   }
 
   /**
@@ -220,15 +248,22 @@ abstract class JoomMigration
   protected function refresh($task = null)
   {
     $this->_mainframe->setUserState('joom.migration.internal.task', $task);
+
+    if($this->isCli)
+    {
+      // If executed from the command line it is not necessary to refresh
+      return;
+    }
+
     $this->writeLogfile('Refresh to continue the migration');
     $this->refresher->refresh();
   }
 
   /**
-   * Puts last comments into the logfile,
+   * Puts last comments into the log file,
    * closes it and sets redirect with report of success.
    *
-   * @return  void
+   * @return  boolean True on success, false if errors occurred.
    * @since   1.5.0
    */
   protected function end()
@@ -236,14 +271,15 @@ abstract class JoomMigration
     $this->writeLogfile('end of migration - exiting');
     $this->writeLogfile('*****************************');
 
-    $msg = '';
     $msgType = 'message';
+    $success = true;
     $errors = $this->_mainframe->getUserState('joom.migration.internal.errors');
     if($errors)
     {
       $this->writeLogfile('Errors recognized: '.$errors);
-      $msg      = 'There were '.$errors.' error(s) during migration. Please have a look at the logfile.';
+      $msg      = 'There were '.$errors.' error(s) during migration. Please have a look at the log file.';
       $msgType  = 'error';
+      $success = false;
     }
     else
     {
@@ -252,7 +288,13 @@ abstract class JoomMigration
 
     $this->writeLogfile('Migration ended');
 
-    $this->refresher->refresh(null, 'display', $msg, $msgType);
+    if(!$this->isCli)
+    {
+      // Refreshing is only necessary if not executed from the command line
+      $this->refresher->refresh(null, 'display', $msg, $msgType);
+    }
+
+    return $success;
   }
 
   /**
@@ -1121,16 +1163,11 @@ abstract class JoomMigration
     {
       $result = $db->$method();
     }
-    catch(DatabaseException $e)
+    catch(Exception $e)
     {
       $this->setError($e->getMessage(), true);
 
       $result = null;
-    }
-
-    if($db->getErrorMsg())
-    {
-      $this->setError($db->getErrorMsg(), true);
     }
 
     return $result;
@@ -1173,8 +1210,26 @@ abstract class JoomMigration
           $db = $this->_db2;
         }
 
+        // Check whether 'joom_migrated' exists from previously failed migrations
+        $checkQuery = $db->getQuery(true)
+              ->select('COLUMN_NAME')
+              ->from('information_schema.COLUMNS')
+              ->where('TABLE_NAME = '.$db->q($table))
+              ->where('COLUMN_NAME = '.$db->q('joom_migrated'));
+        $db->setQuery($checkQuery);
+        if($this->runQuery('loadResult', $db))
+        {
+          $db->setQuery('ALTER TABLE '.$table.' DROP '.$db->qn('joom_migrated'));
+          $this->runQuery('', $db);
+        }
+
+        // Add column 'joom_migrated' to be able to keep track of already migrated entries
         $db->setQuery('ALTER TABLE '.$table.' ADD '.$db->qn('joom_migrated').' INT(1) NOT NULL default 0');
-        $this->runQuery('', $db);
+        if(!$this->runQuery('', $db))
+        {
+          // If this fails we want to abort the whole migration
+          throw new RuntimeException('Could not add \'joom_migrated\' column which is essential for the migration.');
+        }
 
         $this->_mainframe->setUserState('joom.migration.internal.parent_cats', $first_parents);
       }
@@ -1304,9 +1359,10 @@ abstract class JoomMigration
    */
   protected function rebuild()
   {
-    // Refreh page once before rebuilding category tree
-    // in order to have as much time for it as possible
-    if(!$this->_mainframe->getUserState('joom.migration.internal.refreshedForRebuild'))
+    // Refresh page once before rebuilding category tree
+    // in order to have as much time for it as possible.
+    // Refreshing is only necessary if not executed from the command line.
+    if(!$this->isCli && !$this->_mainframe->getUserState('joom.migration.internal.refreshedForRebuild'))
     {
       $this->_mainframe->setUserState('joom.migration.internal.refreshedForRebuild', true);
 
