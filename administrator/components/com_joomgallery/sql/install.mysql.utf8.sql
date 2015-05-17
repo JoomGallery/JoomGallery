@@ -584,7 +584,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /* ### Frontend Settings->General Settings ####*/
   /*jg_alternative_layout*/ '',
   /*jg_anchors*/            1,
-  /*jg_tooltips*/           2,
+  /*jg_tooltips*/           1,
   /*jg_dyncrop*/            0,
   /*jg_dyncropposition*/    2,
   /*jg_dyncropwidth*/       100,
