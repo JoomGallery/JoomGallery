@@ -132,12 +132,6 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
       $start = max(0, (int)(ceil($total / $limit) - 1) * $limit);
     }
 
-    $jinput = JFactory::getApplication()->input;
-    if ($jinput->get('ajaxeditimg', '', 'STRING') === "edit")
-    {
-      $this->getAjax();
-    }
-
     return $start;
   }
 
@@ -378,60 +372,5 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
     $query->order($this->_db->escape($orderCol.' '.$orderDirn));
 
     return $query;
-  }
-  
-  /**
-   * Method saving ajax data.
-   *
-   * @return  Json  ajax answer
-   * @since   3.3
-   */
-  protected function getAjax()
-  {
-    try
-    {
-      $jinput           = JFactory::getApplication()->input;
-      $ImgDataToUpdate  = json_decode($jinput->post->get('jsonData', '', 'RAW'));
-      $db               = JFactory::getDBO();
-      $user             = JFactory::getUser();
-      $user_id          = $user->get('id');
-
-      if ($db->query() and is_object($ImgDataToUpdate))
-      {
-        foreach ($ImgDataToUpdate as $key => $val)
-        {
-          $query = $db->getQuery(true);
-          // Fields to update.
-          $fields = array(
-              $db->quoteName('imgtitle')  ."='".strip_tags($val->imgtitle)."'",
-              $db->quoteName('imgauthor') ."='".strip_tags($val->imgauthor)."'",
-              $db->quoteName('metadesc')  ."='".strip_tags($val->metadesc)."'",
-              $db->quoteName('imgtext')   ."='".$val->imgtext."'"
-          );
-          // Conditions for which records should be updated.
-          $conditions = array(
-              $db->quoteName('id')    . "=" .$key, 
-              $db->quoteName('access'). "IN (" . implode(',', $user->getAuthorisedViewLevels()) . ")", 
-              $db->quoteName('owner') . "=" . $user_id
-          );
-
-          $query->update($db->quoteName('#__joomgallery'))->set($fields)->where($conditions);
-
-          $db->setQuery($query);
-          $db->query();
-        }
-        $result = true;
-      }
-      else
-      {
-        $result .= JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_ERROR');
-      }
-      echo new JResponseJson($result);
-    }
-    catch(Exception $e)
-    {
-      echo new JResponseJson(JText::_('COM_JOOMGALLERY_COMMON_DATACHANGED_ERROR'));
-    }
-    exit;
   }
 }

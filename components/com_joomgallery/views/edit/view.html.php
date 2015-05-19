@@ -83,7 +83,10 @@ class JoomGalleryViewEdit extends JoomGalleryView
       $params->set('show_btm_modules', 1);
     }
 
-    $image = $this->get('Image');
+    $model = $this->getModel();
+    $array = JRequest::getVar('id',  0, '', 'array');
+    $model->setId((int)$array[0]);
+    $image = $model->getImage();
 
     // Get the form and fill the fields
     $form = $this->get('Form');

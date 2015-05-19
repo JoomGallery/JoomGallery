@@ -190,7 +190,11 @@ class JoomGalleryViewUserpanel extends JoomGalleryView
     }
 
     // Quick editing
-    $this->name_editor = JFactory::getConfig()->get( 'editor' );
+    JText::script('COM_JOOMGALLERY_USERPANEL_DATACHANGED_SUCCESS');
+    $this->_doc->addStyleDeclaration( '.toggle-editor, .jg-editor-wrapper > p.label{display:none;}');
+		JHtml::_('jquery.framework');
+    $this->_doc->addScript($this->_ambit->getScript("userpanel.js"));
+    $this->editor = JFactory::getEditor(JFactory::getConfig()->get('editor'));
 
     $this->params = $params;
 
