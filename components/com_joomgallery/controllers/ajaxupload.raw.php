@@ -42,7 +42,7 @@ class JoomGalleryControllerAjaxupload extends JControllerLegacy
       {
         $result['id'] = $image->id;
         $result['imgtitle'] = $image->imgtitle;
-        $result['thumb_url'] = JoomAmbit::getInstance()->getImg('thumb_url', $image);
+        $result['thumbnailUrl'] = JoomAmbit::getInstance()->getImg('thumb_url', $image);
       }
     }
     else

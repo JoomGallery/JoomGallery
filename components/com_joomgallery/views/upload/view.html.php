@@ -161,26 +161,6 @@ class JoomGalleryViewUpload extends JoomGalleryView
       $this->_doc->addStyleSheet($this->_ambit->getScript('fineuploader/fineuploader.css'));
       $this->_doc->addScript($this->_ambit->getScript('fineuploader/js/fineuploader'.(JFactory::getConfig()->get('debug') ? '' : '.min').'.js'));
 
-      $this->fileSizeLimit = $this->_config->get('jg_maxfilesize');
-      $this->chunkSize     = 0;
-      $post_max_size = @ini_get('post_max_size');
-      if(!empty($post_max_size))
-      {
-        $post_max_size   = JoomHelper::iniToBytes($post_max_size);
-        $this->chunkSize = (int) min(500000, (int)(0.8 * $post_max_size));
-      }
-      $upload_max_filesize = @ini_get('upload_max_filesize');
-      if(!empty($upload_max_filesize))
-      {
-        $upload_max_filesize = JoomHelper::iniToBytes($upload_max_filesize);
-
-        if($this->fileSizeLimit <= 0 || $this->fileSizeLimit > $upload_max_filesize)
-        {
-          $this->fileSizeLimit = $upload_max_filesize;
-        }
-      }
-      $this->editFilename = $this->_config->get('jg_useruseorigfilename');
-
       $model = $this->getModel();
       $this->ajax_redirect = $model->getRedirectUrlAfterUpload('ajax');
     }
