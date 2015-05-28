@@ -146,6 +146,13 @@ class JoomGalleryViewUpload extends JoomGalleryView
       $this->uploads[key($this->uploads)]['active'] = true;
     }
 
+    JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
+    $this->single_form  = JForm::getInstance(_JOOM_OPTION.'.upload', 'upload');
+    $this->ajax_form    = JForm::getInstance(_JOOM_OPTION.'.ajaxupload', 'ajaxupload');
+    $this->batch_form   = JForm::getInstance(_JOOM_OPTION.'.batchupload', 'batchupload');
+    $this->applet_form  = JForm::getInstance(_JOOM_OPTION.'.jupload', 'jupload');
+    $this->single_form->setFieldAttribute('arrscreenshot', 'quantity', $inputcounter);
+
     $this->_doc->addScriptDeclaration('    var jg_filenamewithjs = '.($this->_config->get('jg_filenamewithjs') ? 'true' : 'false').';');
     $this->_doc->addScript($this->_ambit->getScript('upload.js'));
     JText::script('COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE');
@@ -161,16 +168,8 @@ class JoomGalleryViewUpload extends JoomGalleryView
       $this->_doc->addStyleSheet($this->_ambit->getScript('fineuploader/fineuploader.css'));
       $this->_doc->addScript($this->_ambit->getScript('fineuploader/js/fineuploader'.(JFactory::getConfig()->get('debug') ? '' : '.min').'.js'));
 
-      $model = $this->getModel();
-      $this->ajax_redirect = $model->getRedirectUrlAfterUpload('ajax');
+      $this->ajax_form->setFieldAttribute('ajaxupload', 'redirect', $this->getModel()->getRedirectUrlAfterUpload('ajax'));
     }
-
-    JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
-    $this->single_form  = JForm::getInstance(_JOOM_OPTION.'.upload', 'upload');
-    $this->ajax_form    = JForm::getInstance(_JOOM_OPTION.'.ajaxupload', 'ajaxupload');
-    $this->batch_form   = JForm::getInstance(_JOOM_OPTION.'.batchupload', 'batchupload');
-    $this->applet_form  = JForm::getInstance(_JOOM_OPTION.'.jupload', 'jupload');
-    $this->single_form->setFieldAttribute('arrscreenshot', 'quantity', $inputcounter);
 
     if($this->_config->get('jg_useorigfilename'))
     {

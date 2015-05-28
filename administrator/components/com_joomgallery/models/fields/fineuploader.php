@@ -160,7 +160,7 @@ class JFormFieldFineuploader extends JFormField
           }
           if(jQuery('#<?php echo $prefix; ?>generictitle').length > 0) {
             if(!jQuery('#<?php echo $prefix; ?>generictitle').prop('checked')) {
-              jQuery('#<?php echo $prefix; ?>imgtitleid-' + id).remove();
+              jQuery('#<?php echo $prefix; ?>imgtitleid-' + id)<?php echo $isMini ? '.remove();' : ".attr('readonly', 'true');"; ?>
             }
           }
           <?php if($redirect): ?>
@@ -283,7 +283,7 @@ class JFormFieldFineuploader extends JFormField
       uploader.requestParams.imgauthor = jQuery('#<?php echo $prefix; ?>imgauthor').val();
       uploader.requestParams.access = jQuery('#<?php echo $prefix; ?>access').val();
       <?php   endif;
-             else: ?>
+            else: ?>
       uploader.requestParams.published = jQuery('#<?php echo $prefix; ?>published0').prop('checked') ? 0 : 1;
       <?php endif; ?>
       if(jQuery('#<?php echo $prefix; ?>original_delete').length > 0) {
@@ -357,7 +357,7 @@ class JFormFieldFineuploader extends JFormField
           <div class="qq-progress-bar-selector qq-progress-bar"></div>
         </div>
         <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-        <img class="qq-thumbnail-selector thumbnail" qq-max-size="50" qq-server-scale="false">
+        <img class="qq-thumbnail-selector thumbnail" qq-max-size="50" qq-server-scale="<?php echo !$isMini && !$app->isSite() ? 'true' : 'false'; ?>">
         <?php if($editFilename) echo '<span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>'; ?>
         <span class="qq-upload-file-selector qq-upload-file"></span>
         <?php if($editFilename) echo '<input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">'; ?>
