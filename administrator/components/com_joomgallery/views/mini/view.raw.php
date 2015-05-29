@@ -293,7 +293,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path');
+          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path', null, 'upload_categories');
         }
       }
     }
@@ -315,7 +315,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path');
+          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path', null, 'parent_categories');
         }
       }
     }
