@@ -357,7 +357,7 @@ class JFormFieldFineuploader extends JFormField
           <div class="qq-progress-bar-selector qq-progress-bar"></div>
         </div>
         <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-        <img class="qq-thumbnail-selector thumbnail" qq-max-size="50" qq-server-scale="<?php echo !$isMini && !$app->isSite() ? 'true' : 'false'; ?>">
+        <img class="qq-thumbnail-selector thumbnail" qq-max-size="50" qq-server-scale="<?php echo !$isMini ? 'true' : 'false'; ?>">
         <?php if($editFilename) echo '<span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>'; ?>
         <span class="qq-upload-file-selector qq-upload-file"></span>
         <?php if($editFilename) echo '<input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">'; ?>
