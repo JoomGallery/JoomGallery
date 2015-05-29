@@ -725,7 +725,9 @@ abstract class JoomMigration
                     _JOOM_TABLE_COMMENTS,
                     _JOOM_TABLE_NAMESHIELDS,
                     _JOOM_TABLE_USERS,
-                    _JOOM_TABLE_VOTES);
+                    _JOOM_TABLE_VOTES,
+                    _JOOM_TABLE_IMAGE_DETAILS,
+                    _JOOM_TABLE_CATEGORY_DETAILS);
     $prefix = $this->_mainframe->getCfg('dbprefix');
     foreach($tables as $table)
     {
