@@ -201,25 +201,11 @@ class JoomGalleryViewMini extends JoomGalleryView
       {
         $this->upload_form->setFieldAttribute('catid', 'default', $this->upload_catid);
       }
-
-      $this->fileSizeLimit = $this->_mainframe->isSite() ? $this->_config->get('jg_maxfilesize') : 0;
-      $this->chunkSize     = 0;
-      $post_max_size = @ini_get('post_max_size');
-      if(!empty($post_max_size))
+      else
       {
-        $post_max_size   = JoomHelper::iniToBytes($post_max_size);
-        $this->chunkSize = (int) min(500000, (int)(0.8 * $post_max_size));
+        $this->upload_form->setFieldAttribute('ajaxupload', 'insert_options', true);
       }
-      $upload_max_filesize = @ini_get('upload_max_filesize');
-      if(!empty($upload_max_filesize))
-      {
-        $upload_max_filesize = JoomHelper::iniToBytes($upload_max_filesize);
 
-        if($this->fileSizeLimit <= 0 || $this->fileSizeLimit > $upload_max_filesize)
-        {
-          $this->fileSizeLimit = $upload_max_filesize;
-        }
-      }
       $this->editFilename     = $this->_mainframe->isSite() ? $this->_config->get('jg_useruseorigfilename') : $this->_config->get('jg_useorigfilename');
       $this->delete_original  = $this->_mainframe->isSite() ? ($this->_config->get('jg_delete_original_user') == 2) : ($this->_config->get('jg_delete_original') == 2);
 
@@ -309,7 +295,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path');
+          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path', null, 'upload_categories');
         }
       }
     }
@@ -331,7 +317,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path');
+          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path', null, 'parent_categories');
         }
       }
     }

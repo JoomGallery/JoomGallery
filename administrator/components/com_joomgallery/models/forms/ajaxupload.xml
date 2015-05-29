@@ -107,6 +107,11 @@
         description="COM_JOOMGALLERY_UPLOAD_DEBUG_MODE_ASTERISK"
         value="1"
       />
+      <field
+        name="ajaxupload"
+        type="fineuploader"
+        form_id="upload-form"
+      />
     </fieldset>
   </fields>
 </form>

@@ -69,6 +69,13 @@
         description="COM_JOOMGALLERY_UPLOAD_CREATE_SPECIAL_GIF_ASTERISK"
         value="1"
       />
+      <field
+        name="ajaxupload"
+        type="fineuploader"
+        form_id="MiniUploadForm"
+        catid_field="upload_categories"
+        mini="true"
+      />
     </fieldset>
   </fields>
 </form>
