@@ -193,34 +193,53 @@ echo $this->loadTemplate('header'); ?>
   <div class="jg_minis">
 <?php   if($this->_config->get('jg_motionminis') == 2): ?>
     <div id="motioncontainer">
-      <div id="motiongallery">
-        <div style="white-space:nowrap;" id="trueContainer">
+      <ul>
 <?php   endif;
-          $rows	 = [];
-          $limit = $this->_config->get('jg_motionminiLimit');          
-          
-          if ($limit > 0)
-          {
-            $imageposition = ($this->image->position + 1) - $limit/2;
-            $imageposition = min($imageposition, count($this->images) - $limit);
-            $rows = array_splice($this->images, max(0, $imageposition), $limit);
-          }
-          else
-          {
-            $rows = $this->images;
-          }
-			
-          foreach($rows as $row): ?>
+        $rows	 = array();
+        $limit = $this->_config->get('jg_motionminiLimit');
+
+        if ($limit > 0)
+        {
+          $imageposition = ($this->image->position + 1) - $limit/2;
+          $imageposition = min($imageposition, count($this->images) - $limit);
+          $rows = array_splice($this->images, max(0, $imageposition), $limit);
+        }
+        else
+        {
+          $rows = $this->images;
+        }
+
+        foreach($rows as $row):
+          if($this->_config->get('jg_motionminis') == 2): ?>
+        <li>
+<?php     endif; ?>
           <a title="<?php echo $row->imgtitle; ?>" href="<?php echo JRoute::_('index.php?view=detail&id='.$row->id).JHTML::_('joomgallery.anchor'); ?>">
 <?php       $cssid = '';
-            if($row->id == $this->image->id):
-              $cssid = ' id="jg_mini_akt"';
-            endif; ?>
+          if($row->id == $this->image->id):
+            $cssid = ' id="jg_mini_akt"';
+          endif; ?>
             <img src="<?php echo $this->_ambit->getImg('thumb_url', $row); ?>"<?php echo $cssid; ?> class="jg_minipic" alt="<?php echo $row->imgtitle; ?>" /></a>
-<?php     endforeach;
+<?php     if($this->_config->get('jg_motionminis') == 2): ?>
+        </li>
+<?php     endif; ?>
+<?php   endforeach;
         if($this->_config->get('jg_motionminis') == 2): ?>
-        </div>
-      </div>
+      </ul>
+      <script>
+        (function($){
+          $(window).load(function(){
+            $("#motioncontainer").mThumbnailScroller({
+              axis:"x",
+              type:"hover-precise",
+              callbacks:{
+                onInit:function(){
+                  $("#motioncontainer").mThumbnailScroller("scrollTo", "#jg_mini_akt");
+                }
+              },
+            });
+          });
+        })(jQuery);
+      </script>
     </div>
 <?php   endif; ?>
   </div>

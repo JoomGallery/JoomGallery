@@ -296,6 +296,7 @@ td.jg_cmtf {
 .jg_minipic {
   border:1px solid #000;
   padding:1px;
+  margin-right:-2px;
 }
 .jg_detailnavi {
   overflow:hidden;
@@ -332,27 +333,10 @@ td.jg_cmtf {
 #jg_mini_akt {
   border:2px solid #000;
 }
-#motiongallery {
-  position:absolute;
-  left:0;
-  top:0;
-  white-space:nowrap;
-}
 #motioncontainer {
   margin:0 auto;  /*centers on page */
-  position:relative;
-  overflow:hidden;
-}
-#statusdiv {
-  background-color:#FFFFE0;
-  border:1px solid #7F7F7F;
-  padding:2px;
-  position:absolute; /* Stop Editing Gallery Styles */
-  left:-300px;
-  visibility:hidden;
-}
-#motioncontainer a:hover {
-  color:#F00; /* Dummy definition to overcome IE bug */
+  overflow:auto;
+  max-width:100%;
 }
 /* Nameshield */
 .nameshield {
