@@ -296,7 +296,6 @@ td.jg_cmtf {
 .jg_minipic {
   border:1px solid #000;
   padding:1px;
-  margin-right:-2px;
 }
 .jg_detailnavi {
   overflow:hidden;
@@ -335,8 +334,14 @@ td.jg_cmtf {
 }
 #motioncontainer {
   margin:0 auto;  /*centers on page */
-  overflow:auto;
+  overflow:hidden;
   max-width:100%;
+}
+#motioncontainer ul { 
+  opacity: 0;
+}
+#motioncontainer.jg_scroller-ready ul {
+  opacity: 1;
 }
 /* Nameshield */
 .nameshield {

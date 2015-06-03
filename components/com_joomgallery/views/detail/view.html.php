@@ -626,7 +626,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
     // MotionGallery
     if($this->_config->get('jg_minis') && $this->_config->get('jg_motionminis') == 2)
     {
-      JHtml::_('bootstrap.framework');
+      JHtml::_('jquery.framework');
       $this->_doc->addStyleSheet($this->_ambit->getScript('motiongallery/css/jquery.mThumbnailScroller.css'));
       $this->_doc->addScript($this->_ambit->getScript('motiongallery/js/jquery.mThumbnailScroller'.(JFactory::getConfig()->get('debug') ? '' : '.min').'.js'));
     }

@@ -195,7 +195,7 @@ echo $this->loadTemplate('header'); ?>
     <div id="motioncontainer">
       <ul>
 <?php   endif;
-        $rows	 = array();
+        $rows  = array();
         $limit = $this->_config->get('jg_motionminiLimit');
 
         if ($limit > 0)
@@ -230,10 +230,13 @@ echo $this->loadTemplate('header'); ?>
           $(window).load(function(){
             $("#motioncontainer").mThumbnailScroller({
               axis:"x",
-              type:"hover-precise",
+              type:"hover-20",
               callbacks:{
                 onInit:function(){
-                  $("#motioncontainer").mThumbnailScroller("scrollTo", "#jg_mini_akt");
+                  var $this = $(this);
+                  var moveTo = $("#jg_mini_akt").position().left + ($("#jg_mini_akt").width() / 2) - ($("#motioncontainer").find(".mTSWrapper").width() / 2);
+                  $this.mThumbnailScroller("scrollTo", (moveTo > 0 ? moveTo : "left"));
+                  setTimeout(function() { $this.addClass("jg_scroller-ready"); }, 300);
                 }
               },
             });
