@@ -79,13 +79,6 @@ div.jg_photo_left, div.jg_bbcode_left, div.jg_exif_left,div.jg_cmtl {
   text-align:right !important;
 }
 
-#motiongallery {
-  right:0;
-}
-#statusdiv {
-  right:-300px;
-}
-
 .jg_fav_switchlayout{
   text-align:left;
 }

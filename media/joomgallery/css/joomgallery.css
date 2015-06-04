@@ -332,27 +332,16 @@ td.jg_cmtf {
 #jg_mini_akt {
   border:2px solid #000;
 }
-#motiongallery {
-  position:absolute;
-  left:0;
-  top:0;
-  white-space:nowrap;
-}
 #motioncontainer {
   margin:0 auto;  /*centers on page */
-  position:relative;
   overflow:hidden;
+  max-width:100%;
 }
-#statusdiv {
-  background-color:#FFFFE0;
-  border:1px solid #7F7F7F;
-  padding:2px;
-  position:absolute; /* Stop Editing Gallery Styles */
-  left:-300px;
-  visibility:hidden;
+#motioncontainer ul { 
+  opacity: 0;
 }
-#motioncontainer a:hover {
-  color:#F00; /* Dummy definition to overcome IE bug */
+#motioncontainer.jg_scroller-ready ul {
+  opacity: 1;
 }
 /* Nameshield */
 .nameshield {

@@ -626,29 +626,9 @@ class JoomGalleryViewDetail extends JoomGalleryView
     // MotionGallery
     if($this->_config->get('jg_minis') && $this->_config->get('jg_motionminis') == 2)
     {
-      $this->_doc->addScript($this->_ambit->getScript('motiongallery.js'));
-      $script = "\n"
-              . "   /***********************************************\n"
-              . "   * CMotion Image Gallery- © Dynamic Drive DHTML code library (www.dynamicdrive.com)\n"
-              . "   * Visit http://www.dynamicDrive.com for hundreds of DHTML scripts\n"
-              . "   * This notice must stay intact for legal use\n"
-              . "   * Modified by Jscheuer1 for autowidth and optional starting positions\n"
-              . "   ***********************************************/";
-      $this->_doc->addScriptDeclaration($script);
-
-      $custom = "  <!-- Do not edit IE conditional style below -->"
-              . "\n"
-              . "  <!--[if gte IE 5.5]>"
-              . "\n"
-              . "  <style type=\"text/css\">\n"
-              . "     #motioncontainer {\n"
-              . "       width:expression(Math.min(this.offsetWidth, maxwidth)+'px');\n"
-              . "     }\n"
-              . "  </style>\n"
-              . "  <![endif]-->"
-              . "\n"
-              . "  <!-- End Conditional Style -->";
-      $this->_doc->addCustomTag($custom);
+      JHtml::_('jquery.framework');
+      $this->_doc->addStyleSheet($this->_ambit->getScript('motiongallery/css/jquery.mThumbnailScroller.css'));
+      $this->_doc->addScript($this->_ambit->getScript('motiongallery/js/jquery.mThumbnailScroller'.(JFactory::getConfig()->get('debug') ? '' : '.min').'.js'));
     }
 
     // Icons
