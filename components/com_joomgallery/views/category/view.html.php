@@ -873,18 +873,6 @@ class JoomGalleryViewCategory extends JoomGalleryView
       }
     }
 
-    if($this->_config->get('jg_cooliris') && count($images))
-    {
-      $href = JRoute::_('index.php?view=category&catid='.$cat->cid.'&page='.$page.'&format=raw');
-      $attribs = array('id' => 'gallery', 'type' => 'application/rss+xml', 'title' => 'Cooliris');
-      $this->_doc->addHeadLink($href, 'alternate', 'rel', $attribs);
-
-      if($this->_config->get('jg_coolirislink'))
-      {
-        $this->_doc->addScript('http://lite.piclens.com/current/piclens.js');
-      }
-    }
-
     if($this->_config->get('jg_usercatorder') && count($images))
     {
       $orderby   = $this->_mainframe->getUserStateFromRequest('joom.category.images.orderby', 'orderby');

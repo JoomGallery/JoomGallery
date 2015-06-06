@@ -129,8 +129,6 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_msg_rejectimg_type` int(1) NOT NULL,
   `jg_msg_global_from` int(1) NOT NULL,
   `jg_realname` int(1) NOT NULL,
-  `jg_cooliris` int(1) NOT NULL,
-  `jg_coolirislink` int(1) NOT NULL,
   `jg_contentpluginsenabled` int(1) NOT NULL,
   `jg_itemid` varchar(10) NOT NULL,
   `jg_ajaxcategoryselection` int(1) NOT NULL,
@@ -519,8 +517,6 @@ INSERT IGNORE INTO `#__joomgallery_config`
 
   /* ### General settings->Additional functions ####*/
   /*jg_realname*/                 0,
-  /*jg_cooliris*/                 0,
-  /*jg_coolirislink*/             0,
   /*jg_contentpluginsenabled*/    1,
   /*jg_itemid*/                   '',
   /*jg_ajaxcategoryselection*/    0,
