@@ -167,8 +167,6 @@ echo JHtml::_('tabs.panel', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_ADDITIONAL_F
 
 JHTML::_('joomconfig.start', 'page6');
     JHTML::_('joomconfig.row', 'jg_realname', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_USERNAME_REALNAME', $this->_config->jg_realname);
-    JHTML::_('joomconfig.row', 'jg_cooliris', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_COOLIRIS_SUPPORT', $this->_config->jg_cooliris);
-    JHTML::_('joomconfig.row', 'jg_coolirislink', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_COOLIRIS_LINK', $this->_config->jg_coolirislink);
     JHTML::_('joomconfig.row', 'jg_contentpluginsenabled', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_CONTENTPLUGINS', $this->_config->get('jg_contentpluginsenabled'));
     JHTML::_('joomconfig.row', 'jg_itemid', 'text', 'COM_JOOMGALLERY_CONFIG_GS_AF_ITEMID', $this->_config->get('jg_itemid'));
     JHTML::_('joomconfig.row', 'jg_ajaxcategoryselection', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_AJAXCATEGORYSELECTION', $this->_config->get('jg_ajaxcategoryselection'));

@@ -17,11 +17,7 @@
     <?php echo $this->pagination->getPagesLinks(); ?>
   </div>
 <?php endif;
-      if($this->_config->get('jg_coolirislink')): ?>
-  <a id="jg_cooliris" href="javascript:PicLensLite.start({feedUrl:'<?php echo JRoute::_('index.php?view=category&amp;catid='.$this->category->cid.'&amp;page='.$this->page.'&amp;format=raw', true); ?>',maxScale:0});">
-    <?php echo JText::_('COM_JOOMGALLERY_CATEGORY_COOLIRISLINK_TEXT'); ?></a>
-<?php endif; ?>
-<?php if($this->params->get('show_all_in_popup')):
+      if($this->params->get('show_all_in_popup')):
         echo $this->popup['before'];
       endif;
       $count_pics = count($this->images);
