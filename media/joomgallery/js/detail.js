@@ -199,27 +199,13 @@ function joomAjaxVoteResponse(response)
     // Refresh rating tooltip
     if(response.data.tooltipclass != null)
     {
-      $$('.hasHintAjaxVote').each(function(el) {
-        var title = el.get('title');
-        if(title) {
-          var parts = title.split('::', 2);
-          el.store('tip:title', parts[0]);
-          el.store('tip:text', parts[1]);
-        }
-      });
-
       if(response.data.tooltipclass == 'default')
       {
-        var tooltips = new Tips($$('.hasHintAjaxVote'), { maxTitleChars: 50,
-                                                          fixed: false
-                                                        });
+        jQuery('.hasHintAjaxVote').tooltip();
       }
       else
       {
-        var tooltips = new Tips($$('.hasHintAjaxVote'), { maxTitleChars: 50,
-                                                          fixed: false,
-                                                          className: response.data.tooltipclass
-                                                        });
+        jQuery('.hasHintAjaxVote').tooltip({template: '<div class="jg-tooltip-wrap tooltip"><div class="tooltip-inner tip"></div></div>'});        
       }
     }
   }

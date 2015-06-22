@@ -302,7 +302,7 @@ function ajaxRequest(url, page, query)
                 $('jg_bu_pagelinks').set('html', response.pagination);
 
                 // Now we have to create the tooltips for all the new images
-                var JTooltips = new Tips($$('.hasMiniTip'), { maxTitleChars: 50, fixed: false});
+                jQuery('.hasMiniTip').tooltip({container: 'body'});
 
                 // Set current page if it was changed
                 if(page > 0)
@@ -589,25 +589,9 @@ function displayInsertOptions(uploader, item, fileName, r)
 // Preparations
 window.addEvent('domready', function()
 {
-  $$('.hasTooltip').each(function(el) {
-    var title = el.get('title');
-    if (title) {
-      var parts = title.split('::', 2);
-      el.store('tip:title', parts[0]);
-      el.store('tip:text', parts[1]);
-    }
-  });
-  var JTooltips = new Tips($$('.hasTooltip'), {maxTitleChars: 50, fixed: false});
+  jQuery('.hasTooltip').tooltip({container: 'body'});
 
-  $$('.hasMiniTip').each(function(el) {
-    var title = el.get('title');
-    if (title) {
-      var parts = title.split('::', 2);
-      el.store('tip:title', parts[0]);
-      el.store('tip:text', parts[1]);
-    }
-  });
-  var JTooltips = new Tips($$('.hasMiniTip'), {maxTitleChars: 50, fixed: false});
+  jQuery('.hasMiniTip').tooltip({container: 'body'});
 
   document.formvalidator.setHandler('joompositivenumeric', function(value) {
     regex=/^[1-9]+[0-9]*$/;
