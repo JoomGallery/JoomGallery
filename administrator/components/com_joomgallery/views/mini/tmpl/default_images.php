@@ -91,8 +91,8 @@
           <input type="text" name="search" id="filter_search" value="<?php echo $this->search; ?>" class="inputbox" placeholder="<?php echo JText::_('COM_JOOMGALLERY_MINI_SEARCH_IMAGE'); ?>" />
         </div>
         <div class="btn-group pull-left">
-          <button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
-          <button class="btn tip hasTooltip" type="submit" onclick="document.id('filter_search').value='';" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
+          <button class="btn hasTooltip" type="submit" title="<?php echo JText::_('JSEARCH_FILTER_SUBMIT'); ?>"><i class="icon-search"></i></button>
+          <button class="btn hasTooltip" type="submit" onclick="document.id('filter_search').value='';" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
         </div>
         <div class="pull-right">
           <?php echo JText::_('JGLOBAL_DISPLAY_NUM').$this->lists['limit']; ?>
