@@ -58,8 +58,8 @@ $sortFields = $this->getSortFields();
           <input type="text" name="filter_search" placeholder="<?php echo JText::_('COM_JOOMGALLERY_COMMON_FILTER_SEARCH'); ?>" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_FILTER_SEARCH'); ?>" />
         </div>
         <div class="btn-group pull-left hidden-phone">
-          <button class="btn tip hasTooltip" type="submit" title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_FILTER_SEARCH'); ?>"><i class="icon-search"></i></button>
-          <button class="btn tip hasTooltip" type="button" onclick="document.id('filter_search').value='';this.form.submit();" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
+          <button class="btn hasTooltip" type="submit" title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_FILTER_SEARCH'); ?>"><i class="icon-search"></i></button>
+          <button class="btn hasTooltip" type="button" onclick="document.id('filter_search').value='';this.form.submit();" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
         </div>
         <div class="btn-group pull-right hidden-phone">
           <label for="limit" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH_LIMIT'); ?></label>
