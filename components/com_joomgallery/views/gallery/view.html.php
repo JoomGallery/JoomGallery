@@ -60,7 +60,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
     // Get number of all root categories
     if($this->_config->get('jg_hideemptycats') == 2)
     {
-      $total = &$this->get('TotalWithoutEmpty');
+      $total = $this->get('TotalWithoutEmpty');
     }
     else
     {
@@ -166,7 +166,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
       // is chosen ('Also those which contain empty sub-categories'),
       // we need additional code to exclude these categories.
       // (For the second alternative only the query in the model is modified.)
-      $categories = &$this->get('CategoriesWithoutEmpty');
+      $categories = $this->get('CategoriesWithoutEmpty');
     }
     else
     {
