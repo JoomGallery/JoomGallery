@@ -621,7 +621,7 @@ abstract class JHtmlJoomGallery
         {
           $link .= "','";
         }
-        $link .= $imginfo[0]."','".$imginfo[1]."')";
+        $link .= $imginfo[0]."','".$imginfo[1]."','".JUri::root()."')";
 
         if(!isset($loaded[3]))
         {
