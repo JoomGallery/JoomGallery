@@ -670,3 +670,7 @@ div.current .formu td {
 .jg-quick-edit-row .jg-editor-wrapper > textarea {
   box-sizing:border-box;
 }
+
+.jg-icon-disabled img {
+  filter:grayscale(100%);
+}

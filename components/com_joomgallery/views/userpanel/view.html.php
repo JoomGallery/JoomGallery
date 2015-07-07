@@ -191,6 +191,7 @@ class JoomGalleryViewUserpanel extends JoomGalleryView
 
     // Quick editing
     JText::script('COM_JOOMGALLERY_USERPANEL_DATACHANGED_SUCCESS');
+    JText::script('COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE');
     $this->_doc->addStyleDeclaration( '.toggle-editor, .jg-editor-wrapper > p.label{display:none;}');
 		JHtml::_('jquery.framework');
     $this->_doc->addScript($this->_ambit->getScript("userpanel.js"));

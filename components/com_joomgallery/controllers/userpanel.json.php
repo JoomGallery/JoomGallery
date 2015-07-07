@@ -17,17 +17,17 @@ jimport('joomla.application.component.controller');
 require_once JPATH_COMPONENT.'/controller.php';
 
 /**
- * JoomGallery JSON Vote Controller
+ * JoomGallery JSON Userpanel Controller
  *
  * @package JoomGallery
- * @since   2.1
+ * @since   3.3
  */
 class JoomGalleryControllerUserpanel extends JoomGalleryController
 {
   /**
-   * Method saving ajax data.
+   * Method for saving Ajax data.
    *
-   * @return  Json  ajax answer
+   * @return  string  Ajax answer
    * @since   3.3
    */
   public function quickEdit()

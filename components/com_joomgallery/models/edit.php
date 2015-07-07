@@ -425,7 +425,8 @@ class JoomGalleryModelEdit extends JoomGalleryModel
     }
 
     // Check whether it is an existing image
-    if(!$id = (int) $id)
+    $id = (int) $id;
+    if(!$id)
     {
       throw new RuntimeException(JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
     }

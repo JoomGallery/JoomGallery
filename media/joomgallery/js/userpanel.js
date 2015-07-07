@@ -1,3 +1,13 @@
+/****************************************************************************************\
+**   JoomGallery 3                                                                      **
+**   By: JoomGallery::ProjectTeam                                                       **
+**   Copyright (C) 2008 - 2015  JoomGallery::ProjectTeam                                **
+**   Based on: JoomGallery 1.0.0 by JoomGallery::ProjectTeam                            **
+**   Released under GNU GPL Public License                                              **
+**   License: http://www.gnu.org/copyleft/gpl.html or have a look                       **
+**   at administrator/components/com_joomgallery/LICENSE.TXT                            **
+\****************************************************************************************/
+
 (function ($) {
   $.QuickEditingData = function (options) {
     ops = $.extend({
@@ -7,8 +17,20 @@
 
     // Toggle visibility of editing units
     $('.jg-show-editing-units a, .jg-cancel').click(function () {
+      if($(this).hasClass('jg-icon-disabled')) {
+        return false;
+      }
+
       $('.jg-show-editing-units').toggle();
       $('.jg-quick-edit-row, .jg-visible-hidden-toggle, #jg-quick-edit-btn-bar').toggle('slow');
+
+      var id = $(this).attr('data-id');
+      if(id) {
+        $('#imgtitle_' + id).select();
+        $('html, body').animate({
+          scrollTop: $('#imgtitle_' + id).closest('tr').prev().offset().top
+        }, 2000);
+      }
 
       return false;
     });
@@ -29,6 +51,7 @@
     // Send the Ajax request for updating image data
     $('#jg-quick-edit-btn-bar .jg-save').click(function () {
       var imagesdata = {};
+      var submit = true;
       $('.jg-quick-edit-row.changed').each(function () {
         var id = $(this).attr('data-id');
         imagesdata[id] = {
@@ -37,12 +60,23 @@
           'metadesc': $(this).find('#metadesc_' + id).val(),
           'imgtext': ops.getContentCallback('imgtext_' + id)
         };
+        if(!imagesdata[id].imgtitle) {
+          alert(Joomla.JText._('COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE'));
+          $(this).find('#imgtitle_' + id).focus();
+          submit = false;
+
+          return false;
+        }
       });
+
+      if(!submit) {
+        return;
+      }
 
       $.getJSON(ops.url, {images: imagesdata})
         .done(function (response) {
           if (response.success === true) {
-            Joomla.renderMessages({'success' : [Joomla.JText._('COM_JOOMGALLERY_COMMON_DATACHANGED_SUCCESS')]});
+            Joomla.renderMessages({'success' : [Joomla.JText._('COM_JOOMGALLERY_USERPANEL_DATACHANGED_SUCCESS')]});
             $('.jg-show-editing-units').toggle();
             $('.jg-quick-edit-row, .jg-visible-hidden-toggle, #jg-quick-edit-btn-bar').toggle('slow');
             $('.jg-quick-edit-row.changed').each(function () {

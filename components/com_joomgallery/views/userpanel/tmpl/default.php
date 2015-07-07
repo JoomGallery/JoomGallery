@@ -12,7 +12,7 @@ $editingforms             = "";
 
 if($saveOrder):
   $saveOrderingUrl = 'index.php?option='._JOOM_OPTION.'&task=images.saveorder&format=json';
-  JHtml::_('sortablelist.sortable', 'imageList', 'userpanelForm', strtolower($listDirn), $saveOrderingUrl, false, false);
+  JHtml::_('sortablelist.sortable', 'imageList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, false);
 endif;
 
 $sortFields = $this->getSortFields();
@@ -49,7 +49,7 @@ echo $this->loadTemplate('header');
       </div>
 <?php endif; ?>
     </div>
-    <form action="<?php echo JRoute::_('index.php?view=userpanel'); ?>" method="post" name="userpanelForm" id="userpanelForm">
+    <form action="<?php echo JRoute::_('index.php?view=userpanel'); ?>" method="post" name="adminForm" id="adminForm">
       <div id="filter-bar" class="btn-toolbar">
         <div class="filter-search btn-group pull-left">
           <label for="filter_search" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_FILTER_SEARCH'); ?></label>
@@ -85,7 +85,7 @@ echo $this->loadTemplate('header');
           <?php echo $this->lists['filter_state']; ?>
         </div>
         <div class="btn-group pull-right hidden-phone">
-          <?php echo JHtml::_('joomselect.categorylist', $this->state->get('filter.category'), 'filter_category', 'onchange="document.id(\'userpanelForm\').submit()"', null, '- ', 'filter'); ?>
+          <?php echo JHtml::_('joomselect.categorylist', $this->state->get('filter.category'), 'filter_category', 'onchange="document.id(\'adminForm\').submit()"', null, '- ', 'filter'); ?>
         </div>
       </div>
       <div class="clearfix"> </div>
@@ -190,7 +190,7 @@ echo $this->loadTemplate('header');
             <td class="nowrap">
 <?php       if($item->show_edit_icon): ?>
               <div class="pull-left jg-show-editing-units<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_QUICK_EDIT_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_QUICK_EDIT_IMAGE_TIPCAPTION'); ?>">
-                <a href="#">
+                <a href="#" data-id="<?php echo $item->id; ?>"<?php echo $listOrder == 'ordering' ? ' class="jg-icon-disabled"' : ''; ?>>
                   <?php echo JHTML::_('joomgallery.icon', 'lightning.png', 'COM_JOOMGALLERY_COMMON_QUICK_EDIT_IMAGE_TIPCAPTION'); ?></a>
               </div>
               <div class="pull-left jg-show-editing-units hide<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_CLOSE_QUICK_EDIT_IMAGE_TIPTEXT', 'COM_JOOMGALLERY_COMMON_CLOSE_QUICK_EDIT_IMAGE_TIPCAPTION'); ?>">
@@ -262,10 +262,10 @@ echo $this->loadTemplate('header');
                 <div class="span9">
                   <div class="row-fluid">
                     <div class="span3">
-                      <label for="imgtitle_<?php echo $item->id; ?>"><?php echo JText::_('COM_JOOMGALLERY_COMMON_IMAGE_NAME'); ?></label>
+                      <label for="imgtitle_<?php echo $item->id; ?>"><?php echo JText::_('COM_JOOMGALLERY_COMMON_IMAGE_NAME'); ?><span class="">&nbsp;*</span></label>
                     </div>
                     <div class="span9">
-                      <input type="text" value="<?php echo $item->imgtitle; ?>" name="imgtitle" id="imgtitle_<?php echo $item->id; ?>" class="span12" />
+                      <input type="text" value="<?php echo $item->imgtitle; ?>" name="imgtitle" id="imgtitle_<?php echo $item->id; ?>" class="span12 required" required="required" />
                     </div>
                   </div>
                   <div class="row-fluid">
