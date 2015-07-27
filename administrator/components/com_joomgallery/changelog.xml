@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.2.2" published="20150726">
+    <entries date="20150726">
+      <logentry type="#">Fix filename validation in drag'n'drop upload</logentry>
+    </entries>
+    <entries date="20150705">
+      <logentry type="^">Exchange Mootools tooltips with Bootstrap tooltips</logentry>
+      <logentry type="#">Fix close button not always displaying in DHTML box</logentry>
+    </entries>
+    <entries date="20150630">
+      <logentry type="#">Fix E_STRICT errors in gallery view</logentry>
+    </entries>
+    <entries date="20150626">
+      <logentry type="-">Remove unnecessary class 'tip' from button's class attribute</logentry>
+      <logentry type="#">Fix some not working tooltips in the backend</logentry>
+    </entries>
+    <entries date="20150619">
+      <logentry type="#">Added missing language constant</logentry>
+    </entries>
+    <entries date="20150610">
+      <logentry type="#">Delete additional old files and folders during update</logentry>
+    </entries>
+    <entries date="20150608">
+      <logentry type="#">Prevent saving password in the browser</logentry>
+    </entries>
+    <entries date="20150529">
+      <logentry type="^">Remove 'nowrap' from CSS class 'jg_catorderlist'</logentry>
+      <logentry type="#">Wrong ID of select boxes when configuring specific categories in JoomPlu</logentry>
+      <logentry type="+">Also check details tables during migration check</logentry>
+    </entries>
+    <entries date="20150519">
+      <logentry type="^">Create a form field for Fineuploader in order to reduce code redundancy </logentry>
+      <logentry type="^">Use Bootstrap button and modal in Thumbnail form field</logentry>
+    </entries>
+    <entries date="20150517">
+      <logentry type="^">Tooltips should be enabled with default styling for new installations</logentry>
+    </entries>
+    <entries date="20150514">
+      <logentry type="^">Use Bootstrap button and modal in image form field</logentry>
+      <logentry type="^">Use Bootstrap button and modal in Joomuser form field</logentry>
+      <logentry type="#">Small improvements for migration purposes</logentry>
+    </entries>
+    <entries date="20150513">
+      <logentry type="^">Changed context name for batch processing</logentry>
+    </entries>
+    <entries date="20150512">
+      <logentry type="#">Pagination disappeared on phones -> move to Joomla language strings</logentry>
+    </entries>
+  </release>
   <release version="3.2.1" published="20150512">
     <entries date="20150512">
       <logentry type="+">MiniJoom popup could not be used for multiple purposes on the same page</logentry>
