@@ -276,6 +276,7 @@ echo $this->loadTemplate('header');
                       <input type="text" value="<?php echo $item->imgauthor; ?>" name="imgauthor" id="imgauthor_<?php echo $item->id; ?>" class="span12" />
                     </div>
                   </div>
+                  <?php if($this->_config->get('jg_edit_metadata')): ?>
                   <div class="row-fluid">
                     <div class="span3">
                       <label for="metadesc_<?php echo $item->id; ?>"><?php echo JText::_('COM_JOOMGALLERY_USERPANEL_METADESC'); ?></label>
@@ -284,6 +285,7 @@ echo $this->loadTemplate('header');
                       <input type="text" value="<?php echo $item->metadesc; ?>" name="metadesc" id="metadesc_<?php echo $item->id; ?>" class="span12" />
                     </div>
                   </div>
+                  <?php endif; ?>
                   <div class="row-fluid">
                     <label for="imgtext_<?php echo $item->id; ?>"><?php echo JText::_('COM_JOOMGALLERY_COMMON_DESCRIPTION'); ?></label>
                     <div class="jg-editor-wrapper">

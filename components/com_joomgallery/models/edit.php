@@ -161,6 +161,14 @@ class JoomGalleryModelEdit extends JoomGalleryModel
       // Unset the data of fields which we aren't allowed to change
       $form->setFieldAttribute('published', 'filter', 'unset');
     }
+    
+    if(!$this->_config->get('jg_edit_metadata'))
+    {
+      $form->setFieldAttribute('metakey', 'disabled', 'true');
+      $form->setFieldAttribute('metakey', 'filter', 'unset');
+      $form->setFieldAttribute('metadesc', 'disabled', 'true');
+      $form->setFieldAttribute('metadesc', 'filter', 'unset');
+    }
 
     return $form;
   }

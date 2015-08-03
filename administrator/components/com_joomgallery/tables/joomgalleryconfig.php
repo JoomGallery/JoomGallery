@@ -101,6 +101,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_newpiccopyright;
   var $jg_newpicnote;
   var $jg_redirect_after_upload;
+  var $jg_edit_metadata;
   var $jg_download;
   var $jg_download_unreg;
   var $jg_download_hint;

@@ -222,6 +222,7 @@ JHTML::_('joomconfig.start', 'page7');
     $redirect_after_upload[] = JHTML::_('select.option','3', JText::_('COM_JOOMGALLERY_CONFIG_GS_BU_REDIRECT_AFTER_UPLOAD_TO_GALLERY_VIEW'));
     $mc_jg_redirect_after_upload = JHTML::_('select.genericlist', $redirect_after_upload, 'jg_redirect_after_upload', 'class="inputbox" size="4"', 'value', 'text', $this->_config->jg_redirect_after_upload);
     JHTML::_('joomconfig.row', 'jg_redirect_after_upload', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_BU_REDIRECT_AFTER_UPLOAD', $mc_jg_redirect_after_upload);
+    JHtml::_('joomconfig.row', 'jg_edit_metadata', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_UU_EDIT_METADATA', $this->_config->jg_edit_metadata);
 JHTML::_('joomconfig.end');
 
 // start Tab "Benutzer-Rechte->Download"

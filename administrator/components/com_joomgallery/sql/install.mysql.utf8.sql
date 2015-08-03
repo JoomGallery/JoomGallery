@@ -157,6 +157,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_newpiccopyright` int(1) NOT NULL,
   `jg_newpicnote` int(1) NOT NULL,
   `jg_redirect_after_upload` int(1) NOT NULL,
+  `jg_edit_metadata` int(1) NOT NULL,
   `jg_download` int(1) NOT NULL,
   `jg_download_unreg` int(1) NOT NULL,
   `jg_download_hint` int(1) NOT NULL,
@@ -548,6 +549,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_newpiccopyright*/          1,
   /*jg_newpicnote*/               1,
   /*jg_redirect_after_upload*/    1,
+  /*jg_edit_metadata*/            0,
 
   /* ### User Access rights->Download ####*/
   /*jg_download*/               1,
