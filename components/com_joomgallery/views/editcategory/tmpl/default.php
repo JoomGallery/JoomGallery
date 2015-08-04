@@ -44,6 +44,9 @@ echo $this->loadTemplate('header'); ?>
         <ul class="nav nav-tabs">
           <li class="active"><a href="#editor" data-toggle="tab"><?php echo (!$this->category->cid) ? JText::_('COM_JOOMGALLERY_COMMON_NEW_CATEGORY') : JText::_('COM_JOOMGALLERY_EDITCATEGORY_MODIFY_CATEGORY'); ?></a></li>
           <li><a href="#publishing" data-toggle="tab"><?php echo JText::_('COM_JOOMGALLERY_EDITCATEGORY_PUBLISHING') ?></a></li>
+          <?php if($this->_config->get('jg_edit_metadata')): ?>
+          <li><a href="#metadata" data-toggle="tab"><?php echo JText::_('COM_JOOMGALLERY_EDIT_METADATA') ?></a></li>
+          <?php endif; ?>
 <?php if(count($this->fieldSets) > 0) : ?>
           <li><a href="#other" data-toggle="tab"><?php echo JText::_('COM_JOOMGALLERY_EDITCATEGORY_OTHER') ?></a></li>
 <?php endif; ?>
@@ -152,6 +155,12 @@ echo $this->loadTemplate('header'); ?>
               </div>
             </div>
           </div>
+          <?php if($this->_config->get('jg_edit_metadata')): ?>
+          <div class="tab-pane" id="metadata">
+            <?php echo $this->form->renderField('metadesc'); ?>
+            <?php echo $this->form->renderField('metakey'); ?>
+          </div>
+          <?php endif; ?>
 <?php if(count($this->fieldSets) > 0) : ?>
           <div class="tab-pane" id="other">
             <?php echo $this->loadTemplate('options'); ?>

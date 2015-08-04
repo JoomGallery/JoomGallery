@@ -52,10 +52,6 @@ class JoomGalleryModelEdit extends JoomGalleryModel
     {
       throw new Exception(JText::_('COM_JOOMGALLERY_COMMON_MSG_YOU_ARE_NOT_LOGGED'));
     }
-
-    $array = JRequest::getVar('id',  0, '', 'array');
-
-    $this->setId((int)$array[0]);
   }
 
   /**
@@ -136,13 +132,13 @@ class JoomGalleryModelEdit extends JoomGalleryModel
    * @return  mixed   A JForm object on success, false on failure
    * @since   2.0
    */
-  public function getForm($data = array())
+  public function getForm($data = array(), $formName = 'edit')
   {
     JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
     JForm::addFieldPath(JPATH_COMPONENT_ADMINISTRATOR.'/models/fields');
     JForm::addRulePath(JPATH_COMPONENT_ADMINISTRATOR.'/models/rules');
 
-    $form = JForm::getInstance(_JOOM_OPTION.'.edit', 'edit');
+    $form = JForm::getInstance(_JOOM_OPTION.'.'.$formName, $formName);
     if(empty($form))
     {
       return false;
@@ -164,6 +160,14 @@ class JoomGalleryModelEdit extends JoomGalleryModel
 
       // Unset the data of fields which we aren't allowed to change
       $form->setFieldAttribute('published', 'filter', 'unset');
+    }
+    
+    if(!$this->_config->get('jg_edit_metadata'))
+    {
+      $form->setFieldAttribute('metakey', 'disabled', 'true');
+      $form->setFieldAttribute('metakey', 'filter', 'unset');
+      $form->setFieldAttribute('metadesc', 'disabled', 'true');
+      $form->setFieldAttribute('metadesc', 'filter', 'unset');
     }
 
     return $form;
@@ -406,6 +410,67 @@ class JoomGalleryModelEdit extends JoomGalleryModel
     $this->_mainframe->triggerEvent('onContentAfterSave', array(_JOOM_OPTION.'.image', &$row, false));
 
     return $row->id;
+  }
+
+  /**
+   * Method to store an edited image from the quick edit form
+   *
+   * @param   int   ID of the image to edit
+   * @param   array Associative array of image data to store
+   * @return  boolean True on success
+   * @since   3.3
+   */
+  public function quickEdit($id, $data)
+  {
+    $row = $this->getTable('joomgalleryimages');
+
+    // Check for validation errors
+    $form = $this->getForm($data, 'quickedit');
+    $data = $this->_validate($form, $data);
+    if($data === false)
+    {
+      throw new RuntimeException($this->getError());
+    }
+
+    // Check whether it is an existing image
+    $id = (int) $id;
+    if(!$id)
+    {
+      throw new RuntimeException(JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
+    }
+
+    // Load image data from the database
+    $row->load($id);
+
+    // Check whether we are allowed to edit it
+    $asset = _JOOM_OPTION.'.image.'.$id;
+    if(!$this->_user->authorise('core.edit', $asset) && (!$this->_user->authorise('core.edit.own', $asset) || !$row->owner || $row->owner != $this->_user->get('id')))
+    {
+      throw new RuntimeException(JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_TO_EDIT_IMAGE'));
+    }
+
+    // Bind the form fields to the images table
+    if(!$row->bind($data))
+    {
+      throw new RuntimeException($row->getError());
+    }
+
+    // Make sure the record is valid
+    if(!$row->check())
+    {
+      throw new RuntimeException($row->getError());
+    }
+
+    // Store the entry to the database
+    if(!$row->store())
+    {
+      throw new RuntimeException($row->getError());
+    }
+
+    // Successfully stored image
+    $this->_mainframe->triggerEvent('onContentAfterSave', array(_JOOM_OPTION.'.image.quick', &$row, false));
+
+    return true;
   }
 
   /**
