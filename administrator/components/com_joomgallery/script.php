@@ -267,6 +267,10 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/administrator/components/com_joomgallery/changelog.php';
     // Old ordering form field
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/ordering.php';
+    // Old motion gallery
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/motiongallery.js';
+    // Old raw view for Cooliris
+    $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/view.raw.php';
 
     foreach($delete_files as $delete_file)
     {

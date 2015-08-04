@@ -167,8 +167,6 @@ echo JHtml::_('tabs.panel', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_ADDITIONAL_F
 
 JHTML::_('joomconfig.start', 'page6');
     JHTML::_('joomconfig.row', 'jg_realname', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_USERNAME_REALNAME', $this->_config->jg_realname);
-    JHTML::_('joomconfig.row', 'jg_cooliris', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_COOLIRIS_SUPPORT', $this->_config->jg_cooliris);
-    JHTML::_('joomconfig.row', 'jg_coolirislink', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_COOLIRIS_LINK', $this->_config->jg_coolirislink);
     JHTML::_('joomconfig.row', 'jg_contentpluginsenabled', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_CONTENTPLUGINS', $this->_config->get('jg_contentpluginsenabled'));
     JHTML::_('joomconfig.row', 'jg_itemid', 'text', 'COM_JOOMGALLERY_CONFIG_GS_AF_ITEMID', $this->_config->get('jg_itemid'));
     JHTML::_('joomconfig.row', 'jg_ajaxcategoryselection', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_AF_AJAXCATEGORYSELECTION', $this->_config->get('jg_ajaxcategoryselection'));
@@ -652,6 +650,7 @@ JHTML::_('joomconfig.start', 'page19');
     $mc_jg_motionminis = JHTML::_('select.genericlist', $joom_ShowMotionMinis, 'jg_motionminis', 'class="inputbox" size="2"', 'value', 'text', $this->_config->jg_motionminis);
     JHTML::_('joomconfig.row', 'jg_motionminis', 'custom', 'COM_JOOMGALLERY_CONFIG_DV_MG_DISPLAYMODE', $mc_jg_motionminis);
     JHTML::_('joomconfig.row', 'jg_motionminiWidth', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_WIDTH', $this->_config->jg_motionminiWidth);
+    JHTML::_('joomconfig.row', 'jg_motionminiLimit', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_LIMIT', $this->_config->jg_motionminiLimit);
     JHTML::_('joomconfig.row', 'jg_motionminiHeight', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_HEIGHT', $this->_config->jg_motionminiHeight);
     JHTML::_('joomconfig.row', 'jg_miniWidth', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_MINIS_MAXWIDTH', $this->_config->jg_miniWidth);
     JHTML::_('joomconfig.row', 'jg_miniHeight', 'text', 'COM_JOOMGALLERY_CONFIG_DV_MG_MINIS_MAXHEIGHT', $this->_config->jg_miniHeight);

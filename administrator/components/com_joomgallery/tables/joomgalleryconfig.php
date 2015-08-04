@@ -73,8 +73,6 @@ class TableJoomgalleryConfig extends JTable
   var $jg_msg_rejectimg_type;
   var $jg_msg_global_from;
   var $jg_realname;
-  var $jg_cooliris;
-  var $jg_coolirislink;
   var $jg_contentpluginsenabled;
   var $jg_itemid;
   var $jg_ajaxcategoryselection;
