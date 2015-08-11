@@ -367,7 +367,6 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_toplist_report_images` int(1) NOT NULL,
   `jg_showtoplisteditorlinks` int(1) NOT NULL,
   `jg_favourites` int(1) NOT NULL,
-  `jg_showdetailfavourite` int(1) NOT NULL,
   `jg_favouritesshownotauth` int(1) NOT NULL,
   `jg_maxfavourites` int(5) NOT NULL,
   `jg_zipdownload` int(1) NOT NULL,
@@ -803,7 +802,6 @@ INSERT IGNORE INTO `#__joomgallery_config`
 
   /* ### Favorites ####*/
   /*jg_favourites*/                 1,
-  /*jg_showdetailfavourite*/        0,
   /*jg_favouritesshownotauth*/      0,
   /*jg_maxfavourites*/              0,
   /*jg_zipdownload*/                1,
