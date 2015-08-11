@@ -25,7 +25,7 @@ $this->_doc->addStyleSheet($this->_ambit->getStyleSheet('joomgallery.css')); ?>
         <input type="hidden" name="task" value="report.send" />
         <input type="hidden" name="tmpl" value="component" />
       </div>
-      <div><input type="submit" name="button" value="<?php echo JText::_('COM_JOOMGALLERY_COMMON_REPORT_SEND_REPORT'); ?>" class="button validate" /></div>
+      <div><input type="submit" name="button" value="<?php echo JText::_('COM_JOOMGALLERY_COMMON_REPORT_SEND_REPORT'); ?>" class="btn btn-primary validate" /></div>
     </form>
   </fieldset>
 </div>
