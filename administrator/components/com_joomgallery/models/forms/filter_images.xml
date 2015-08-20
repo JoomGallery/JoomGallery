@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+  <fields name="filter">
+    <field
+      name="search"
+      type="text"
+      label="COM_JOOMGALLERY_COMMON_SEARCH"
+      hint="COM_JOOMGALLERY_COMMON_SEARCH"
+    />
+    <field
+      name="state"
+      type="list"
+      label="JOPTION_SELECT_PUBLISHED"
+      onchange="this.form.submit();"
+      >
+      <option value="">JOPTION_SELECT_PUBLISHED</option>
+      <option value="1">COM_JOOMGALLERY_COMMON_OPTION_PUBLISHED_ONLY</option>
+      <option value="2">COM_JOOMGALLERY_COMMON_OPTION_NOT_PUBLISHED_ONLY</option>
+      <option value="3">COM_JOOMGALLERY_COMMON_OPTION_APPROVED_ONLY</option>
+      <option value="4">COM_JOOMGALLERY_COMMON_OPTION_NOT_APPROVED_ONLY</option>
+      <option value="5">COM_JOOMGALLERY_COMMON_OPTION_REJECTED_ONLY</option>
+    </field>
+    <field
+      name="category"
+      type="joomcategory"
+      label="COM_JOOMGALLERY_COMMON_ALL"
+      onchange="document.getElementById('adminForm').submit();"
+      task="filter"
+    />
+    <field
+      name="access"
+      type="accesslevel"
+      label="JOPTION_FILTER_ACCESS"
+      description="JOPTION_FILTER_ACCESS_DESC"
+      onchange="this.form.submit();"
+      >
+      <option value="">JOPTION_SELECT_ACCESS</option>
+    </field>
+    <field
+      name="owner"
+      type="joomuser"
+      label="COM_JOOMGALLERY_COMMON_OPTION_SELECT_OWNER"
+      hint="COM_JOOMGALLERY_COMMON_OPTION_SELECT_OWNER"
+      onchange="document.getElementById('adminForm').submit();"
+    />
+    <field
+      name="type"
+      type="list"
+      label="COM_JOOMGALLERY_COMMON_OPTION_SELECT_TYPE"
+      onchange="this.form.submit();"
+      >
+      <option value="">COM_JOOMGALLERY_COMMON_OPTION_SELECT_TYPE</option>
+      <option value="1">COM_JOOMGALLERY_COMMON_OPTION_USER_UPLOADED_ONLY</option>
+      <option value="2">COM_JOOMGALLERY_COMMON_OPTION_ADMIN_UPLOADED_ONLY</option>
+    </field>    
+  </fields>  
+  <fields name="list">
+    <field
+      name="fullordering"
+      type="joomlist"
+      label="JGLOBAL_SORT_BY"
+      onchange="this.form.submit();"
+      default="a.ordering ASC"
+      >
+      <option value="">JGLOBAL_SORT_BY</option>
+      <option value="a.ordering ASC">JGRID_HEADING_ORDERING_ASC</option>
+      <option value="a.ordering DESC">JGRID_HEADING_ORDERING_DESC</option>
+      <option value="a.imgtitle ASC">COM_JOOMGALLERY_COMMON_TITLE, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.imgtitle DESC">COM_JOOMGALLERY_COMMON_TITLE, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.published ASC">COM_JOOMGALLERY_COMMON_PUBLISHED, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.published DESC">COM_JOOMGALLERY_COMMON_PUBLISHED, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.approved ASC">COM_JOOMGALLERY_COMMON_APPROVED, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.approved DESC">COM_JOOMGALLERY_COMMON_APPROVED, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="category_name ASC">COM_JOOMGALLERY_COMMON_CATEGORY, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="category_name DESC">COM_JOOMGALLERY_COMMON_CATEGORY, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="access_level ASC">COM_JOOMGALLERY_COMMON_ACCESS, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="access_level DESC">COM_JOOMGALLERY_COMMON_ACCESS, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.owner ASC">COM_JOOMGALLERY_COMMON_OWNER, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.owner DESC">COM_JOOMGALLERY_COMMON_OWNER, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.imgauthor ASC">COM_JOOMGALLERY_COMMON_AUTHOR, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.imgauthor DESC">COM_JOOMGALLERY_COMMON_AUTHOR, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.imgdate ASC">COM_JOOMGALLERY_COMMON_DATE, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.imgdate DESC">COM_JOOMGALLERY_COMMON_DATE, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.hits ASC">COM_JOOMGALLERY_IMGMAN_HITS, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.hits DESC">COM_JOOMGALLERY_IMGMAN_HITS, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.downloads ASC">COM_JOOMGALLERY_COMMON_DOWNLOADS, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.downloads DESC">COM_JOOMGALLERY_COMMON_DOWNLOADS, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.id ASC">COM_JOOMGALLERY_COMMON_ID, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.id DESC">COM_JOOMGALLERY_COMMON_ID, JGLOBAL_ORDER_DESCENDING</option>
+    </field>
+    <field
+      name="limit"
+      type="limitbox"
+      class="input-mini"
+      default="20"
+      label="COM_JOOMGALLERY_COMMON_SEARCH_LIMIT"
+      onchange="this.form.submit();"
+    />
+  </fields>
+</form>

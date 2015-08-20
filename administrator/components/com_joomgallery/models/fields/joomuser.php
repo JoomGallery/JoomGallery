@@ -49,6 +49,7 @@ class JFormFieldJoomUser extends JFormFieldUser
                   . (isset($groups) ? ('&amp;groups='.base64_encode(json_encode($groups))) : '')
                   . (isset($excluded) ? ('&amp;excluded='.base64_encode(json_encode($excluded))) : '');
     $required = '';
+    $hint     = (!empty($this->hint) ? $this->hint : 'COM_JOOMGALLERY_COMMON_NO_USER');
 
     if($this->required)
     {
@@ -74,7 +75,7 @@ class JFormFieldJoomUser extends JFormFieldUser
     {
       $script[] = '  jQuery(document).ready(function() {';
       $script[] = '    document.formvalidator.setHandler("SelectUser_' . $this->id . '", function(value) {';
-      $script[] = '      if (value == "" || value == "' . JText::_('COM_JOOMGALLERY_COMMON_NO_USER') . '") {';
+      $script[] = '      if (value == "" || value == "' . JText::_('$hint') . '") {';
       $script[] = '        return false;';
       $script[] = '      }';
       $script[] = '      return true;';
@@ -87,7 +88,7 @@ class JFormFieldJoomUser extends JFormFieldUser
     $script[] = '    if (old_id != id) {';
     $script[] = '      document.getElementById("' . $this->id . '").value = id;';
     $script[] = '      if (id == "") {';
-    $script[] = '        document.getElementById("' . $this->id . '_name").value = "' . JText::_('COM_JOOMGALLERY_COMMON_NO_USER', true) . '";';
+    $script[] = '        document.getElementById("' . $this->id . '_name").value = "' . JText::_($hint, true) . '";';
     $script[] = '      }';
     $script[] = '      else {';
     $script[] = '        document.getElementById("' . $this->id . '_name").value = title;';
@@ -118,7 +119,7 @@ class JFormFieldJoomUser extends JFormFieldUser
     }
     else
     {
-      $table->$type = JText::_('COM_JOOMGALLERY_COMMON_NO_USER');
+      $table->$type = JText::_($hint);
       $this->value = '';
     }
 

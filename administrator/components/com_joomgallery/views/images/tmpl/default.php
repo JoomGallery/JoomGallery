@@ -7,6 +7,7 @@ JHtml::_('formbehavior.chosen', 'select');
 $listOrder                = $this->escape($this->state->get('list.ordering'));
 $listDirn                 = $this->escape($this->state->get('list.direction'));
 $saveOrder                = $listOrder == 'a.ordering';
+$columns                  = 15;
 $display_hidden_asterisk  = false;
 $approved_states          = array( 1 => array('reject', 'COM_JOOMGALLERY_COMMON_APPROVED', 'COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE', 'COM_JOOMGALLERY_COMMON_APPROVED', true, 'publish', 'publish'),
                                    0 => array('approve', 'COM_JOOMGALLERY_COMMON_NOT_APPROVED', 'COM_JOOMGALLERY_IMGMAN_APPROVE_IMAGE', 'COM_JOOMGALLERY_COMMON_NOT_APPROVED', true, 'unpublish', 'unpublish'),
@@ -16,21 +17,17 @@ if($saveOrder):
   JHtml::_('sortablelist.sortable', 'imageList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, false);
 endif;
 
-$sortFields = $this->getSortFields();
+JFactory::getDocument()->addScriptDeclaration(
+  '
+  jQuery(document).ready(function() {
+    jQuery(\'.js-stools-btn-clear\').click(function() {
+      jQuery(\'#filter_owner\').val(\'\');
+      ' . ($this->_config->get('jg_ajaxcategoryselection') ? 'jQuery(\'#filter_category\').val(\'\');' : '') . '
+    });
+  });'
+);
 ?>
-<script type="text/javascript">
-  Joomla.orderTable = function() {
-    table = document.getElementById("sortTable");
-    direction = document.getElementById("directionTable");
-    order = table.options[table.selectedIndex].value;
-    if (order != '<?php echo $listOrder; ?>') {
-      dirn = 'asc';
-    } else {
-      dirn = direction.options[direction.selectedIndex].value;
-    }
-    Joomla.tableOrdering(order, dirn, '');
-  }
-</script>
+
 <form action="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images');?>" method="post" name="adminForm" id="adminForm">
 <?php if(!empty($this->sidebar)): ?>
   <div id="j-sidebar-container" class="span2">
@@ -40,82 +37,60 @@ $sortFields = $this->getSortFields();
 <?php else : ?>
   <div id="j-main-container">
 <?php endif;?>
-    <div id="filter-bar" class="btn-toolbar">
-      <div class="filter-search btn-group pull-left">
-        <label for="filter_search" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH'); ?></label>
-        <input type="text" name="filter_search" placeholder="<?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH'); ?>" id="filter_search" value="<?php echo $this->escape($this->state->get('filter.search')); ?>" title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH'); ?>" />
-      </div>
-      <div class="btn-group pull-left hidden-phone">
-        <button class="btn hasTooltip" type="submit" title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH'); ?>"><i class="icon-search"></i></button>
-        <button class="btn hasTooltip" type="button" onclick="document.id('filter_search').value='';this.form.submit();" title="<?php echo JText::_('JSEARCH_FILTER_CLEAR'); ?>"><i class="icon-remove"></i></button>
-      </div>
-      <div class="btn-group pull-right hidden-phone">
-        <label for="limit" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_SEARCH_LIMIT'); ?></label>
-        <?php echo $this->pagination->getLimitBox(); ?>
-      </div>
-      <div class="btn-group pull-right hidden-phone">
-        <label for="directionTable" class="element-invisible"><?php echo JText::_('JFIELD_ORDERING_DESC');?></label>
-        <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-          <option value=""><?php echo JText::_('JFIELD_ORDERING_DESC');?></option>
-          <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_ASCENDING');?></option>
-          <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('JGLOBAL_ORDER_DESCENDING');?></option>
-        </select>
-      </div>
-      <div class="btn-group pull-right">
-        <label for="sortTable" class="element-invisible"><?php echo JText::_('JGLOBAL_SORT_BY');?></label>
-        <select name="sortTable" id="sortTable" class="input-medium" onchange="Joomla.orderTable()">
-          <option value=""><?php echo JText::_('JGLOBAL_SORT_BY');?></option>
-          <?php echo JHtml::_('select.options', $sortFields, 'value', 'text', $listOrder);?>
-        </select>
-      </div>
+  <?php
+    // Search tools bar
+    echo JLayoutHelper::render('joomla.searchtools.default', array('view' => $this));
+  ?>
+<?php if($this->state->get('filter.inuse') && !$this->get('Total')) : ?>
+    <div class="alert alert-no-items">
+      <?php echo JText::_('COM_JOOMGALLERY_IMGMAN_MSG_NO_IMAGES_FOUND_MATCHING_YOUR_QUERY'); ?>
     </div>
-    <div class="clearfix"> </div>
-
+<?php else : ?>
     <table class="table table-striped" id="imageList">
       <thead>
         <tr>
           <th width="1%" class="nowrap center hidden-phone">
-            <?php echo JHtml::_('grid.sort', '<i class="icon-menu-2"></i>', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING'); ?>
+            <?php echo JHtml::_('searchtools.sort', '', 'a.ordering', $listDirn, $listOrder, null, 'asc', 'JGRID_HEADING_ORDERING', 'icon-menu-2'); ?>
           </th>
-          <th width="1%" class="hidden-phone">
-            <input type="checkbox" name="checkall-toggle" value="" title="<?php echo JText::_('JGLOBAL_CHECK_ALL'); ?>" onclick="Joomla.checkAll(this)" />
+          <th width="1%" class="center">
+            <?php echo JHtml::_('grid.checkall'); ?>
           </th>
           <th class="center hidden-phone" width="25"></th>
           <th class="nowrap">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_TITLE', 'a.imgtitle', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_TITLE', 'a.imgtitle', $listDirn, $listOrder); ?>
           </th>
           <th class="center" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
           </th>
           <th class="center" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_APPROVED', 'a.approved', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_APPROVED', 'a.approved', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="10%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_CATEGORY', 'category_name', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_CATEGORY', 'category_name', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_ACCESS', 'access_level', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_ACCESS', 'access_level', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="7%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_OWNER', 'a.owner', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_OWNER', 'a.owner', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_TYPE', 'a.owner', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_TYPE', 'a.owner', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="7%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_AUTHOR', 'a.imgauthor', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_AUTHOR', 'a.imgauthor', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_DATE', 'a.imgdate', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_DATE', 'a.imgdate', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="5%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_IMGMAN_HITS', 'a.hits', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_IMGMAN_HITS', 'a.hits', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="7%">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_DOWNLOADS', 'a.downloads', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_DOWNLOADS', 'a.downloads', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="1%" class="nowrap">
-            <?php echo JHtml::_('grid.sort', 'COM_JOOMGALLERY_COMMON_ID', 'a.id', $listDirn, $listOrder); ?>
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_ID', 'a.id', $listDirn, $listOrder); ?>
           </th>
         </tr>
       </thead>
@@ -126,25 +101,25 @@ $sortFields = $this->getSortFields();
         $canChange  = $this->_user->authorise('core.edit.state', _JOOM_OPTION.'.image.'.$item->id); ?>
         <tr class="row<?php echo $i % 2; ?>" sortable-group-id="<?php echo $item->catid ?>">
           <td class="order nowrap center hidden-phone">
-          <?php if($canChange) :
-            $disableClassName = '';
-            $disabledLabel    = '';
-
-            if (!$saveOrder) :
-              $disabledLabel    = JText::_('JORDERINGDISABLED');
-              $disableClassName = 'inactive tip-top';
-            endif; ?>
-            <span class="sortable-handler hasTooltip <?php echo $disableClassName?>" title="<?php echo $disabledLabel?>">
-              <i class="icon-menu"></i>
+            <?php
+            $iconClass = '';
+            if (!$canChange)
+            {
+              $iconClass = ' inactive';
+            }
+            elseif (!$saveOrder)
+            {
+              $iconClass = ' inactive tip-top hasTooltip" title="' . JHtml::tooltipText('JORDERINGDISABLED');
+            }
+            ?>
+            <span class="sortable-handler<?php echo $iconClass ?>">
+              <span class="icon-menu"></span>
             </span>
-            <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering;?>" class="width-20 text-area-order " />
-          <?php else : ?>
-            <span class="sortable-handler inactive" >
-              <i class="icon-menu"></i>
-            </span>
-          <?php endif; ?>
+            <?php if ($canChange && $saveOrder) : ?>
+              <input type="text" style="display:none" name="order[]" size="5" value="<?php echo $item->ordering; ?>" class="width-20 text-area-order " />
+            <?php endif; ?>
           </td>
-          <td class="center hidden-phone">
+          <td class="center">
             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
           </td>
           <td class="center hidden-phone">
@@ -203,21 +178,20 @@ $sortFields = $this->getSortFields();
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="15">
-            <?php echo $this->pagination->getListFooter(); ?>
-<?php if($display_hidden_asterisk): ?>
-            <div class = "small pull-left">
-              <?php echo JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK'); ?> <?php echo JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN'); ?>
-            </div>
-<?php endif; ?>
+          <td colspan="<?php echo $columns; ?>">
           </td>
         </tr>
       </tfoot>
     </table>
+<?php endif; ?>
+<?php echo $this->pagination->getListFooter(); ?>
+<?php if($display_hidden_asterisk): ?>
+    <div class = "small pull-left">
+      <?php echo JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK'); ?> <?php echo JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN'); ?>
+    </div>
+<?php endif; ?>
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
-    <input type="hidden" name="filter_order" value="<?php echo $listOrder; ?>" />
-    <input type="hidden" name="filter_order_Dir" value="<?php echo $listDirn; ?>" />
     <?php echo JHtml::_('form.token'); ?>
     <?php JHTML::_('joomgallery.credits'); ?>
   </div>
