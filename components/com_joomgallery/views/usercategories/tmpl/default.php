@@ -66,9 +66,9 @@ $sortFields = $this->getSortFields();
           <?php echo $this->pagination->getLimitBox(); ?>
         </div>
         <div class="btn-group pull-right hidden-phone">
-          <label for="directionTable" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDERING');?></label>
+          <label for="directionTable" class="element-invisible"><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDER_DIRECTION');?></label>
           <select name="directionTable" id="directionTable" class="input-medium" onchange="Joomla.orderTable()">
-            <option value=""><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDERING');?></option>
+            <option value=""><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDER_DIRECTION');?></option>
             <option value="asc" <?php if ($listDirn == 'asc') echo 'selected="selected"'; ?>><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDERING_ASC');?></option>
             <option value="desc" <?php if ($listDirn == 'desc') echo 'selected="selected"'; ?>><?php echo JText::_('COM_JOOMGALLERY_COMMON_ORDERING_DESC');?></option>
           </select>
