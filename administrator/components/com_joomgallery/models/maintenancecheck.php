@@ -198,7 +198,7 @@ class JoomGalleryModelMaintenancecheck extends JoomGalleryModel
       {
         foreach($files as $file)
         {
-          if(in_array(JFile::getExt($file), $img_types))
+          if(in_array(strtolower(JFile::getExt($file)), $img_types))
           {
             $type = $types[0];
           }
