@@ -62,11 +62,11 @@
   margin:5px 0px;
 }
 .jg_updexistautoform form {
-	margin: 0;
+  margin: 0;
 }
 .jg_updexistversion table{
   margin-bottom: 9px;
-}	
+}  
 
 /* MiniJoom */
 .jg_bu_filter{
@@ -165,7 +165,7 @@ label#rules-lbl {
 }
 
 .jg_imgpreview{
-	max-width:500px;
+  max-width:500px;
 }
 
 /* Ajax Category Search */
@@ -184,11 +184,11 @@ label#rules-lbl {
   padding:5px;
 }
 .jg-category-result:hover{
-	background-color:#e8f6fe;
-	cursor:pointer;
+  background-color:#e8f6fe;
+  cursor:pointer;
 }
 .jg-category-result-hover{
-	background-color:#e8f6fe !important;
+  background-color:#e8f6fe !important;
 }
 
 .categories-results{
@@ -198,11 +198,11 @@ label#rules-lbl {
 }
 
 .row0{
-	background-color:#f7f7f7;
+  background-color:#f7f7f7;
 }
 .row1{
-	background-color:#f0f0f0;
-	border-top:1px solid #ffffff;
+  background-color:#f0f0f0;
+  border-top:1px solid #ffffff;
 }
 .jg-no-results{
   padding:5px;
@@ -214,8 +214,8 @@ label#rules-lbl {
   border-bottom:1px solid grey;
 }
 .jg-category-more-results:hover{
-	background-color:#e8f6fe;
-	cursor:pointer;
+  background-color:#e8f6fe;
+  cursor:pointer;
 }
 
 /** New Styles since 3.0.0 Alpha */
@@ -259,66 +259,82 @@ label#rules-lbl {
 
 /* -- TAB STYLES ----------------------------- */
 dl.tabs {
-	float: left;
-	margin: 10px 0 -1px 0;
-	z-index: 50;
+  float: left;
+  margin: 10px 0 -1px 0;
+  z-index: 50;
 }
 
 dl.tabs dt {
-	float: left;
-	padding: 4px 10px;
-	border: 1px solid #ccc;
-	margin-left: 3px;
-	background: #e9e9e9;
-	color: #666;
+  float: left;
+  padding: 4px 10px;
+  border: 1px solid #ccc;
+  margin-left: 3px;
+  background: #e9e9e9;
+  color: #666;
 }
 
 dl.tabs dt.open {
-	background: #F9F9F9;
-	border-bottom: 1px solid #f9f9f9;
-	z-index: 100;
-	color: #000;
+  background: #F9F9F9;
+  border-bottom: 1px solid #f9f9f9;
+  z-index: 100;
+  color: #000;
 }
 
 div.current {
-	clear: both;
-	border: 1px solid #ccc;
-	padding: 10px 10px;
+  clear: both;
+  border: 1px solid #ccc;
+  padding: 10px 10px;
 }
 
 div.current dd {
-	padding: 0;
-	margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 dl#content-pane.tabs {
-	margin: 1px 0 0 0;
+  margin: 1px 0 0 0;
 }
 
 div.current fieldset {
-	border: none 0;
+  border: none 0;
 }
 
 div.current fieldset.adminform {
-	border: 1px #ccc solid;
+  border: 1px #ccc solid;
 }
 
 p.tab-description {
-	font-size: 1.091em;
-	margin-left: 0;
-	margin-top: 5px;
+  font-size: 1.091em;
+  margin-left: 0;
+  margin-top: 5px;
 }
 
 /* Tab changes for accessibility */
 dl.tabs dt h3 {
-	margin: 0;
-	padding: 0;
-	font-size: 1em;
-	font-weight: normal;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-weight: normal;
 }
 
 dl.tabs dt h3 a:link {
-	color:#333333;
-	outline:medium none;
-	text-decoration:none;
+  color:#333333;
+  outline:medium none;
+  text-decoration:none;
+}
+
+/* Modal reject popup */
+#jg-reject-popup .modal-body {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+#jg-reject-popup #jg-reject-image{
+  max-height: 200px;
+  width: auto;
+}
+
+#jg-reject-owner p, #jg-reject-no-owner p {
+  margin-top: 5px;
+  margin-bottom: 20px;
 }

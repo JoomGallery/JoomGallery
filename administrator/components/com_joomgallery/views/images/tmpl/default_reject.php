@@ -1,4 +1,6 @@
-<?php defined('_JEXEC') or die('Direct Access to this location is not allowed.'); ?>
+<?php defined('_JEXEC') or die('Direct Access to this location is not allowed.');
+JHtml::_('bootstrap.tooltip', '.modalTooltip', array('container' => '.modal-body'));
+?>
 <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="PopupRejectModalLabel" aria-hidden="true" id="jg-reject-popup">
   <script type="text/javascript">
     jQuery('#jg-reject-popup').on('shown', function ()
@@ -12,21 +14,24 @@
       <h3 id="PopupRejectModalLabel"><?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_HEADING'); ?></h3>
     </div>
     <div class="modal-body">
-      <div class="pull-right span6">
-        <img src="../media/system/images/blank.png" class="img-polaroid span12" id="jg-reject-image" alt="Thumbnail" />
-      </div>
-      <p id="jg-reject-no-owner"><?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_NOOWNER'); ?></p>
-      <div id="jg-reject-owner">
-        <p><?php echo JText::sprintf('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_OWNER', '<span id="jg-reject-owner-name"></span>'); ?></p>
-        <div class="clearfix"></div>
-        <div class="control-group">
-          <div class="control-label span6">
-            <label rel="tooltip" class="spn6" title="<?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_MESSAGE_TIP'); ?>">
-              <?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_MESSAGE_LABEL'); ?>
-            </label>
-          </div>
-          <div class="controls">
-            <textarea id="jg-message" name="message" class="span12" cols="30" rows="7"></textarea>
+      <div class="row-fluid">
+        <div class="span4">
+          <img src="../media/system/images/blank.png" class="img-polaroid" id="jg-reject-image" alt="Thumbnail" />
+        </div>
+        <div class="span8">
+          <p id="jg-reject-no-owner"><?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_NOOWNER'); ?></p>
+          <div id="jg-reject-owner">
+            <p><?php echo JText::sprintf('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_OWNER', '<span id="jg-reject-owner-name"></span>'); ?></p>
+            <div class="control-group">
+              <div class="control-label">
+                <label for="jg-message" class="modalTooltip" title="<?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_MESSAGE_TIP'); ?>">
+                  <?php echo JText::_('COM_JOOMGALLERY_IMGMAN_REJECT_IMAGE_MESSAGE_LABEL'); ?>
+                </label>
+              </div>
+              <div class="controls">
+                <textarea id="jg-message" name="message" cols="30" rows="6" class="span12"></textarea>
+              </div>
+            </div>
           </div>
         </div>
       </div>
