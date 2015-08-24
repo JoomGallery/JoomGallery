@@ -90,12 +90,12 @@ class TableJoomgalleryConfig extends JTable
   var $jg_usercatacc;
   var $jg_usercatthumbalign;
   var $jg_maxuploadfields;
-  var $jg_useruploadnumber;
   var $jg_useruploadsingle;
   var $jg_useruploadajax;
   var $jg_useruploadbatch;
   var $jg_useruploadjava;
   var $jg_useruseorigfilename;
+  var $jg_useruploadnumber;
   var $jg_special_gif_upload;
   var $jg_delete_original_user;
   var $jg_newpiccopyright;
@@ -154,8 +154,8 @@ class TableJoomgalleryConfig extends JTable
   var $jg_openjs_padding;
   var $jg_openjs_background;
   var $jg_dhtml_border;
-  var $jg_show_title_in_dhtml;
-  var $jg_show_description_in_dhtml;
+  var $jg_show_title_in_popup;
+  var $jg_show_description_in_popup;
   var $jg_lightbox_speed;
   var $jg_lightbox_slide_all;
   var $jg_resize_js_image;
@@ -226,7 +226,6 @@ class TableJoomgalleryConfig extends JTable
   var $jg_cursor_navigation;
   var $jg_disable_rightclick_detail;
   var $jg_detail_report_images;
-  var $jg_report_images_notauth;
   var $jg_showdetaileditorlinks;
   var $jg_showdetailtitle;
   var $jg_showdetail;
