@@ -14,7 +14,7 @@
 // modified by JoomGallery team
 // The DHTML-function for creating a overlaying div-layer uses parts of the Dynamic Image Mambot, written by Manuel Hirsch
 // and Lightbox => core code quirksmode.org
-function joom_opendhtml(imgsource, imgtitle, imgtext, imgwidth, imgheight)
+function joom_opendhtml(imgsource, imgtitle, imgtext, imgwidth, imgheight, baseURL)
 {
   imgwidth = parseInt(imgwidth);
   imgheight = parseInt(imgheight);
@@ -91,7 +91,7 @@ function joom_opendhtml(imgsource, imgtitle, imgtext, imgwidth, imgheight)
   }
 
   var closeimg  = new Image();
-  closeimg.src  = "media/joomgallery/images/close.png";
+  closeimg.src  = baseURL + "media/joomgallery/images/close.png";
   var closeimgw = "";
   var closeimgh = "";
   if(closeimg.complete == true)

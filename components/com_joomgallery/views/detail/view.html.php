@@ -868,7 +868,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
             $this->assignRef('mapdata', $mapdata);
 
             $apikey = $this->_config->get('jg_geotaggingkey');
-            $this->_doc->addScript('http://maps.google.com/maps/api/js?sensor=false'.(!empty($apikey) ? '&amp;key='.$apikey : ''));
+            $this->_doc->addScript('http'.(JUri::getInstance()->isSSL() ? 's' : '').'://maps.google.com/maps/api/js?sensor=false'.(!empty($apikey) ? '&amp;key='.$apikey : ''));
 
             JText::script('COM_JOOMGALLERY_DETAIL_MAPS_BROWSER_IS_INCOMPATIBLE');
           }

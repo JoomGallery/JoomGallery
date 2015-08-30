@@ -318,26 +318,34 @@ abstract class JHtmlJoomGallery
         $params = array();
         if($config->get('jg_tooltips') == 2)
         {
-          $params['className'] = 'jg-tooltip-wrap';
+          $params['template']  = '<div class="jg-tooltip-wrap tooltip"><div class="tooltip-inner tip"></div></div>';
         }
 
-        JHTML::_('behavior.tooltip', '.'.$class, $params);
+        JHtml::_('bootstrap.tooltip', '.'.$class, $params);
         $loaded = true;
       }
 
-      if($translate)
+      if($config->get('jg_tooltips') == 2)
       {
-        $text = JText::_($text);
-      }
-
-      if($title)
-      {
-        if($translate)
+        $tmp = "";
+        if($title)
         {
-          $title = JText::_($title);
+          $tmp = '<div class="tip-title">';
+
+          if($translate)
+          {
+            $title = JText::_($title);
+          }
+
+          $tmp .= $title . '</div>';
         }
 
-        $text = $title.'::'.$text;
+        $tmp .= '<div class="tip-text">' . ($translate ? JText::_($text) : $text) . '</div>';
+        $text = htmlspecialchars($tmp, ENT_QUOTES, 'UTF-8');
+      }
+      else
+      {
+        $text = JHtml::tooltipText($title, $text, $translate);
       }
 
       if($addclass)
@@ -613,7 +621,7 @@ abstract class JHtmlJoomGallery
         {
           $link .= "','";
         }
-        $link .= $imginfo[0]."','".$imginfo[1]."')";
+        $link .= $imginfo[0]."','".$imginfo[1]."','".JUri::root()."')";
 
         if(!isset($loaded[3]))
         {
@@ -1254,7 +1262,7 @@ abstract class JHtmlJoomGallery
       {
         if($isSite)
         {
-          $html .= '<span'.JHtml::_('joomgallery.tip', htmlspecialchars('<img src="'.$url.'" width="'.$imginfo[0].'" height="'.$imginfo[1].'" alt="'.$img->imgtitle.'" />', ENT_QUOTES, 'UTF-8'), null, true, false).'>';
+          $html .= '<span'.JHtml::_('joomgallery.tip', '<img src="'.$url.'" width="'.$imginfo[0].'" height="'.$imginfo[1].'" alt="'.$img->imgtitle.'" />', null, true, false).'>';
         }
         else
         {
@@ -1337,7 +1345,7 @@ abstract class JHtmlJoomGallery
         {
           if($isSite)
           {
-            $html .= '<span'.JHtml::_('joomgallery.tip', htmlspecialchars('<img src="'.$url.'" width="'.$imginfo[0].'" height="'.$imginfo[1].'" alt="'.$cat->name.'" />', ENT_QUOTES, 'UTF-8'), null, true, false).'>';
+            $html .= '<span'.JHtml::_('joomgallery.tip', '<img src="'.$url.'" width="'.$imginfo[0].'" height="'.$imginfo[1].'" alt="'.$cat->name.'" />', null, true, false).'>';
           }
           else
           {

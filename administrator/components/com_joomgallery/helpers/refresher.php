@@ -184,6 +184,17 @@ class JoomRefresher extends JObject
   }
 
   /**
+   * Returns the calculated maximum execution time
+   *
+   * @return  int The calculated maximum execution time
+   * @since   3.2
+   */
+  public function getMaxTime()
+  {
+    return $this->_maxtime;
+  }
+
+  /**
    * Resets the progressbar or the name of the current task
    *
    * @param   int     $remaining  Number of remaining steps

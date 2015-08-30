@@ -35,6 +35,7 @@ class JoomGalleryViewMini extends JoomGalleryView
 
     $catid = $this->_mainframe->getUserStateFromRequest('joom.mini.catid', 'catid', 0, 'int');
     $this->assignRef('catid', $catid);
+    $this->prefix = $this->_mainframe->getUserStateFromRequest('joom.mini.prefix', 'prefix', 'joom', 'cmd');
 
     // Pagination
     $total    = $this->get('TotalImages');

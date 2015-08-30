@@ -28,7 +28,7 @@ class Com_JoomGalleryInstallerScript
    *
    * @var string
    */
-  private $version = '3.2.0';
+  private $version = '3.2.2';
 
   /**
    * Preflight method
@@ -191,6 +191,8 @@ class Com_JoomGalleryInstallerScript
 
     // MooRainbow assets
     $delete_folders[] = JPATH_ROOT.'/media/joomgallery/js/moorainbow';
+    // Old vote view
+    $delete_folders[] = JPATH_ROOT.'/components/com_joomgallery/views/vote';
 
     echo '<p>';
     echo 'Looking for orphaned files and folders from the old installation ';
@@ -259,6 +261,7 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/cbowner.php';
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/owner.php';
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/color.php';
+    $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/models/fields/thumbnail.php';
     // Template files that aren't used anymore
     $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/tmpl/default_catpagination.php';
     $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/tmpl/default_imgpagination.php';
@@ -267,6 +270,18 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/administrator/components/com_joomgallery/changelog.php';
     // Old ordering form field
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/models/fields/ordering.php';
+    // Old view file of MiniJoom
+    $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/views/mini/view.html.php';
+    // Unnecessary layout XML files in views which cannot be linked from a menu
+    $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/downloadzip/tmpl/default.xml';
+    $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/edit/tmpl/default.xml';
+    $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/editcategory/tmpl/default.xml';
+    // Old CSS file of MiniJoom
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/css/mini.css';
+    // Old JavaScript files
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/miniupload.js';
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/thickbox3/js/jquery-latest.pack.js';
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/userpanel.js';
     // Old motion gallery
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/motiongallery.js';
     // Old raw view for Cooliris 

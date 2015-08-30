@@ -37,50 +37,109 @@ class JFormFieldThumbnail extends JFormField
    */
   protected function getInput()
   {
-    $doc = JFactory::getDocument();
+    JHtml::_('bootstrap.tooltip');
 
+    $app         = JFactory::getApplication();
+    $db          = JFactory::getDBO();
+    $doc         = JFactory::getDocument();
     $imagelib_id = $this->element['imagelib_id'] ? $this->element['imagelib_id'] : 'imagelib';
+    $script      = array();
+    $html        = array();
+    $css         = array();
+    $catid       = 0;
 
-    $cids   = JRequest::getVar('cid', array(), '', 'array');
-    $catid  = 0;
-    if(isset($cids[0]))
+    if($app->isAdmin())
     {
-      $catid = intval($cids[0]);
-    }
+      // Get category id from request
+      $cids   = JRequest::getVar('cid', array(), '', 'array');
 
-    // Prepare the path for the thumbnail preview
-    $path = JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&view=image&format=raw&type=thumb', false).'&cid=';
-
-    $js = "
-    function joom_selectimage(id, title, object, filename) {
-      document.getElementById(object + '_id').value = id;
-      $('remove_button').removeClass('jg_displaynone');
-      if(id != '') {
-        document.getElementById('".$imagelib_id."').src = '".$path."' + id
-      } else {
-        document.getElementById('".$imagelib_id."').src = '../media/system/images/blank.png';
+      if(isset($cids[0]))
+      {
+        $catid = intval($cids[0]);
       }
-      window.parent.SqueezeBox.close();
+
+      // Prepare the path for the thumbnail preview
+      $path = JRoute::_('index.php?option=' . _JOOM_OPTION . '&controller=images&view=image&format=raw&type=thumb', false) . '&cid=';
     }
-    function joom_clearthumb() {
-      $('remove_button').addClass('jg_displaynone');
-      document.getElementById('".$this->id."_id').value = 0;
-      document.getElementById('".$imagelib_id."').src = '../media/system/images/blank.png';
-    }";
-    $doc->addScriptDeclaration($js);
+    else
+    {
+      // Get category id from request
+      $catid = JRequest::getInt('catid', 0);
 
-    $link = 'index.php?option=com_joomgallery&view=mini&extended=0&format=raw&object='.$this->id.'&type=category&catid='.$catid;
+      // Prepare the path for the thumbnail preview
+      $path = JRoute::_('index.php?option=' . _JOOM_OPTION . '&view=image&format=raw&type=thumb', false) . '&id=';
+    }
 
-    JHTML::_('behavior.modal', 'a.modal');
-    $html = '
-    <div id="select_button" class="button2-left">
-      <div class="blank">
-        <a class="modal" title="'.JText::_('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL_TIP').'" href="'.$link.'" rel="{handler: \'iframe\', size: {x: 620, y: 550}}">'.JText::_('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL').'</a>
-      </div>
-    </div>
-    <input type="hidden" id="'.$this->id.'_id" name="'.$this->name.'" value="'.$this->value.'" />
-    <a id="remove_button" '.(!$this->value ? 'class="jg_displaynone" ' : '').'title="'.JText::_('COM_JOOMGALLERY_CATMAN_REMOVE_CATTHUMB_TIP').'" href="javascript:joom_clearthumb();"><img src="../media/media/images/remove.png" alt="Remove" /></a>';
+    $script[] = '  function joom_selectimage(id, title, object, filename) {';
+    $script[] = '    document.getElementById(object + "_id").value = id;';
+    $script[] = '    document.getElementById(object + "_name").value = title;';
+    $script[] = '    jQuery("#' . $this->id . '_clear").removeClass("hidden");';
+    $script[] = '    if(id != "") {';
+    $script[] = '      document.getElementById("' . $imagelib_id . '").src = "' . $path . '" + id';
+    $script[] = '    } else {';
+    $script[] = '      document.getElementById("' . $imagelib_id . '").src = "' . JURI::root(true) . '/media/system/images/blank.png";';
+    $script[] = '    }';
+    $script[] = '    jQuery("#modalSelectThumbnail").modal("hide");';
+    $script[] = '  }';
+    $script[] = '  function joom_clearthumb() {';
+    $script[] = '    jQuery("#' . $this->id . '_clear").addClass("hidden");';
+    $script[] = '    document.getElementById("' . $this->id . '_id").value = 0;';
+    $script[] = '    document.getElementById("' . $this->id . '_name").value = "-";';
+    $script[] = '    document.getElementById("' . $imagelib_id . '").src = "' . JURI::root(true) . '/media/system/images/blank.png";';
+    $script[] = '    return false';
+    $script[] = '  }';
 
-    return $html;
+    $doc->addScriptDeclaration(implode("\n", $script));
+
+    // Remove bottom border from modal header as we will not have a title
+    $css[] = '  #modalSelectThumbnail .modal-header {';
+    $css[] = '    border-bottom: none;';
+    $css[] = '  }';
+
+    $doc->addStyleDeclaration(implode("\n", $css));
+
+    // Get the image title
+    $img = JTable::getInstance('joomgalleryimages', 'Table');
+
+    if(!empty($this->value))
+    {
+      $img->load($this->value);
+    }
+    else
+    {
+      $img->imgtitle = '-';
+    }
+
+    $title = htmlspecialchars($img->imgtitle, ENT_QUOTES, 'UTF-8');
+
+    $link = 'index.php?option=com_joomgallery&amp;view=mini&amp;extended=0&amp;format=raw&amp;object='
+              . $this->id . '&amp;type=category&amp;catid=' . $catid;
+
+    $html[] = '<span class="input-append">';
+    $html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $title . '"'
+                . ' readonly="readonly" disabled="disabled" size="35" />';
+    $html[] = '<a href="#modalSelectThumbnail"  class="btn hasTooltip" role="button"  data-toggle="modal"'
+                . ' title="'
+                . ($app->isAdmin() ? JHtml::tooltipText('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL_TIP') : JHtml::tooltipText('COM_JOOMGALLERY_COMMON_SELECT_THUMBNAIL_TIP')) . '">'
+                . '<i class="icon-image"></i> '
+                . ($app->isAdmin() ? JText::_('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL') : JText::_('COM_JOOMGALLERY_COMMON_SELECT'))
+                . '</a>';
+
+    $html[] = JHtmlBootstrap::renderModal(
+                'modalSelectThumbnail', array(
+                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
+                  'width'   => '620px',
+                  'height'  => '390px'
+                 )
+              );
+
+    $html[] = '<button id="' . $this->id . '_clear" class="btn' . ($this->value ? '' : ' hidden') . ' hasTooltip" title="'
+                . ($app->isAdmin() ? JHtml::tooltipText('COM_JOOMGALLERY_CATMAN_REMOVE_CATTHUMB_TIP') : JHtml::tooltipText('COM_JOOMGALLERY_COMMON_REMOVE_CATTHUMB_TIP'))
+                . '" onclick="return joom_clearthumb()"><span class="icon-remove"></span></button>';
+
+    $html[] = '</span>';
+    $html[] = '<input type="hidden" id="' . $this->id . '_id" name="' . $this->name . '" value="' . $this->value . '"/>';
+
+    return implode("\n", $html);
   }
 }

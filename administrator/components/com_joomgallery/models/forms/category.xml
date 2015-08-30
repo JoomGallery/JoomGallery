@@ -153,6 +153,7 @@
       name="password"
       type="joompassword"
       strengthmeter="true"
+      autocomplete="off"
       class="inputbox"
       label="COM_JOOMGALLERY_CATMAN_PASSWORD"
       description="COM_JOOMGALLERY_CATMAN_PASSWORD_TIP"

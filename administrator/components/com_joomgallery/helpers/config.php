@@ -38,7 +38,6 @@ class JoomConfig extends JObject
   var $jg_use_real_paths;
   var $jg_checkupdate;
   var $jg_filenamewithjs;
-  var $jg_filenamesearch;
   var $jg_filenamereplace;
   var $jg_thumbcreation;
   var $jg_fastgd2thumbcreation;
@@ -58,8 +57,8 @@ class JoomConfig extends JObject
   var $jg_msg_upload_type;
   var $jg_msg_upload_recipients;
   var $jg_msg_download_type;
-  var $jg_msg_zipdownload;
   var $jg_msg_download_recipients;
+  var $jg_msg_zipdownload;
   var $jg_msg_comment_type;
   var $jg_msg_comment_recipients;
   var $jg_msg_comment_toowner;
@@ -229,6 +228,11 @@ class JoomConfig extends JObject
   var $jg_showdetailtitle;
   var $jg_showdetail;
   var $jg_showdetailaccordion;
+  var $jg_accordionduration;
+  var $jg_accordiondisplay;
+  var $jg_accordionopacity;
+  var $jg_accordionalwayshide;
+  var $jg_accordioninitialeffect;
   var $jg_showdetaildescription;
   var $jg_showdetaildatum;
   var $jg_showdetailhits;

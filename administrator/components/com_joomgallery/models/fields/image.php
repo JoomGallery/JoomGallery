@@ -37,14 +37,86 @@ class JFormFieldImage extends JFormField
    */
   protected function getInput()
   {
-    require_once(JPATH_BASE.'/components/com_joomgallery/includes/defines.php');
+    require_once(JPATH_BASE . '/components/com_joomgallery/includes/defines.php');
 
     $db       = JFactory::getDBO();
     $doc      = JFactory::getDocument();
-    $class    = $this->element['class'] ? (string) $this->element['class'] : '';
-    $validate = false;
+    $required = $this->required ? ' required="required"' : '';
+    $validate = ($this->validate && $this->validate == 'joompositivenumeric') ? true : false;
+    $class    = '';
+    $script   = array();
+    $html     = array();
+    $css      = array();
 
-    if($this->element['required'] && $this->element['required'] == true && strpos($class, 'required') === false)
+    JHtml::_('bootstrap.tooltip');
+
+    if($validate)
+    {
+      $class = 'validate-' . $this->validate;
+
+      // Add a validation script for form validation
+      $script[] = '  jQuery(document).ready(function() {';
+      $script[] = '    document.formvalidator.setHandler("joompositivenumeric", function(value) {';
+      $script[] = '      regex = /^[1-9]+[0-9]*$/;';
+      $script[] = '      return regex.test(value);';
+      $script[] = '    })';
+      $script[] = '  });';
+    }
+
+    // Add script for fetching the selected image in the modal dialog
+    $script[] = '  function joom_selectimage(id, title, object) {';
+    $script[] = '    document.getElementById(object).value            = id;';
+    $script[] = '    document.getElementById(object + "_name").value  = title;';
+    $script[] = '    jQuery("#modalSelectImage").modal("hide");';
+    if($validate)
+    {
+      $script[] = '    document.formvalidator.validate(document.getElementById(object));';
+      $script[] = '    document.formvalidator.validate(document.getElementById(object + "_name"));';
+    }
+    $script[] = '  }';
+
+    $doc->addScriptDeclaration(implode("\n", $script));
+
+    // Remove bottom border from modal header as we will not have a title
+    $css[] = '  #modalSelectImage .modal-header {';
+    $css[] = '    border-bottom: none;';
+    $css[] = '  }';
+
+    $doc->addStyleDeclaration(implode("\n", $css));
+
+    JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_joomgallery/tables');
+    $img = JTable::getInstance('joomgalleryimages', 'Table');
+
+    if($this->value)
+    {
+      $img->load($this->value);
+    }
+    else
+    {
+      $img->imgtitle = '';
+    }
+
+    $link  = 'index.php?option=com_joomgallery&amp;view=mini&amp;extended=0&amp;format=raw&amp;catid=0&amp;object=' . $this->id;
+    $title = htmlspecialchars($img->imgtitle, ENT_QUOTES, 'UTF-8');
+
+    $html[] = '<span class="input-append">';
+    $html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $title . '"' . $required . ' readonly="readonly" size="40" />';
+    $html[] = '<a href="#modalSelectImage"  class="btn hasTooltip" role="button"  data-toggle="modal"'
+                . ' title="' . JHtml::tooltipText('COM_JOOMGALLERY_LAYOUT_COMMON_CHOOSE_IMAGE') . '">'
+                . '<i class="icon-image"></i> ' . JText::_('JSELECT')
+                . '</a>';
+
+    $html[] = JHtmlBootstrap::renderModal(
+                'modalSelectImage', array(
+                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
+                  'width'   => '620px',
+                  'height'  => '390px'
+                 )
+              );
+
+    $html[] = '</span>';
+
+    if($this->required)
     {
       if(!empty($class))
       {
@@ -53,70 +125,8 @@ class JFormFieldImage extends JFormField
       $class .= 'required';
     }
 
-    // Store class attribute for input box displaying the image title
-    $sclass = !empty($class) ? ' class="'.$class.'"' : '';
+    $html[] = '<input class="' . $class . '" type="hidden" id="' . $this->id . '" name="' . $this->name . '" value="' . (int) $this->value . '"/>';
 
-    if($this->element['validate'] && (string) $this->element['validate'] == 'joompositivenumeric')
-    {
-      $validate = true;
-      // Add a validation script for form validation
-      $js_validate = "
-        jQuery(document).ready(function() {
-          document.formvalidator.setHandler('joompositivenumeric', function(value) {
-            regex=/^[1-9]+[0-9]*$/;
-            return regex.test(value);
-          })
-        });";
-      $doc->addScriptDeclaration($js_validate);
-
-      // Element class needs attribute validate-...
-      if(!empty($class))
-      {
-        $class .= ' ';
-      }
-      $class .= 'validate-'.(string) $this->element['validate'];
-    }
-
-    JTable::addIncludePath(JPATH_ADMINISTRATOR.'/components/com_joomgallery/tables');
-    $img = JTable::getInstance('joomgalleryimages', 'Table');
-    if($this->value)
-    {
-      $img->load($this->value);
-    }
-    else
-    {
-      $img->imgtitle = "";
-    }
-
-    $js = "
-    function joom_selectimage(id, title, object) {
-      document.getElementById(object).value            = id;
-      document.getElementById(object + '_name').value  = title;
-      window.parent.SqueezeBox.close();";
-    if($validate)
-    {
-      $js .= "
-      document.formvalidator.validate(document.getElementById(object));
-      document.formvalidator.validate(document.getElementById(object + '_name'));";
-    }
-      $js .= "
-    }";
-    $doc->addScriptDeclaration($js);
-
-    $link = 'index.php?option=com_joomgallery&view=mini&extended=0&format=raw&catid=0&object='.$this->id;
-
-    JHTML::_('behavior.modal', 'a.modal');
-    $html = '
-    <div style="float: left;">
-      <input'.$sclass.' type="text" size="30" id="'.$this->id.'_name" value="'.htmlspecialchars($img->imgtitle, ENT_QUOTES, 'UTF-8').'" readonly="readonly" />
-    </div>
-    <div class="button2-left">
-      <div class="blank">
-        <a class="modal" title="'.JText::_('COM_JOOMGALLERY_LAYOUT_COMMON_CHOOSE_IMAGE').'"  href="'.$link.'" rel="{handler: \'iframe\', size: {x: 620, y: 550}}">'.JText::_('COM_JOOMGALLERY_COMMON_PLEASE_SELECT_IMAGE').'</a>
-      </div>
-    </div>
-    <input class="'.$class.'" type="hidden" id="'.$this->id.'" name="'.$this->name.'" value="'.(int)$this->value.'"/>';
-
-    return $html;
+    return implode("\n", $html);
   }
 }

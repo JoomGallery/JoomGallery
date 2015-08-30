@@ -479,7 +479,7 @@ echo $this->loadTemplate('header'); ?>
         <?php echo $this->voting; ?>
         <?php echo JText::_('COM_JOOMGALLERY_DETAIL_RATING_GOOD', $this->maxvoting); ?>
         <p>
-          <input class="button" type="submit" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_RATING_VOTE'); ?>" name="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_RATING_VOTE'); ?>" />
+          <input class="btn btn-small btn-primary" type="submit" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_RATING_VOTE'); ?>" name="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_RATING_VOTE'); ?>" />
         </p>
       </form>
 <?php     endif;
@@ -571,7 +571,7 @@ echo $this->loadTemplate('header'); ?>
         <div class="jg_cmtl">
           <?php echo $this->_user->get('username'); ?>
 <?php     if(!$this->_user->get('id') && $this->_config->get('jg_namedanoncomment')): ?>
-          <input title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_GUEST'); ?>" type="text" class="inputbox" name="cmtname" value="<?php echo $this->_mainframe->getUserState('joom.comments.name', JText::_('COM_JOOMGALLERY_COMMON_GUEST')); ?>" tabindex="1" />
+          <input title="<?php echo JText::_('COM_JOOMGALLERY_COMMON_GUEST'); ?>" type="text" class="inputbox input-medium" name="cmtname" value="<?php echo $this->_mainframe->getUserState('joom.comments.name', JText::_('COM_JOOMGALLERY_COMMON_GUEST')); ?>" tabindex="1" />
 <?php     endif;
           if($this->params->get('smiley_support')): ?>
           <div class="jg_cmtsmilies">
@@ -604,9 +604,9 @@ echo $this->loadTemplate('header'); ?>
           &nbsp;
         </div>
         <div class="jg_cmtr">
-          <input type="button" name="send" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_SEND_COMMENT'); ?>" class="button" onclick="joom_validatecomment()" />
+          <input type="button" name="send" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_SEND_COMMENT'); ?>" class="btn btn-primary btn-small" onclick="joom_validatecomment()" />
             &nbsp;
-          <input type="reset" value="<?php echo JText::_('COM_JOOMGALLERY_COMMON_DELETE'); ?>" name="reset" class="button" />
+          <input type="reset" value="<?php echo JText::_('COM_JOOMGALLERY_COMMON_DELETE'); ?>" name="reset" class="btn btn-small" />
         </div>
       </form>
 <?php   endif;
@@ -653,7 +653,7 @@ echo $this->loadTemplate('header'); ?>
           &nbsp;
         </div>
         <p class="jg_s2fr">
-          <input type="button" name="send" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_SEND_EMAIL'); ?>" class="button" onclick="joom_validatesend2friend()" />
+          <input type="button" name="send" value="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_SEND_EMAIL'); ?>" class="btn btn-primary btn-small" onclick="joom_validatesend2friend()" />
         </p>
       </form>
 <?php   endif;

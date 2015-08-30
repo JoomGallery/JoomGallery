@@ -40,6 +40,7 @@ class JoomGalleryViewMini extends JoomGalleryView
 
     $this->extended     = $this->_mainframe->getUserStateFromRequest('joom.mini.extended', 'extended', 1, 'int');
     $this->upload_catid = $this->_mainframe->input->getInt('upload_category');
+    $this->prefix       = $this->_mainframe->getUserStateFromRequest('joom.mini.prefix', 'prefix', 'joom', 'cmd');
 
     // Decide which tabs have to be displayed
     $this->tabs = array('images' => true);
@@ -183,6 +184,7 @@ class JoomGalleryViewMini extends JoomGalleryView
     {
       $this->categories_form = JForm::getInstance(_JOOM_OPTION.'.mini.categories', 'mini.categories');
 
+      $this->categories_form->setFieldAttribute('category_catid', 'onchange', str_replace('joom_', $this->prefix.'_', $this->categories_form->getFieldAttribute('category_catid', 'onchange')));
       $categories_fields = array('category_mode', 'category_limit', 'category_columns', 'category_ordering', 'category_linkedtext');
       foreach($categories_fields as $field)
       {
@@ -199,25 +201,11 @@ class JoomGalleryViewMini extends JoomGalleryView
       {
         $this->upload_form->setFieldAttribute('catid', 'default', $this->upload_catid);
       }
-
-      $this->fileSizeLimit = $this->_mainframe->isSite() ? $this->_config->get('jg_maxfilesize') : 0;
-      $this->chunkSize     = 0;
-      $post_max_size = @ini_get('post_max_size');
-      if(!empty($post_max_size))
+      else
       {
-        $post_max_size   = JoomHelper::iniToBytes($post_max_size);
-        $this->chunkSize = (int) min(500000, (int)(0.8 * $post_max_size));
+        $this->upload_form->setFieldAttribute('ajaxupload', 'insert_options', true);
       }
-      $upload_max_filesize = @ini_get('upload_max_filesize');
-      if(!empty($upload_max_filesize))
-      {
-        $upload_max_filesize = JoomHelper::iniToBytes($upload_max_filesize);
 
-        if($this->fileSizeLimit <= 0 || $this->fileSizeLimit > $upload_max_filesize)
-        {
-          $this->fileSizeLimit = $upload_max_filesize;
-        }
-      }
       $this->editFilename     = $this->_mainframe->isSite() ? $this->_config->get('jg_useruseorigfilename') : $this->_config->get('jg_useorigfilename');
       $this->delete_original  = $this->_mainframe->isSite() ? ($this->_config->get('jg_delete_original_user') == 2) : ($this->_config->get('jg_delete_original') == 2);
 
@@ -307,7 +295,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path');
+          $this->upload_categories  = JHtml::_('select.genericlist', $categories, 'catid', null, 'cid', 'path', null, 'upload_categories');
         }
       }
     }
@@ -329,7 +317,7 @@ class JoomGalleryViewMini extends JoomGalleryView
         else
         {
           // Otherwise set the new category select box
-          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path');
+          $this->parent_categories  = JHtml::_('select.genericlist', $categories, 'parent_id', null, 'cid', 'path', null, 'parent_categories');
         }
       }
     }
