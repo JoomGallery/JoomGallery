@@ -75,7 +75,7 @@ class JFormFieldJoomUser extends JFormFieldUser
     {
       $script[] = '  jQuery(document).ready(function() {';
       $script[] = '    document.formvalidator.setHandler("SelectUser_' . $this->id . '", function(value) {';
-      $script[] = '      if (value == "" || value == "' . JText::_('$hint') . '") {';
+      $script[] = '      if (value == "" || value == "' . JText::_($hint) . '") {';
       $script[] = '        return false;';
       $script[] = '      }';
       $script[] = '      return true;';
