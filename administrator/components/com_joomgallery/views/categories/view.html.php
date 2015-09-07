@@ -132,9 +132,9 @@ class JoomGalleryViewCategories extends JoomGalleryView
       'c.name' => JText::_('JGLOBAL_TITLE'),
       'access_level' => JText::_('JGRID_HEADING_ACCESS'),
       'c.cid' => JText::_('JGRID_HEADING_ID'),
-      'c.alias' => 'Alias',
-      'c.parent_id' => 'Parent',
-      'c.owner' => 'Owner',
+      'c.alias' => JText::_('JFIELD_ALIAS_LABEL'),
+      'c.parent_id' => JText::_('COM_JOOMGALLERY_COMMON_PARENT_CATEGORY') ,
+      'c.owner' => JText::_('COM_JOOMGALLERY_COMMON_OWNER'),
       //'c.level' => 'Level'
     );
   }
