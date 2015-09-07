@@ -34,12 +34,193 @@ class JFormFieldJoomUser extends JFormFieldUser
   public $type = 'Joomuser';
 
   /**
+   * User count
+   *
+   * @var     int
+   * @since   3.2
+   */
+  protected static $userCount = null;
+
+  /**
+   * User list
+   *
+   * @var    array
+   * @since   3.2
+   */
+  protected static $userList = null;
+
+  /**
+   * Use listbox for user selection until specified maximum number
+   * of system users is reached, otherwise use modal popup
+   *
+   * @var    array
+   * @since   3.2
+   */
+  protected $useListboxMaxUserCount = 0;
+
+  /**
+   * Method to get certain otherwise inaccessible properties from the form field object.
+   *
+   * @param   string  $name  The property name for which to the the value.
+   *
+   * @return  mixed  The property value or null.
+   *
+   * @since   3.2
+   */
+  public function __get($name)
+  {
+    switch ($name)
+    {
+      case 'useListboxMaxUserCount':
+        return $this->$name;
+    }
+
+    return parent::__get($name);
+  }
+
+  /**
+   * Method to set certain otherwise inaccessible properties of the form field object.
+   *
+   * @param   string  $name   The property name for which to the the value.
+   * @param   mixed   $value  The value of the property.
+   *
+   * @return  void
+   *
+   * @since   3.2
+   */
+  public function __set($name, $value)
+  {
+    switch ($name)
+    {
+      case 'useListboxMaxUserCount':
+        $this->$name = (int) $value;
+        break;
+
+      default:
+        parent::__set($name, $value);
+    }
+  }
+
+  /**
+   * Method to attach a JForm object to the field.
+   *
+   * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the <field /> tag for the form field object.
+   * @param   mixed             $value    The form field value to validate.
+   * @param   string            $group    The field name group control value. This acts as as an array container for the field.
+   *                                      For example if the field has name="foo" and the group value is set to "bar" then the
+   *                                      full field name would end up being "bar[foo]".
+   *
+   * @return  boolean  True on success.
+   *
+   * @see     JFormField::setup()
+   * @since   3.2
+   */
+  public function setup(SimpleXMLElement $element, $value, $group = null)
+  {
+    $return = parent::setup($element, $value, $group);
+
+    if ($return)
+    {
+      $this->useListboxMaxUserCount  = (int) $this->element['useListboxMaxUserCount'];
+    }
+
+    return $return;
+  }
+
+  /**
    * Method to get the field input markup
    *
    * @return  string  The field input markup
    * @since 2.0
    */
   protected function getInput()
+  {
+    if($this->useListboxMaxUserCount)
+    {
+      // Get the number of not blocked users
+      if(self::$userCount === null)
+      {
+        $db = JFactory::getDbo();
+
+        $query = $db->getQuery(true)
+              ->select('COUNT(id)')
+              ->from('#__users');
+        $db->setQuery($query);
+
+        self::$userCount = $db->loadResult();
+      }
+
+      if(self::$userCount != null && (self::$userCount <= $this->useListboxMaxUserCount))
+      {
+        return $this->getListboxInput();
+      }
+    }
+
+    return $this->getPopupInput();
+  }
+
+  /**
+   * Method to get the field input markup in the case of
+   * using a listbox for user selection
+   *
+   * @return  string  The field input markup
+   * @since 3.2
+   */
+  protected function getListboxInput()
+  {
+    $options = array();
+    $attr    = '';
+
+    // Initialize some field attributes.
+    $attr .= !empty($this->class) ? ' class="' . $this->class . '"' : '';
+    $attr .= !empty($this->size) ? ' size="' . $this->size . '"' : '';
+    $attr .= $this->multiple ? ' multiple' : '';
+    $attr .= $this->required ? ' required aria-required="true"' : '';
+    $attr .= $this->autofocus ? ' autofocus' : '';
+
+    // Initialize JavaScript field attributes.
+    $attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+
+    if(self::$userList === null)
+    {
+      $config = JoomConfig::getInstance();
+      $type   = $config->get('jg_realname') ? 'name' : 'username';
+
+      $db = JFactory::getDbo();
+
+      $query = $db->getQuery(true)
+            ->select('id AS value')
+            ->select($type . ' AS text')
+            ->from('#__users')
+            ->order($type . ' ASC');
+      $db->setQuery($query);
+
+      self::$userList = $db->loadObjectList();
+    }
+
+    $hint = (!empty($this->hint) ? $this->hint : 'COM_JOOMGALLERY_COMMON_NO_USER');
+
+    $options[] = JHtml::_('select.option',  '', JText::_($hint));
+
+    if(!empty(self::$userList))
+    {
+      foreach(self::$userList as $user)
+      {
+        $options[] = JHtml::_('select.option', $user->value , $user->text);
+      }
+    }
+
+    return JHtml::_('select.genericlist', $options, $this->name, trim($attr), 'value', 'text', $this->value, $this->id);
+  }
+
+  /**
+   * Method to get the field input markup in the case of
+   * using a modal popup for user selection
+   *
+   * @return  string  The field input markup
+   * @since 3.2
+   */
+  protected function getPopupInput()
   {
     // Initialize variables.
     $html     = array();

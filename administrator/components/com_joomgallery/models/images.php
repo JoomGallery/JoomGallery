@@ -203,6 +203,8 @@ class JoomGalleryModelImages extends JoomGalleryModel
     {
       $form = JForm::getInstance($name, $source, $options, false, $xpath);
 
+      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', '250', 'filter');
+
       if(isset($options['load_data']) && $options['load_data'])
       {
         // Get the data for the form.
