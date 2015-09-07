@@ -329,7 +329,7 @@ dl.tabs dt h3 a:link {
   overflow-y: auto;
 }
 
-#jg-reject-popup #jg-reject-image{
+#jg-reject-popup #jg-reject-image {
   max-height: 200px;
   width: auto;
 }
@@ -337,4 +337,10 @@ dl.tabs dt h3 a:link {
 #jg-reject-owner p, #jg-reject-no-owner p {
   margin-top: 5px;
   margin-bottom: 20px;
+}
+
+/* Search tools */
+.js-stools-field-filter .input-append,
+.js-stools-field-filter #jg-filter_category-input {
+  margin-bottom: 0px;
 }
