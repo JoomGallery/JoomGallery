@@ -32,21 +32,16 @@ class JoomGalleryViewCategories extends JoomGalleryView
   function display($tpl = null)
   {
     // Get data from the model
-    $items      = $this->get('Categories');
-    $state      = $this->get('State');
-    $pagination = $this->get('Pagination');
-
-    $this->assignRef('items',       $items);
-    $this->assignRef('state',       $state);
-    $this->assignRef('pagination',  $pagination);
-
-    if($state->get('filter.inuse') && !$this->get('Total'))
-    {
-      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_CATMAN_MSG_NO_CATEGORIES_FOUND_MATCHING_YOUR_QUERY'));
-    }
+    $this->items         = $this->get('Categories');
+    $this->state         = $this->get('State');
+    $this->pagination    = $this->get('Pagination');
+    $this->filterForm    = $this->get('FilterForm');
+    $this->activeFilters = $this->get('ActiveFilters');
 
     $this->addToolbar();
+
     $this->sidebar = JHtmlSidebar::render();
+
     parent::display($tpl);
   }
 
@@ -94,48 +89,5 @@ class JoomGalleryViewCategories extends JoomGalleryView
       JToolbarHelper::deleteList('','remove');
       JToolbarHelper::divider();
     }
-
-    $options = array( JHtml::_('select.option', 1, JText::_('COM_JOOMGALLERY_COMMON_OPTION_PUBLISHED_ONLY')),
-                      JHtml::_('select.option', 0, JText::_('COM_JOOMGALLERY_COMMON_OPTION_NOT_PUBLISHED_ONLY')));
-    JHtmlSidebar::addFilter(
-      JText::_('JOPTION_SELECT_PUBLISHED'),
-      'filter_published',
-      JHtml::_('select.options', $options, 'value', 'text', $this->state->get('filter.published'), true)
-    );
-
-    JHtmlSidebar::addFilter(
-      JText::_('JOPTION_SELECT_ACCESS'),
-      'filter_access',
-      JHtml::_('select.options', JHtml::_('access.assetgroups'), 'value', 'text', $this->state->get('filter.access'))
-    );
-
-    $options = array( JHtml::_('select.option', 1, JText::_('COM_JOOMGALLERY_CATMAN_OPTION_USERCATEGORIES_ONLY')),
-                      JHtml::_('select.option', 2, JText::_('COM_JOOMGALLERY_CATMAN_OPTION_BACKENDCATEGORIES_ONLY')));
-    JHtmlSidebar::addFilter(
-      JText::_('COM_JOOMGALLERY_COMMON_OPTION_SELECT_TYPE'),
-      'filter_type',
-      JHtml::_('select.options', $options, 'value', 'text', $this->state->get('filter.type'), true)
-    );
-  }
-
-  /**
-   * Returns an array of fields the table can be sorted by
-   *
-   * @return  array Array containing the field name to sort by as the key and display text as value
-   * @since   3.0
-   */
-  protected function getSortFields()
-  {
-    return array(
-      'c.lft' => JText::_('JGRID_HEADING_ORDERING'),
-      'c.published' => JText::_('JSTATUS'),
-      'c.name' => JText::_('JGLOBAL_TITLE'),
-      'access_level' => JText::_('JGRID_HEADING_ACCESS'),
-      'c.cid' => JText::_('JGRID_HEADING_ID'),
-      'c.alias' => 'Alias',
-      'c.parent_id' => 'Parent',
-      'c.owner' => 'Owner',
-      //'c.level' => 'Level'
-    );
   }
 }
