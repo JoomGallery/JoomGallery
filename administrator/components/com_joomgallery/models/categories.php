@@ -74,7 +74,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
     {
       // Get the data of the categories which will actually be displayed
       $query = $this->_buildQuery();
-      $this->_db->setQuery($query, $this->getState('list.start'), $this->getState('list.limit'));
+      $this->_db->setQuery($query, $this->getStart(), $this->getState('list.limit'));
       $current_categories = $this->_db->loadObjectList('cid');
 
       // Get the complete category structure (containing only
