@@ -78,7 +78,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
     if(empty($this->_images))
     {
       $query = $this->_buildQuery();
-      $this->_images = $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
+      $this->_images = $this->_getList($query, $this->getStart(), $this->getState('list.limit'));
     }
 
     return $this->_images;
@@ -942,10 +942,11 @@ class JoomGalleryModelImages extends JoomGalleryModel
   {
     $app = JFactory::getApplication();
 
-    $cur_state  = $app->getUserState($key, $default);
-    $new_state  = JRequest::getVar($request, null, 'default', $type);
+    $old_state = $app->getUserState($key);
+    $cur_state = (!is_null($old_state)) ? $old_state : $default;
+    $new_state = JRequest::getVar($request, null, 'default', $type);
 
-    if($cur_state != $new_state && $resetPage)
+    if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
       JRequest::setVar('limitstart', 0);
     }
