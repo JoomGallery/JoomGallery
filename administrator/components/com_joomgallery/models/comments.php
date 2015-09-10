@@ -57,7 +57,8 @@ class JoomGalleryModelComments extends JoomGalleryModel
         'approved', 'c.approved',
         'cmtip', 'c.cmtip',
         'i.imgtitle',
-        'cmtdate', 'c.cmtdate'
+        'cmtdate', 'c.cmtdate',
+        'state'
         );
   }
 
@@ -73,7 +74,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
     if(empty($this->_comments))
     {
       $query = $this->_buildQuery();
-      $this->_comments = $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
+      $this->_comments = $this->_getList($query, $this->getStart(), $this->getState('list.limit'));
 
       foreach($this->_comments as $key => $comment)
       {
@@ -90,6 +91,33 @@ class JoomGalleryModelComments extends JoomGalleryModel
   }
 
   /**
+   * Function to get the active filters
+   *
+   * @return  array  Associative array in the format: array('filter_published' => 0)
+   *
+   * @since   3.2.3
+   */
+  public function getActiveFilters()
+  {
+    $activeFilters = array();
+
+    if (!empty($this->filter_fields))
+    {
+      foreach ($this->filter_fields as $filter)
+      {
+        $filterName = 'filter.' . $filter;
+
+        if (property_exists($this->state, $filterName) && (!empty($this->state->{$filterName}) || is_numeric($this->state->{$filterName})))
+        {
+          $activeFilters[$filter] = $this->state->get($filterName);
+        }
+      }
+    }
+
+    return $activeFilters;
+  }
+
+  /**
    * Method to get the pagination object for the list.
    * This method uses 'getTotel', 'getStart' and the current
    * list limit of this view.
@@ -99,7 +127,6 @@ class JoomGalleryModelComments extends JoomGalleryModel
    */
   public function getPagination()
   {
-    jimport('joomla.html.pagination');
     return new JPagination($this->getTotal(), $this->getStart(), $this->getState('list.limit'));
   }
 
@@ -141,6 +168,97 @@ class JoomGalleryModelComments extends JoomGalleryModel
   }
 
   /**
+   * Get the filter form
+   *
+   * @param   array    $data      data
+   * @param   boolean  $loadData  load current data
+   *
+   * @return  JForm/false  the JForm object or false
+   *
+   * @since   3.2.3
+   */
+  public function getFilterForm($data = array(), $loadData = true)
+  {
+    return $this->loadForm(_JOOM_OPTION . '.filter_comments', 'filter_comments', array('control' => '', 'load_data' => $loadData));
+  }
+
+  /**
+   * Method to get a form object.
+   *
+   * @param   string   $name     The name of the form.
+   * @param   string   $source   The form source. Can be XML string if file flag is set to false.
+   * @param   array    $options  Optional array of options for the form creation.
+   * @param   boolean  $clear    Optional argument to force load a new form.
+   * @param   string   $xpath    An optional xpath to search for the fields.
+   *
+   * @return  mixed  JForm object on success, False on error.
+   *
+   * @see     JForm
+   * @since   3.2.3
+   */
+  protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
+  {
+    // Handle the optional arguments.
+    $options['control'] = JArrayHelper::getValue($options, 'control', false);
+
+    // Get the form.
+    JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+    JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
+
+    try
+    {
+      $form = JForm::getInstance($name, $source, $options, false, $xpath);
+
+      if(isset($options['load_data']) && $options['load_data'])
+      {
+        // Get the data for the form.
+        $data = $this->loadFormData();
+      }
+      else
+      {
+        $data = array();
+      }
+
+      // Load the data into the form after the plugins have operated.
+      $form->bind($data);
+    }
+    catch(Exception $e)
+    {
+      $this->setError($e->getMessage());
+
+      return false;
+    }
+
+    return $form;
+  }
+
+  /**
+   * Method to get the data that should be injected in the form.
+   *
+   * @return  mixed  The data for the form.
+   *
+   * @since  3.2.3
+   */
+  protected function loadFormData()
+  {
+    // Check the session for previously entered form data.
+    $data = JFactory::getApplication()->getUserState('joom.comments', new stdClass);
+
+    // Pre-fill the list options
+    if (!property_exists($data, 'list'))
+    {
+      $data->list = array(
+          'direction' => $this->state->{'list.direction'},
+          'limit'     => $this->state->{'list.limit'},
+          'ordering'  => $this->state->{'list.ordering'},
+          'start'     => $this->state->{'list.start'}
+      );
+    }
+
+    return $data;
+  }
+
+  /**
    * Method to auto-populate the model state.
    *
    * Note. Calling getState in this method will result in recursion.
@@ -152,43 +270,95 @@ class JoomGalleryModelComments extends JoomGalleryModel
    */
   protected function populateState($ordering = 'c.cmtdate', $direction = 'desc')
   {
-    $search = $this->getUserStateFromRequest('joom.comments.filter.search', 'filter_search');
-    $this->setState('filter.search', $search);
+    // Receive & set filters
+    $filters = $this->getUserStateFromRequest('joom.comments.filter', 'filter', array('search' => null, 'state' => ''), 'array');
 
-    $state = $this->getUserStateFromRequest('joom.comments.filter.state', 'filter_state', '');
-    $this->setState('filter.state', $state);
-
-    $value = $this->getUserStateFromRequest('global.list.limit', 'limit', $this->_mainframe->getCfg('list_limit'));
-    $limit = $value;
-    $this->setState('list.limit', $limit);
-
-    $value = $this->getUserStateFromRequest('joom.comments.limitstart', 'limitstart', 0);
-    $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-    $this->setState('list.start', $limitstart);
-
-    // Check if the ordering field is in the white list, otherwise use the incoming value
-    $value = $this->getUserStateFromRequest('joom.comments.ordercol', 'filter_order', $ordering);
-    if(!in_array($value, $this->filter_fields))
+    if($filters)
     {
-      $value = $ordering;
-      $this->_mainframe->setUserState('joom.comments.ordercol', $value);
+      foreach($filters as $name => $value)
+      {
+        $this->setState('filter.' . $name, $value);
+
+        if($value)
+        {
+          $this->setState('filter.inuse', 1);
+        }
+      }
     }
 
-    $this->setState('list.ordering', $value);
+    $limit = 0;
 
-    // Check if the ordering direction is valid, otherwise use the incoming value
-    $value = $this->getUserStateFromRequest('joom.comments.orderdirn', 'filter_order_Dir', $direction);
-    if(!in_array(strtoupper($value), array('ASC', 'DESC', '')))
+    // Receive & set list options
+    $list = $this->getUserStateFromRequest('joom.comments.list', 'list',
+        array('ordering' => $ordering, 'direction' => $direction, 'fullordering' => $ordering . ' ' . $direction,
+            'limit' => $this->_mainframe->getCfg('list_limit'), 'start' => 0), 'array');
+
+    if($list)
     {
-      $value = $direction;
-      $this->_mainframe->setUserState('joom.comments.orderdirn', $value);
-    }
+      foreach($list as $name => $value)
+      {
+        // Extra validations
+        switch($name)
+        {
+          case 'fullordering':
+            $orderingParts = explode(' ', $value);
 
-    $this->setState('list.direction', $value);
+            if(count($orderingParts) >= 2)
+            {
+              // Latest part will be considered the direction
+              $fullDirection = end($orderingParts);
 
-    if($search || $state)
-    {
-      $this->setState('filter.inuse', 1);
+              if(in_array(strtoupper($fullDirection), array('ASC', 'DESC', '')))
+              {
+                $this->setState('list.direction', $fullDirection);
+              }
+
+              unset($orderingParts[count($orderingParts) - 1]);
+
+              // The rest will be the ordering
+              $fullOrdering = implode(' ', $orderingParts);
+
+              if(in_array($fullOrdering, $this->filter_fields))
+              {
+                $this->setState('list.ordering', $fullOrdering);
+              }
+            }
+            else
+            {
+              $this->setState('list.ordering', $ordering);
+              $this->setState('list.direction', $direction);
+            }
+            break;
+          case 'ordering':
+            if(!in_array($value, $this->filter_fields))
+            {
+              $value = $ordering;
+            }
+            break;
+
+          case 'direction':
+            if(!in_array(strtoupper($value), array('ASC', 'DESC', '')))
+            {
+              $value = $direction;
+            }
+            break;
+
+          case 'limit':
+            $limit = $value;
+            break;
+
+            // Just to keep the default case
+          default:
+            $value = $value;
+            break;
+        }
+
+        $this->setState('list.' . $name, $value);
+      }
+
+      $value      = $this->getUserStateFromRequest('joom.comments.limitstart', 'limitstart', 0);
+      $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+      $this->setState('list.start', $limitstart);
     }
   }
 
@@ -398,6 +568,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
   public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
   {
     $app = JFactory::getApplication();
+
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
     $new_state = JRequest::getVar($request, null, 'default', $type);
