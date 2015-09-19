@@ -31,20 +31,14 @@ class JoomGalleryViewComments extends JoomGalleryView
   public function display($tpl = null)
   {
     // Get data from the model
-    $state      = $this->get('State');
-    $items      = $this->get('Comments');
-    $pagination = $this->get('Pagination');
-
-    $this->assignRef('items',       $items);
-    $this->assignRef('pagination',  $pagination);
-    $this->assignRef('state',       $state);
-
-    if($state->get('filter.inuse') && !$this->get('Total'))
-    {
-      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMAN_MSG_NO_COMMENTS_FOUND_MATCHING_YOUR_QUERY'));
-    }
+    $this->items         = $this->get('Comments');
+    $this->state         = $this->get('State');
+    $this->pagination    = $this->get('Pagination');
+    $this->filterForm    = $this->get('FilterForm');
+    $this->activeFilters = $this->get('ActiveFilters');
 
     $this->addToolbar();
+
     $this->sidebar = JHtmlSidebar::render();
 
     parent::display($tpl);
@@ -66,40 +60,5 @@ class JoomGalleryViewComments extends JoomGalleryView
     JToolbarHelper::divider();
     JToolbarHelper::deleteList('', 'remove', 'COM_JOOMGALLERY_COMMAN_TOOLBAR_REMOVE_COMMENT');
     JToolbarHelper::divider();
-
-    // Add filter by state
-    $options = array(JHtml::_('select.option', 0, JText::_('JOPTION_SELECT_PUBLISHED')),
-                     JHtml::_('select.option', 1, JText::_('COM_JOOMGALLERY_COMMAN_OPTION_PUBLISHED_ONLY')),
-                     JHtml::_('select.option', 2, JText::_('COM_JOOMGALLERY_COMMAN_OPTION_NOT_PUBLISHED_ONLY')),
-                     JHtml::_('select.option', 3, JText::_('COM_JOOMGALLERY_COMMAN_OPTION_APPROVED_ONLY')),
-                     JHtml::_('select.option', 4, JText::_('COM_JOOMGALLERY_COMMAN_OPTION_NOT_APPROVED_ONLY')));
-
-    JHtmlSidebar::addFilter(
-      JText::_('JOPTION_SELECT_PUBLISHED'),
-      'filter_state',
-      JHtml::_('select.options', $options, 'value', 'text', $this->state->get('filter.state'), true),
-      true
-    );
-  }
-
-  /**
-   * Returns an array of fields the table can be sorted by
-   *
-   * @return  array  Array containing the field name to sort by as the key and display text as value
-   *
-   * @since   3.0
-   */
-  protected function getSortFields()
-  {
-    return array(
-      'user' => JText::_('COM_JOOMGALLERY_COMMON_AUTHOR'),
-      'c.cmttext' => JText::_('COM_JOOMGALLERY_COMMAN_TEXT'),
-      'c.published' => JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED'),
-      'c.approved' => JText::_('COM_JOOMGALLERY_COMMON_APPROVED'),
-      'i.imgtitle' => JText::_('COM_JOOMGALLERY_COMMON_IMAGE'),
-      'c.cmtip' => JText::_('COM_JOOMGALLERY_COMMAN_IP'),
-      'c.cmtdate' => JText::_('COM_JOOMGALLERY_COMMON_DATE'),
-      'c.cmtid' => JText::_('COM_JOOMGALLERY_COMMON_ID')
-    );
   }
 }

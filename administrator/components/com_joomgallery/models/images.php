@@ -51,7 +51,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
         'imgtitle', 'a.imgtitle',
         'alias', 'a.alias',
         'catid', 'a.catid',
-        'category_name',
+        'category', 'category_name',
         'published', 'a.published',
         'approved', 'a.approved',
         'access', 'a.access', 'access_level',
@@ -60,7 +60,9 @@ class JoomGalleryModelImages extends JoomGalleryModel
         'imgdate', 'a.imgdate',
         'hits', 'a.hits',
         'downloads', 'a.downloads',
-        'ordering', 'a.ordering'
+        'ordering', 'a.ordering',
+        'state',
+        'type'
         );
   }
 
@@ -76,10 +78,37 @@ class JoomGalleryModelImages extends JoomGalleryModel
     if(empty($this->_images))
     {
       $query = $this->_buildQuery();
-      $this->_images = $this->_getList($query, $this->getState('list.start'), $this->getState('list.limit'));
+      $this->_images = $this->_getList($query, $this->getStart(), $this->getState('list.limit'));
     }
 
     return $this->_images;
+  }
+
+  /**
+   * Function to get the active filters
+   *
+   * @return  array  Associative array in the format: array('filter_published' => 0)
+   *
+   * @since   3.2.3
+   */
+  public function getActiveFilters()
+  {
+    $activeFilters = array();
+
+    if (!empty($this->filter_fields))
+    {
+      foreach ($this->filter_fields as $filter)
+      {
+        $filterName = 'filter.' . $filter;
+
+        if (property_exists($this->state, $filterName) && (!empty($this->state->{$filterName}) || is_numeric($this->state->{$filterName})))
+        {
+          $activeFilters[$filter] = $this->state->get($filterName);
+        }
+      }
+    }
+
+    return $activeFilters;
   }
 
   /**
@@ -92,7 +121,6 @@ class JoomGalleryModelImages extends JoomGalleryModel
    */
   public function getPagination()
   {
-    jimport('joomla.html.pagination');
     return new JPagination($this->getTotal(), $this->getStart(), $this->getState('list.limit'));
   }
 
@@ -134,6 +162,99 @@ class JoomGalleryModelImages extends JoomGalleryModel
   }
 
   /**
+   * Get the filter form
+   *
+   * @param   array    $data      data
+   * @param   boolean  $loadData  load current data
+   *
+   * @return  JForm/false  the JForm object or false
+   *
+   * @since   3.2.3
+   */
+  public function getFilterForm($data = array(), $loadData = true)
+  {
+    return $this->loadForm(_JOOM_OPTION . '.filter_images', 'filter_images', array('control' => '', 'load_data' => $loadData));
+  }
+
+  /**
+   * Method to get a form object.
+   *
+   * @param   string   $name     The name of the form.
+   * @param   string   $source   The form source. Can be XML string if file flag is set to false.
+   * @param   array    $options  Optional array of options for the form creation.
+   * @param   boolean  $clear    Optional argument to force load a new form.
+   * @param   string   $xpath    An optional xpath to search for the fields.
+   *
+   * @return  mixed  JForm object on success, False on error.
+   *
+   * @see     JForm
+   * @since   3.2.3
+   */
+  protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
+  {
+    // Handle the optional arguments.
+    $options['control'] = JArrayHelper::getValue($options, 'control', false);
+
+    // Get the form.
+    JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
+    JForm::addFieldPath(JPATH_COMPONENT . '/models/fields');
+
+    try
+    {
+      $form = JForm::getInstance($name, $source, $options, false, $xpath);
+
+      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', '250', 'filter');
+
+      if(isset($options['load_data']) && $options['load_data'])
+      {
+        // Get the data for the form.
+        $data = $this->loadFormData();
+      }
+      else
+      {
+        $data = array();
+      }
+
+      // Load the data into the form after the plugins have operated.
+      $form->bind($data);
+    }
+    catch(Exception $e)
+    {
+      $this->setError($e->getMessage());
+
+      return false;
+    }
+
+    return $form;
+  }
+
+  /**
+   * Method to get the data that should be injected in the form.
+   *
+   * @return  mixed  The data for the form.
+   *
+   * @since  3.2.3
+   */
+  protected function loadFormData()
+  {
+    // Check the session for previously entered form data.
+    $data = JFactory::getApplication()->getUserState('joom.images', new stdClass);
+
+    // Pre-fill the list options
+    if (!property_exists($data, 'list'))
+    {
+      $data->list = array(
+          'direction' => $this->state->{'list.direction'},
+          'limit'     => $this->state->{'list.limit'},
+          'ordering'  => $this->state->{'list.ordering'},
+          'start'     => $this->state->{'list.start'}
+      );
+    }
+
+    return $data;
+  }
+
+  /**
    * Method to auto-populate the model state.
    *
    * Note. Calling getState in this method will result in recursion.
@@ -145,55 +266,105 @@ class JoomGalleryModelImages extends JoomGalleryModel
    */
   protected function populateState($ordering = 'a.ordering', $direction = 'asc')
   {
-    $search = $this->getUserStateFromRequest('joom.images.filter.search', 'filter_search');
-    $this->setState('filter.search', $search);
+    // Receive & set filters
+    $filters = $this->getUserStateFromRequest('joom.images.filter', 'filter',
+      array('search' => null, 'access' => '', 'state' => '', 'type' => '', 'category' => '', 'owner' => ''), 'array');
 
-    $access = $this->getUserStateFromRequest('joom.images.filter.access', 'filter_access', '');
-    $this->setState('filter.access', $access);
-
-    $published = $this->getUserStateFromRequest('joom.images.filter.state', 'filter_state', 0, 'int');
-    $this->setState('filter.state', $published);
-
-    $type = $this->getUserStateFromRequest('joom.images.filter.type', 'filter_type', 0, 'int');
-    $this->setState('filter.type', $type);
-
-    $category = $this->getUserStateFromRequest('joom.images.filter.category', 'filter_category', '');
-    $this->setState('filter.category', $category);
-
-    $owner = $this->getUserStateFromRequest('joom.images.filter.owner', 'filter_owner', '');
-    $this->setState('filter.owner', $owner);
-
-    $value = $this->getUserStateFromRequest('global.list.limit', 'limit', $this->_mainframe->getCfg('list_limit'));
-    $limit = $value;
-    $this->setState('list.limit', $limit);
-
-    $value = $this->getUserStateFromRequest('joom.images.limitstart', 'limitstart', 0);
-    $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
-    $this->setState('list.start', $limitstart);
-
-    // Check if the ordering field is in the white list, otherwise use the incoming value
-    $value = $this->getUserStateFromRequest('joom.images.ordercol', 'filter_order', $ordering);
-    if(!in_array($value, $this->filter_fields))
+    if($filters)
     {
-      $value = $ordering;
-      $this->_mainframe->setUserState('joom.images.ordercol', $value);
+      foreach($filters as $name => $value)
+      {
+        // Special case for category filter to ensure that search tools will be hidden
+        // , if 'None' has been selected in AJAX category selection box
+        if($this->_config->get('jg_ajaxcategoryselection') && $name == 'category' && $value == 0)
+        {
+          $value = '';
+          JFactory::getApplication()->setUserState('joom.images.filter.' . $name, $value);
+        }
+
+        $this->setState('filter.' . $name, $value);
+
+        if($value)
+        {
+          $this->setState('filter.inuse', 1);
+        }
+      }
     }
 
-    $this->setState('list.ordering', $value);
+    $limit = 0;
 
-    // Check if the ordering direction is valid, otherwise use the incoming value
-    $value = $this->getUserStateFromRequest('joom.images.orderdirn', 'filter_order_Dir', $direction);
-    if(!in_array(strtoupper($value), array('ASC', 'DESC', '')))
+    // Receive & set list options
+    $list = $this->getUserStateFromRequest('joom.images.list', 'list',
+      array('ordering' => $ordering, 'direction' => $direction, 'fullordering' => $ordering . ' ' . $direction,
+      'limit' => $this->_mainframe->getCfg('list_limit'), 'start' => 0), 'array');
+
+    if($list)
     {
-      $value = $direction;
-      $this->_mainframe->setUserState('joom.images.orderdirn', $value);
-    }
+      foreach($list as $name => $value)
+      {
+        // Extra validations
+        switch($name)
+        {
+          case 'fullordering':
+            $orderingParts = explode(' ', $value);
 
-    $this->setState('list.direction', $value);
+            if(count($orderingParts) >= 2)
+            {
+              // Latest part will be considered the direction
+              $fullDirection = end($orderingParts);
 
-    if($search || $access || $published || $type || $category || $owner)
-    {
-      $this->setState('filter.inuse', 1);
+              if(in_array(strtoupper($fullDirection), array('ASC', 'DESC', '')))
+              {
+                $this->setState('list.direction', $fullDirection);
+              }
+
+              unset($orderingParts[count($orderingParts) - 1]);
+
+              // The rest will be the ordering
+              $fullOrdering = implode(' ', $orderingParts);
+
+              if(in_array($fullOrdering, $this->filter_fields))
+              {
+                $this->setState('list.ordering', $fullOrdering);
+              }
+            }
+            else
+            {
+              $this->setState('list.ordering', $ordering);
+              $this->setState('list.direction', $direction);
+            }
+            break;
+          case 'ordering':
+            if(!in_array($value, $this->filter_fields))
+            {
+              $value = $ordering;
+            }
+            break;
+
+          case 'direction':
+            if(!in_array(strtoupper($value), array('ASC', 'DESC', '')))
+            {
+              $value = $direction;
+            }
+            break;
+
+          case 'limit':
+            $limit = $value;
+            break;
+
+            // Just to keep the default case
+          default:
+            $value = $value;
+            break;
+        }
+
+        $this->setState('list.' . $name, $value);
+      }
+
+      $value      = $this->getUserStateFromRequest('joom.images.limitstart', 'limitstart', 0);
+      $limitstart = ($limit != 0 ? (floor($value / $limit) * $limit) : 0);
+      $this->setState('list.start', $limitstart);
+
     }
   }
 
@@ -770,11 +941,12 @@ class JoomGalleryModelImages extends JoomGalleryModel
   public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
   {
     $app = JFactory::getApplication();
+
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
     $new_state = JRequest::getVar($request, null, 'default', $type);
 
-    if($cur_state != $new_state && $resetPage)
+    if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
       JRequest::setVar('limitstart', 0);
     }
