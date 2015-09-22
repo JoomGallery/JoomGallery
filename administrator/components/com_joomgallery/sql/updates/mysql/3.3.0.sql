@@ -6,3 +6,6 @@ ALTER TABLE `#__joomgallery_config` DROP `jg_coolirislink`;
 ALTER TABLE `#__joomgallery_config` ADD `jg_edit_metadata` INT(1) NOT NULL AFTER `jg_redirect_after_upload`;
 
 ALTER TABLE `#__joomgallery_config` DROP `jg_showdetailfavourite`;
+
+ALTER TABLE `#__joomgallery_config` ADD `jg_use_listbox_max_user_count` INT(1) NOT NULL AFTER `jg_ajaxcategoryselection`;
+UPDATE `#__joomgallery_config` SET `jg_use_listbox_max_user_count` = 250;
