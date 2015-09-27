@@ -523,7 +523,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
 
   /* ### General settings->Performance settings ####*/
   /*jg_ajaxcategoryselection*/      0,
-  /*jg_use_listbox_max_user_count*/ 250,
+  /*jg_use_listbox_max_user_count*/ 25,
   /*jg_disableunrequiredchecks*/    0,
 
   /* ### User Access rights->User upload ####*/
