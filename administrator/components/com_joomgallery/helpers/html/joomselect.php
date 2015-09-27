@@ -23,15 +23,6 @@ defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 abstract class JHtmlJoomSelect
 {
   /**
-   * Maximum number of users for who the
-   * default select boxes should be used
-   *
-   * @var   int
-   * @since 3.0
-   */
-  static $max_count = 250;
-
-  /**
    * Number of active users in the system.
    * This is not set until first call of method users().
    *
@@ -277,10 +268,11 @@ abstract class JHtmlJoomSelect
   {
     static $users = null;
 
+    $config = JoomConfig::getInstance();
+
     if(is_null($users))
     {
       $db     = JFactory::getDbo();
-      $config = JoomConfig::getInstance();
 
       $type = $config->get('jg_realname') ? 'name' : 'username';
 
@@ -292,7 +284,7 @@ abstract class JHtmlJoomSelect
 
       self::$count = $db->loadResult();
 
-      if(self::$count <= self::$max_count || !$multiple)
+      if(self::$count <= $config->get('jg_use_listbox_max_user_count') || !$multiple)
       {
         $users = array();
 
@@ -308,7 +300,7 @@ abstract class JHtmlJoomSelect
       }
     }
 
-    if(self::$count > self::$max_count && $multiple)
+    if(self::$count > $config->get('jg_use_listbox_max_user_count') && $multiple)
     {
       return '<input type="text" name="'.$name.'" value="'.implode(',', $active).'" class="inputbox"'.($idtag ? ' id="'.$idtag.'"' : '').'/>';
     }

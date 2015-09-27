@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_itemid` varchar(10) NOT NULL,
   `jg_ajaxcategoryselection` int(1) NOT NULL,
   `jg_disableunrequiredchecks` int(1) NOT NULL,
+  `jg_use_listbox_max_user_count` int(1) NOT NULL,
   `jg_userspace` int(1) NOT NULL,
   `jg_useruploaddefaultcat` int(1) NOT NULL,
   `jg_approve` int(1) NOT NULL,
@@ -515,12 +516,15 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_msg_rejectimg_type*/       1,
   /*jg_msg_global_from*/          0,
 
-  /* ### General settings->Additional functions ####*/
+  /* ### Frontend Settings->General Settings (partly, see more below)####*/
   /*jg_realname*/                 0,
   /*jg_contentpluginsenabled*/    1,
   /*jg_itemid*/                   '',
-  /*jg_ajaxcategoryselection*/    0,
-  /*jg_disableunrequiredchecks*/  0,
+
+  /* ### General settings->Performance settings ####*/
+  /*jg_ajaxcategoryselection*/      0,
+  /*jg_disableunrequiredchecks*/    0,
+  /*jg_use_listbox_max_user_count*/ 25,
 
   /* ### User Access rights->User upload ####*/
   /*jg_userspace*/                1,
@@ -579,7 +583,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_report_unreg*/   1,
   /*jg_report_hint*/    1,
 
-  /* ### Frontend Settings->General Settings ####*/
+  /* ### Frontend Settings->General Settings (partly, see more above) ####*/
   /*jg_alternative_layout*/ '',
   /*jg_anchors*/            1,
   /*jg_tooltips*/           1,

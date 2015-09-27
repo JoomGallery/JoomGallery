@@ -39,6 +39,9 @@ class JoomGalleryViewEditimages extends JoomGalleryView
     // Get the form and fill the fields
     $form = $this->get('Form');
 
+    // Set maximum allowed user count to switch from listbox to modal popup selection
+    $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
+
     // Bind the data to the form
     $form->bind($items[0]);
 

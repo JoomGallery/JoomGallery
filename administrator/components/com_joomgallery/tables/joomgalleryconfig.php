@@ -77,6 +77,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_itemid;
   var $jg_ajaxcategoryselection;
   var $jg_disableunrequiredchecks;
+  var $jg_use_listbox_max_user_count;
   var $jg_userspace;
   var $jg_useruploaddefaultcat;
   var $jg_approve;
@@ -258,6 +259,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_motionminis;
   var $jg_motionminiWidth;
   var $jg_motionminiHeight;
+  var $jg_motionminiLimit;
   var $jg_miniWidth;
   var $jg_miniHeight;
   var $jg_minisprop;
