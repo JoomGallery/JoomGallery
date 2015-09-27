@@ -132,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_contentpluginsenabled` int(1) NOT NULL,
   `jg_itemid` varchar(10) NOT NULL,
   `jg_ajaxcategoryselection` int(1) NOT NULL,
-  `jg_use_listbox_max_user_count` int(1) NOT NULL,
   `jg_disableunrequiredchecks` int(1) NOT NULL,
+  `jg_use_listbox_max_user_count` int(1) NOT NULL,
   `jg_userspace` int(1) NOT NULL,
   `jg_useruploaddefaultcat` int(1) NOT NULL,
   `jg_approve` int(1) NOT NULL,
@@ -523,8 +523,8 @@ INSERT IGNORE INTO `#__joomgallery_config`
 
   /* ### General settings->Performance settings ####*/
   /*jg_ajaxcategoryselection*/      0,
-  /*jg_use_listbox_max_user_count*/ 25,
   /*jg_disableunrequiredchecks*/    0,
+  /*jg_use_listbox_max_user_count*/ 25,
 
   /* ### User Access rights->User upload ####*/
   /*jg_userspace*/                1,

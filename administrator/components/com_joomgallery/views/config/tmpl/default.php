@@ -167,8 +167,8 @@ echo JHtml::_('tabs.panel', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_PERFORMANCE_
 
 JHTML::_('joomconfig.start', 'page6');
     JHTML::_('joomconfig.row', 'jg_ajaxcategoryselection', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_PS_AJAXCATEGORYSELECTION', $this->_config->get('jg_ajaxcategoryselection'));
-    JHTML::_('joomconfig.row', 'jg_use_listbox_max_user_count', 'text', 'COM_JOOMGALLERY_CONFIG_GS_PS_USELISTBOXMAXUSERCOUNT', $this->_config->get('jg_use_listbox_max_user_count'));
     JHTML::_('joomconfig.row', 'jg_disableunrequiredchecks', 'yesno', 'COM_JOOMGALLERY_CONFIG_GS_PS_DISABLEUNREQUIREDCHECKS', $this->_config->get('jg_disableunrequiredchecks'));
+    JHTML::_('joomconfig.row', 'jg_use_listbox_max_user_count', 'text', 'COM_JOOMGALLERY_CONFIG_GS_PS_USELISTBOXMAXUSERCOUNT', $this->_config->get('jg_use_listbox_max_user_count'));
 JHTML::_('joomconfig.end');
 
 echo JHtml::_('tabs.end');
