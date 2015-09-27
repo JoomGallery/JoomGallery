@@ -238,6 +238,8 @@ class JoomGalleryModelCategories extends JoomGalleryModel
     {
       $form = JForm::getInstance($name, $source, $options, false, $xpath);
 
+      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'), 'filter');
+
       if(isset($options['load_data']) && $options['load_data'])
       {
         // Get the data for the form.
@@ -301,7 +303,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
   {
     // Receive & set filters
     $filters = $this->getUserStateFromRequest('joom.categories.filter', 'filter',
-      array('search' => null, 'access' => '', 'published' => '', 'type' => ''), 'array');
+      array('search' => null, 'access' => '', 'published' => '', 'type' => '', 'owner' => ''), 'array');
 
     if($filters)
     {
@@ -448,6 +450,13 @@ class JoomGalleryModelCategories extends JoomGalleryModel
           // No filter by state
           break;
       }
+    }
+
+    // Filter by owner
+    $owner = $this->getState('filter.owner');
+    if($owner !== '')
+    {
+      $query->where('c.owner = '.(int) $owner);
     }
 
     // Filter by type
