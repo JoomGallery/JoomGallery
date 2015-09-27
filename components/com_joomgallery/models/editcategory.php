@@ -178,6 +178,12 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
       $form->setFieldAttribute('published', 'filter', 'unset');
     }
 
+    if(!$this->_config->get('jg_usercatacc'))
+    {
+      $form->setFieldAttribute('access', 'disabled', 'true');
+      $form->setFieldAttribute('access', 'filter', 'unset');
+    }
+
     return $form;
   }
 

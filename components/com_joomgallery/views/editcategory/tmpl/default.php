@@ -143,6 +143,7 @@ echo $this->loadTemplate('header'); ?>
                 <?php echo $this->form->getInput('published'); ?>
               </div>
             </div>
+<?php if($this->_config->get('jg_usercatacc')): ?>
             <div class="control-group">
               <div class="control-label">
                 <?php echo $this->form->getLabel('access'); ?>
@@ -151,6 +152,7 @@ echo $this->loadTemplate('header'); ?>
                 <?php echo $this->form->getInput('access'); ?>
               </div>
             </div>
+<?php endif; ?>
           </div>
 <?php if(count($this->fieldSets) > 0) : ?>
           <div class="tab-pane" id="other">
