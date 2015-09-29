@@ -453,8 +453,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
     }
 
     // Filter by owner
-    $owner = $this->getState('filter.owner');
-    if($owner !== '')
+    if($owner = $this->getState('filter.owner'))
     {
       $query->where('c.owner = '.(int) $owner);
     }
