@@ -1806,7 +1806,9 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
   {
     $query = 'OPTIMIZE TABLE
                 '._JOOM_TABLE_IMAGES.',
+                '._JOOM_TABLE_IMAGE_DETAILS.',
                 '._JOOM_TABLE_CATEGORIES.',
+                '._JOOM_TABLE_CATEGORY_DETAILS.',
                 '._JOOM_TABLE_COMMENTS.',
                 '._JOOM_TABLE_CONFIG.',
                 '._JOOM_TABLE_COUNTSTOP.',
