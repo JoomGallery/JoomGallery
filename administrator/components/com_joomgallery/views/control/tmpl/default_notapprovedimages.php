@@ -15,10 +15,10 @@ $approved_states = array( 1 => array('reject', 'COM_JOOMGALLERY_COMMON_APPROVED'
                       <?php echo JHTML::_('jgrid.state', $approved_states, $item->approved, $i, '', false); ?>
                     </td>
                     <td class="center" width="25">
-                      <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', 'href="'.JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&filter_state=4&filter_order=a.imgdate&filter_order_Dir=desc'), true); ?>
+                      <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', 'href="'.JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&filter[state]=4&list[fullordering]=a.imgdate DESC'), true); ?>
                     </td>
                     <td>
-                      <a href="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&filter_state=4&filter_order=a.imgdate&filter_order_Dir=desc');?>">
+                      <a href="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&filter[state]=4&list[fullordering]=a.imgdate DESC');?>">
                         <?php echo $this->escape($item->imgtitle); ?></a>
                       <span class="small">
                         <?php echo JText::sprintf('COM_JOOMGALLERY_COMMON_CATEGORY_VAR', $this->escape($item->category_name)); ?>
