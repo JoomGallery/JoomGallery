@@ -281,7 +281,6 @@ class Com_JoomGalleryInstallerScript
     // Old JavaScript files
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/miniupload.js';
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/thickbox3/js/jquery-latest.pack.js';
-    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/userpanel.js';
     // Old motion gallery
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/motiongallery.js';
     // Old raw view for Cooliris 
