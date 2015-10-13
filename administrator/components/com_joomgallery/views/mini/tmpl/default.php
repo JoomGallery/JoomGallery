@@ -13,6 +13,7 @@ $debug = JFactory::getConfig()->get('debug'); ?>
   <?php if(JFactory::getLanguage()->isRTL()): ?>
   <link href="<?php echo JUri::root(); ?>media/jui/css/bootstrap-rtl.css" rel="stylesheet" type="text/css" />
   <?php endif; ?>
+  <link href="<?php echo JUri::root(); ?>media/jui/css/icomoon.css" rel="stylesheet" type="text/css" />
   <script src="<?php echo JUri::root(); ?>media/jui/js/jquery<?php echo $debug ? '' : '.min'; ?>.js" type="text/javascript"></script>
   <script src="<?php echo JUri::root(); ?>media/jui/js/jquery-noconflict.js" type="text/javascript"></script>
   <script src="<?php echo JUri::root(); ?>media/system/js/mootools-core<?php echo $debug ? '-uncompressed' : ''; ?>.js" type="text/javascript"></script>

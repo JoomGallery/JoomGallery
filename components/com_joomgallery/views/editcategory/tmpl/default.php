@@ -146,6 +146,7 @@ echo $this->loadTemplate('header'); ?>
                 <?php echo $this->form->getInput('published'); ?>
               </div>
             </div>
+<?php if($this->_config->get('jg_usercatacc')): ?>
             <div class="control-group">
               <div class="control-label">
                 <?php echo $this->form->getLabel('access'); ?>
@@ -154,6 +155,7 @@ echo $this->loadTemplate('header'); ?>
                 <?php echo $this->form->getInput('access'); ?>
               </div>
             </div>
+<?php endif; ?>
           </div>
           <?php if($this->_config->get('jg_edit_metadata')): ?>
           <div class="tab-pane" id="metadata">
