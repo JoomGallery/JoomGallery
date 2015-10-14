@@ -4,7 +4,7 @@
 /****************************************************************************************\
 **   JoomGallery 3                                                                      **
 **   By: JoomGallery::ProjectTeam                                                       **
-**   Copyright (C) 2008 - 2013  JoomGallery::ProjectTeam                                **
+**   Copyright (C) 2008 - 2015  JoomGallery::ProjectTeam                                **
 **   Based on: JoomGallery 1.0.0 by JoomGallery::ProjectTeam                            **
 **   Released under GNU GPL Public License                                              **
 **   License: http://www.gnu.org/copyleft/gpl.html or have a look                       **
@@ -1816,6 +1816,34 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
                 '._JOOM_TABLE_USERS.',
                 '._JOOM_TABLE_VOTES;
 
+    $this->_db->setQuery($query);
+    if(!$this->_db->query())
+    {
+      JError::raiseWarning(500, $this->_db->getErrorMsg());
+
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Resets the config to default of JoomGallery
+   *
+   * @return  boolean True on success, false otherwise
+   * @since   3.3.0
+   */
+  public function resetconfig()
+  {
+    $query = 'DELETE FROM '._JOOM_TABLE_CONFIG;                                   // Delete old values
+    $this->_db->setQuery($query);
+    if(!$this->_db->query())
+    {
+      JError::raiseWarning(500, $this->_db->getErrorMsg());
+
+      return false;
+    }
+	$query = file_get_contents(JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.mysql.utf8.sql');  
     $this->_db->setQuery($query);
     if(!$this->_db->query())
     {
