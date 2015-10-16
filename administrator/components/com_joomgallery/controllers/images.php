@@ -301,7 +301,7 @@ class JoomGalleryControllerImages extends JoomGalleryController
       $imgname_separator    = JText::_('COM_JOOMGALLERY_IMGMAN_IMAGENAME_SEPARATOR');
 
       $changeable_fields  = array('imgtitle', 'catid', 'access', 'imgtext', 'owner', 'imgauthor', 'clearvotes',
-                                  'cleardownloads', 'clearhits', 'published', 'approved', 'hidden', 'ordering');
+                                  'cleardownloads', 'clearhits', 'published', 'approved', 'hidden', 'ordering', 'metakey', 'metadesc');
       $state_fields       = array('published', 'approved', 'hidden', 'ordering');
 
       // Delete all unselected and unchangeable fields
