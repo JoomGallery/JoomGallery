@@ -27,6 +27,13 @@
       <option value="">JOPTION_SELECT_ACCESS</option>
     </field>
     <field
+      name="owner"
+      type="joomuser"
+      label="COM_JOOMGALLERY_COMMON_OPTION_SELECT_OWNER"
+      hint="COM_JOOMGALLERY_COMMON_OPTION_SELECT_OWNER"
+      onchange="document.getElementById('adminForm').submit();"
+    />
+    <field
       name="type"
       type="list"
       label="COM_JOOMGALLERY_COMMON_OPTION_SELECT_TYPE"

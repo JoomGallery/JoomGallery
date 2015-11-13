@@ -203,7 +203,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
     {
       $form = JForm::getInstance($name, $source, $options, false, $xpath);
 
-      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', '250', 'filter');
+      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'), 'filter');
 
       if(isset($options['load_data']) && $options['load_data'])
       {
@@ -832,8 +832,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
     }
 
     // Filter by owner
-    $owner = $this->getState('filter.owner');
-    if($owner !== '')
+    if($owner = $this->getState('filter.owner'))
     {
       $query->where('a.owner = '.(int) $owner);
     }

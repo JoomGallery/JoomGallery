@@ -4,7 +4,7 @@
 /****************************************************************************************\
 **   JoomGallery 3                                                                      **
 **   By: JoomGallery::ProjectTeam                                                       **
-**   Copyright (C) 2008 - 2013  JoomGallery::ProjectTeam                                **
+**   Copyright (C) 2008 - 2015  JoomGallery::ProjectTeam                                **
 **   Based on: JoomGallery 1.0.0 by JoomGallery::ProjectTeam                            **
 **   Released under GNU GPL Public License                                              **
 **   License: http://www.gnu.org/copyleft/gpl.html or have a look                       **
@@ -823,6 +823,26 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
     else
     {
       $this->setRedirect($this->_ambit->getRedirectUrl().'&tab=database', JText::_('COM_JOOMGALLERY_MAIMAN_DB_MSG_OPTIMIZATION_SUCCESSFUL'));
+    }
+  }
+
+/**
+   * Set config to default
+   *
+   * @return  void
+   * @since   3.3.0
+   */
+  public function resetconfig()
+  {
+    $model = $this->getModel('maintenance');
+
+    if(!$model->resetconfig())
+    {
+      $this->setRedirect($this->_ambit->getRedirectUrl().'&tab=database', JText::_('COM_JOOMGALLERY_MAIMAN_DB_MSG_RESETCONFIG_NOT_SUCCESSFUL'), 'error');
+    }
+    else
+    {
+      $this->setRedirect($this->_ambit->getRedirectUrl().'&tab=database', JText::_('COM_JOOMGALLERY_MAIMAN_DB_MSG_RESETCONFIG_SUCCESSFUL'));
     }
   }
 }
