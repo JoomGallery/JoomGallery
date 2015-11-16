@@ -82,25 +82,27 @@
     />
     <field
       name="metakey"
-      type="cbtext"
+      type="cbtextarea"
       class="inputbox"
       cbname="change[]"
       cbvalue="metakey"
       label="COM_JOOMGALLERY_COMMON_METAKEYS"
       description="COM_JOOMGALLERY_COMMON_METAKEYS_TIP"
       default=""
-      maxLength="255"
+      rows="5"
+      cols="40"
     />
     <field
       name="metadesc"
-      type="cbtext"
+      type="cbtextarea"
       class="inputbox"
       cbname="change[]"
       cbvalue="metadesc"
       label="COM_JOOMGALLERY_COMMON_METADESC"
       description="COM_JOOMGALLERY_COMMON_METADESC_TIP"
       default=""
-      maxLength="255"
+      rows="5"
+      cols="40"
     />
     <field
       name="published"
