@@ -129,11 +129,12 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_msg_rejectimg_type` int(1) NOT NULL,
   `jg_msg_global_from` int(1) NOT NULL,
   `jg_realname` int(1) NOT NULL,
+  `jg_cooliris` int(1) NOT NULL,
+  `jg_coolirislink` int(1) NOT NULL,
   `jg_contentpluginsenabled` int(1) NOT NULL,
   `jg_itemid` varchar(10) NOT NULL,
   `jg_ajaxcategoryselection` int(1) NOT NULL,
   `jg_disableunrequiredchecks` int(1) NOT NULL,
-  `jg_use_listbox_max_user_count` int(1) NOT NULL,
   `jg_userspace` int(1) NOT NULL,
   `jg_useruploaddefaultcat` int(1) NOT NULL,
   `jg_approve` int(1) NOT NULL,
@@ -156,7 +157,6 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_newpiccopyright` int(1) NOT NULL,
   `jg_newpicnote` int(1) NOT NULL,
   `jg_redirect_after_upload` int(1) NOT NULL,
-  `jg_edit_metadata` int(1) NOT NULL,
   `jg_download` int(1) NOT NULL,
   `jg_download_unreg` int(1) NOT NULL,
   `jg_download_hint` int(1) NOT NULL,
@@ -313,7 +313,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_watermark` int(1) NOT NULL,
   `jg_watermarkpos` int(1) NOT NULL,
   `jg_watermarksize` int(1) NOT NULL,
-  `jg_watermarkzoomby` int(1) NOT NULL,
+  `jg_watermarkzoom` int(1) NOT NULL,
   `jg_bigpic` int(1) NOT NULL,
   `jg_bigpic_unreg` int(1) NOT NULL,
   `jg_bigpic_open` varchar(50) NOT NULL,
@@ -325,7 +325,6 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_motionminis` int(1) NOT NULL,
   `jg_motionminiWidth` int(3) NOT NULL,
   `jg_motionminiHeight` int(3) NOT NULL,
-  `jg_motionminiLimit` int(2) NOT NULL,
   `jg_miniWidth` int(3) NOT NULL,
   `jg_miniHeight` int(3) NOT NULL,
   `jg_minisprop` int(1) NOT NULL,
@@ -370,6 +369,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_toplist_report_images` int(1) NOT NULL,
   `jg_showtoplisteditorlinks` int(1) NOT NULL,
   `jg_favourites` int(1) NOT NULL,
+  `jg_showdetailfavourite` int(1) NOT NULL,
   `jg_favouritesshownotauth` int(1) NOT NULL,
   `jg_maxfavourites` int(5) NOT NULL,
   `jg_zipdownload` int(1) NOT NULL,
@@ -518,15 +518,14 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_msg_rejectimg_type*/       1,
   /*jg_msg_global_from*/          0,
 
-  /* ### Frontend Settings->General Settings (partly, see more below)####*/
+  /* ### General settings->Additional functions ####*/
   /*jg_realname*/                 0,
+  /*jg_cooliris*/                 0,
+  /*jg_coolirislink*/             0,
   /*jg_contentpluginsenabled*/    1,
   /*jg_itemid*/                   '',
-
-  /* ### General settings->Performance settings ####*/
-  /*jg_ajaxcategoryselection*/      0,
-  /*jg_disableunrequiredchecks*/    0,
-  /*jg_use_listbox_max_user_count*/ 25,
+  /*jg_ajaxcategoryselection*/    0,
+  /*jg_disableunrequiredchecks*/  0,
 
   /* ### User Access rights->User upload ####*/
   /*jg_userspace*/                1,
@@ -551,7 +550,6 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_newpiccopyright*/          1,
   /*jg_newpicnote*/               1,
   /*jg_redirect_after_upload*/    1,
-  /*jg_edit_metadata*/            0,
 
   /* ### User Access rights->Download ####*/
   /*jg_download*/               1,
@@ -585,7 +583,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_report_unreg*/   1,
   /*jg_report_hint*/    1,
 
-  /* ### Frontend Settings->General Settings (partly, see more above) ####*/
+  /* ### Frontend Settings->General Settings ####*/
   /*jg_alternative_layout*/ '',
   /*jg_anchors*/            1,
   /*jg_tooltips*/           1,
@@ -739,7 +737,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_watermark*/                  0,
   /*jg_watermarkpos*/               9,
   /*jg_watermarksize*/              15,
-  /*jg_watermarkzoomby*/            1,
+  /*jg_watermarkzoom*/              1,
   /*jg_bigpic*/                     1,
   /*jg_bigpic_unreg*/               1,
   /*jg_bigpic_open*/                '6',
@@ -753,7 +751,6 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_motionminis*/      2,
   /*jg_motionminiWidth*/  400,
   /*jg_motionminiHeight*/ 50,
-  /*jg_motionminiLimit*/  0,
   /*jg_miniWidth*/        28,
   /*jg_miniHeight*/       28,
   /*jg_minisprop*/        2,
@@ -810,6 +807,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
 
   /* ### Favorites ####*/
   /*jg_favourites*/                 1,
+  /*jg_showdetailfavourite*/        0,
   /*jg_favouritesshownotauth*/      0,
   /*jg_maxfavourites*/              0,
   /*jg_zipdownload*/                1,
