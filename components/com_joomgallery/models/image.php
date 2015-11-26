@@ -262,65 +262,60 @@ class JoomGalleryModelImage extends JoomGalleryModel
     {
       $info_img = array(0 => imagesx($src_img), 1 => imagesy($src_img));
     }
-    $info_wat      = getimagesize($watermark);
-    $widthwm       = $info_wat[0];
-    $heightwm      = $info_wat[1];
+    $info_wat = getimagesize($watermark);
+	$widthwm = $info_wat[0];
+    $heightwm = $info_wat[1];
     $watermarksize = $this->_config->get('jg_watermarksize');
-    $watermarkzoom = $this->_config->get('jg_watermarkzoom');
+    $watermarkby = $this->_config->get('jg_watermarkzoomby');
 
-    switch($watermarkzoom) 
+    switch($watermarkby) 
     {
-      // no resize
-      case 1:
-        $newheight_watermark    = $heightwm;
-        $newwidth_watermark     = $widthwm;
-        break;
-      // by height
-      case 2:
-        $newheight_watermark    = $info_img[1] * $watermarksize / 100;
-        $newwidth_watermark     = $newheight_watermark * $widthwm / $heightwm;
-        if($newwidth_watermark  > $info_img[0])
-        {
-          $newwidth_watermark   = $info_img[0];  
-        }
-        break;
-      // by width
-      case 3:
-        $newwidth_watermark     = $info_img[0] * $watermarksize / 100;
-        $newheight_watermark    = $newwidth_watermark * $heightwm / $widthwm;
-        if($newheight_watermark > $info_img[1])
-        {
-          $newheight_watermark  = $info_img[1];
-        }
-        break;
-      default:
-        $newheight_watermark    = $heightwm;
-        $newwidth_watermark     = $widthwm;
-        break;
-    }
-
-    switch($info_wat[2])
-    {
-      case 1:
-        $watermark  = imagecreatefromgif($watermark);
-        $mime_wat   = 'image/gif';
-        break;
-      case 2:
-        $watermark  = imagecreatefromjpeg($watermark);
-        $mime_wat   = 'image/jpeg';
-        break;
-      case 3:
-        $watermark  = imagecreatefrompng($watermark);
-        $mime_wat   = 'image/png';
-        break;
-      default:
-        $this->setError(JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $info_wat[2]));
-
-        return false;
+	   case 1:                                              // by height
+          $newheight_watermark = $info_img[1] * $watermarksize / 100;
+          $newwidth_watermark = $newheight_watermark * $widthwm / $heightwm;
+		  if($newwidth_watermark > $info_img[0])            // width image is smaller then watermark
+		  {
+			$newwidth_watermark = $info_img[0];  
+		  }
+       //echo "newheight WM: ".$newheight_watermark. ", newwidth WM: ".$newwidth_watermark;
+       //echo ", info_img[0]=width: ".$info_img[0].", info_img[1]=height: ".$info_img[1];
+       //image123(123);
+          break;
+       case 2:                                              // by width
+          $newwidth_watermark = $info_img[0] * $watermarksize / 100;
+	      $newheight_watermark = $newwidth_watermark * $heightwm / $widthwm;
+          if($newheight_watermark > $info_img[1])           // height image is smaller then watermark
+		  {
+			$newheight_watermark = $info_img[1];
+		  }
+		  //echo "newheight WM: ".$newheight_watermark. ", newwidth WM: ".$newwidth_watermark;
+          //echo ", info_img[0]=width: ".$info_img[0].", info_img[1]=height: ".$info_img[1];
+          //image123(123);
+          break;
+	}
+	
+	switch($info_wat[2])
+      {
+         case 1:
+           $watermark  = imagecreatefromgif($watermark);
+           $mime_wat   = 'image/gif';
+           break;
+         case 2:
+           $watermark  = imagecreatefromjpeg($watermark);
+           $mime_wat   = 'image/jpeg';
+           break;
+         case 3:
+           $watermark  = imagecreatefrompng($watermark);
+           $mime_wat   = 'image/png';
+           break;
+         default:
+            $this->setError(JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $info_wat[2]));
+            
+            return false;
     }
           
     $newwatermark = ImageCreateTrueColor($newwidth_watermark, $newheight_watermark);
-    imagealphablending($newwatermark, false);
+	imagealphablending($newwatermark, false);
     imagecopyresampled($newwatermark, $watermark, 0, 0, 0, 0, $newwidth_watermark, $newheight_watermark, $widthwm, $heightwm);
       
    // $info_wat = getimagesize($newwatermark);
@@ -393,10 +388,10 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $newwatermark_height = imagesy($newwatermark);
 
     imagealphablending($src_img, true);
-    imagecolortransparent($newwatermark, imagecolorat($newwatermark, $t_x, $t_y));
+	imagecolortransparent($newwatermark, imagecolorat($newwatermark, $t_x, $t_y));
     imagecopyresampled($src_img, $newwatermark, $pos_x, $pos_y, 0, 0, $newwatermark_width, $newwatermark_height, $newwatermark_width, $newwatermark_height);
-    imagedestroy($newwatermark);
-
+	imagedestroy($newwatermark);
+	
     return $src_img;
   }
 
