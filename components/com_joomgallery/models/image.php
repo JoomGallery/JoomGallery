@@ -262,7 +262,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     {
       $info_img = array(0 => imagesx($src_img), 1 => imagesy($src_img));
     }
-   $info_wat      = getimagesize($watermark);
+    $info_wat      = getimagesize($watermark);
     $widthwm       = $info_wat[0];
     $heightwm      = $info_wat[1];
     $watermarksize = $this->_config->get('jg_watermarksize');
@@ -323,7 +323,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     imagealphablending($newwatermark, false);
     imagecopyresampled($newwatermark, $watermark, 0, 0, 0, 0, $newwidth_watermark, $newheight_watermark, $widthwm, $heightwm);
       
-   // $info_wat = getimagesize($newwatermark);
+    // $info_wat = getimagesize($newwatermark);
     $info_wat[0] = $newwidth_watermark;
     $info_wat[1] = $newheight_watermark;
 

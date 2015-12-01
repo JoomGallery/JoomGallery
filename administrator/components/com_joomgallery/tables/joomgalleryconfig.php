@@ -248,8 +248,8 @@ class TableJoomgalleryConfig extends JTable
   var $jg_downloadwithwatermark;
   var $jg_watermark;
   var $jg_watermarkpos;
-  var $jg_watermarksize;
   var $jg_watermarkzoom;
+  var $jg_watermarksize;
   var $jg_bigpic;
   var $jg_bigpic_unreg;
   var $jg_bigpic_open;
