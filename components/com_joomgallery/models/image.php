@@ -389,12 +389,9 @@ class JoomGalleryModelImage extends JoomGalleryModel
 
     // Watermark procedure
 
-    $newwatermark_width  = imagesx($newwatermark);
-    $newwatermark_height = imagesy($newwatermark);
-
     imagealphablending($src_img, true);
     imagecolortransparent($newwatermark, imagecolorat($newwatermark, $t_x, $t_y));
-    imagecopyresampled($src_img, $newwatermark, $pos_x, $pos_y, 0, 0, $newwatermark_width, $newwatermark_height, $newwatermark_width, $newwatermark_height);
+    imagecopyresampled($src_img, $newwatermark, $pos_x, $pos_y, 0, 0, $newwidth_watermark, $newheight_watermark, $newwidth_watermark, $newheight_watermark);
     imagedestroy($newwatermark);
 
     return $src_img;
