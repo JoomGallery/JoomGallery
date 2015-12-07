@@ -738,7 +738,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_showdetaildownload*/         1,
   /*jg_watermark*/                  0,
   /*jg_watermarkpos*/               9,
-  /*jg_watermarkzoom*/              1,
+  /*jg_watermarkzoom*/              0,
   /*jg_watermarksize*/              15,
   /*jg_bigpic*/                     1,
   /*jg_bigpic_unreg*/               1,
