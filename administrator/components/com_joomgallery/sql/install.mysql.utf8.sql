@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery` (
   `access` tinyint(3) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `hidden` tinyint(1) NOT NULL default '0',
+  `featured` tinyint(1) NOT NULL default '0',
   `imgfilename` varchar(255) NOT NULL default '',
   `imgthumbname` varchar(255) NOT NULL default '',
   `checked_out` int(11) NOT NULL default '0',

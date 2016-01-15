@@ -248,6 +248,19 @@
       <option value="1">
         JYES</option>
     </field>
+    <field
+      name="featured"
+      type="radio"
+      default="0"
+      class="btn-group"
+      label="COM_JOOMGALLERY_IMGMAN_FEATURED"
+      description="COM_JOOMGALLERY_IMGMAN_FEATURED_TIP"
+    >
+      <option value="0">
+        JNO</option>
+      <option value="1">
+        JYES</option>
+    </field>
     <field 
       name="metadesc"
       type="textarea"

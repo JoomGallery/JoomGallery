@@ -49,6 +49,8 @@ class TableJoomgalleryImages extends JTable
   var $published    = null;
   /** @var int */
   var $hidden       = 0;
+  /** @var int */
+  var $featured     = 0;
   /** @var string */
   var $imgfilename  = null;
   /** @var string */

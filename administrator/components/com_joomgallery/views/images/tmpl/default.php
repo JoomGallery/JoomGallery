@@ -65,6 +65,9 @@ JFactory::getDocument()->addScriptDeclaration(
           <th class="center" width="5%">
             <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_APPROVED', 'a.approved', $listDirn, $listOrder); ?>
           </th>
+          <th class="center hidden-phone" width="5%">
+            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_IMGMAN_FEATURED', 'a.featured', $listDirn, $listOrder); ?>
+          </th>
           <th class="nowrap hidden-phone" width="10%">
             <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_CATEGORY', 'category_name', $listDirn, $listOrder); ?>
           </th>
@@ -145,6 +148,9 @@ JFactory::getDocument()->addScriptDeclaration(
           </td>
           <td class="center">
             <?php echo JHTML::_('joomgallery.approved', $approved_states, $item->approved, $i, '', $canChange, $item->id, $item->owner); ?>
+          </td>
+          <td class="center hidden-phone">
+            <?php /* echo JHTML::_('jgrid.featured', $item->featured, $i, '', $canChange) */ ?>
           </td>
           <td class="small hidden-phone">
             <?php echo $this->escape($item->category_name); ?>
