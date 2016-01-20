@@ -40,6 +40,7 @@ class JoomGalleryControllerImages extends JoomGalleryController
     $this->registerTask('save2new',         'save');
     $this->registerTask('save2copy',        'save');
     $this->registerTask('unpublish',        'publish');
+    $this->registerTask('unfeature',        'feature');
     $this->registerTask('reject',           'approve');
     $this->registerTask('accesspublic',     'access');
     $this->registerTask('accessregistered', 'access');
@@ -99,6 +100,61 @@ class JoomGalleryControllerImages extends JoomGalleryController
     else
     {
       $msg = JText::_('COM_JOOMGALLERY_COMMON_MSG_ERROR_PUBLISHING_UNPUBLISHING');
+      $this->setRedirect($this->_ambit->getRedirectUrl(), $msg, 'error');
+    }
+  }
+
+  /**
+   * Features or unfeatures one or more images
+   *
+   * @return  void
+   * @since   3.3
+   */
+  public function feature()
+  {
+    // Initialize variables
+    $cid      = JRequest::getVar('cid', array(), 'post', 'array');
+    $task     = JRequest::getCmd('task');
+    $feature  = (int)($task == 'feature');
+
+    if(empty($cid))
+    {
+      $this->setRedirect($this->_ambit->getRedirectUrl(), JText::_('COM_JOOMGALLERY_COMMON_MSG_NO_IMAGES_SELECTED'));
+      $this->redirect();
+    }
+
+    $unchanged_images = 0;
+    foreach($cid as $key => $id)
+    {
+      // Prune images for which we aren't allowed to change the state
+      if(!JFactory::getUser()->authorise('core.edit.state', _JOOM_OPTION.'.image.'.$id))
+      {
+        unset($cid[$key]);
+        $unchanged_images++;
+      }
+    }
+
+    if($unchanged_images)
+    {
+      JError::raiseNotice(403, JText::plural('COM_JOOMGALLERY_IMGMAN_ERROR_EDITSTATE_NOT_PERMITTED', $unchanged_images));
+    }
+
+    $model = $this->getModel('images');
+    if($count = $model->publish($cid, $feature, 'feature'))
+    {
+      if($count != 1)
+      {
+        $msg = JText::sprintf($feature ? 'COM_JOOMGALLERY_IMGMAN_MSG_IMAGES_FEATURED' : 'COM_JOOMGALLERY_IMGMAN_MSG_IMAGES_UNFEATURED', $count);
+      }
+      else
+      {
+        $msg = JText::_($feature ? 'COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_FEATURED' : 'COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_UNFEATURED');
+      }
+      $this->setRedirect($this->_ambit->getRedirectUrl(), $msg);
+    }
+    else
+    {
+      $msg = JText::_('COM_JOOMGALLERY_COMMON_MSG_ERROR_FEATURING_UNFEATURING');
       $this->setRedirect($this->_ambit->getRedirectUrl(), $msg, 'error');
     }
   }

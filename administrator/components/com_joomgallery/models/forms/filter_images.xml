@@ -16,6 +16,8 @@
       <option value="">JOPTION_SELECT_PUBLISHED</option>
       <option value="1">COM_JOOMGALLERY_COMMON_OPTION_PUBLISHED_ONLY</option>
       <option value="2">COM_JOOMGALLERY_COMMON_OPTION_NOT_PUBLISHED_ONLY</option>
+      <option value="6">COM_JOOMGALLERY_COMMON_OPTION_FEATURED_ONLY</option>
+      <option value="7">COM_JOOMGALLERY_COMMON_OPTION_NOT_FEATURED_ONLY</option>
       <option value="3">COM_JOOMGALLERY_COMMON_OPTION_APPROVED_ONLY</option>
       <option value="4">COM_JOOMGALLERY_COMMON_OPTION_NOT_APPROVED_ONLY</option>
       <option value="5">COM_JOOMGALLERY_COMMON_OPTION_REJECTED_ONLY</option>
@@ -69,6 +71,8 @@
       <option value="a.imgtitle DESC">COM_JOOMGALLERY_COMMON_TITLE, JGLOBAL_ORDER_DESCENDING</option>
       <option value="a.published ASC">COM_JOOMGALLERY_COMMON_PUBLISHED, JGLOBAL_ORDER_ASCENDING</option>
       <option value="a.published DESC">COM_JOOMGALLERY_COMMON_PUBLISHED, JGLOBAL_ORDER_DESCENDING</option>
+      <option value="a.featured ASC">COM_JOOMGALLERY_COMMON_FEATURED, JGLOBAL_ORDER_ASCENDING</option>
+      <option value="a.featured DESC">COM_JOOMGALLERY_COMMON_FEATURED, JGLOBAL_ORDER_DESCENDING</option>
       <option value="a.approved ASC">COM_JOOMGALLERY_COMMON_APPROVED, JGLOBAL_ORDER_ASCENDING</option>
       <option value="a.approved DESC">COM_JOOMGALLERY_COMMON_APPROVED, JGLOBAL_ORDER_DESCENDING</option>
       <option value="category_name ASC">COM_JOOMGALLERY_COMMON_CATEGORY, JGLOBAL_ORDER_ASCENDING</option>
