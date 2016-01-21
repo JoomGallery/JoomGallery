@@ -55,18 +55,15 @@ JFactory::getDocument()->addScriptDeclaration(
           <th width="1%" class="center">
             <?php echo JHtml::_('grid.checkall'); ?>
           </th>
+          <th width="7%">
+            <?php echo JHtml::_('searchtools.sort', 'JSTATUS', 'a.published', $listDirn, $listOrder); ?>
+          </th>
           <th class="center hidden-phone" width="25"></th>
           <th class="nowrap">
             <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_TITLE', 'a.imgtitle', $listDirn, $listOrder); ?>
           </th>
           <th class="center" width="5%">
-            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_PUBLISHED', 'a.published', $listDirn, $listOrder); ?>
-          </th>
-          <th class="center" width="5%">
             <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_APPROVED', 'a.approved', $listDirn, $listOrder); ?>
-          </th>
-          <th class="center hidden-phone" width="5%">
-            <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_IMGMAN_FEATURED', 'a.featured', $listDirn, $listOrder); ?>
           </th>
           <th class="nowrap hidden-phone" width="10%">
             <?php echo JHtml::_('searchtools.sort', 'COM_JOOMGALLERY_COMMON_CATEGORY', 'category_name', $listDirn, $listOrder); ?>
@@ -125,6 +122,18 @@ JFactory::getDocument()->addScriptDeclaration(
           <td class="center">
             <?php echo JHtml::_('grid.id', $i, $item->id); ?>
           </td>
+          <td>
+            <div class="btn-group pull-left">
+              <?php echo JHtml::_('jgrid.published', $item->published, $i, '', $canChange); ?>
+              <?php echo $this->featured($item->featured, $i, '', $canChange); ?>
+            </div>
+            <div class="pull-left">
+              <?php if($item->published && $item->hidden):
+                      echo '<span title="'.JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN').'">'.JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK').'</span>';
+                      $display_hidden_asterisk = true;
+                    endif; ?>
+            </div>
+          </td>
           <td class="center hidden-phone">
             <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', $canEdit || $canEditOwn ? 'href="'.JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images&task=edit&cid='.$item->id) : null, true); ?>
           </td>
@@ -140,17 +149,7 @@ JFactory::getDocument()->addScriptDeclaration(
             </span>
           </td>
           <td class="center">
-            <?php echo JHTML::_('jgrid.published', $item->published, $i, '', $canChange);
-                  if($item->published && $item->hidden):
-                    echo '<span title="'.JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN').'">'.JText::_('COM_JOOMGALLERY_COMMON_HIDDEN_ASTERISK').'</span>';
-                    $display_hidden_asterisk = true;
-                  endif; ?>
-          </td>
-          <td class="center">
             <?php echo JHTML::_('joomgallery.approved', $approved_states, $item->approved, $i, '', $canChange, $item->id, $item->owner); ?>
-          </td>
-          <td class="center hidden-phone">
-            <?php /* echo JHTML::_('jgrid.featured', $item->featured, $i, '', $canChange) */ ?>
           </td>
           <td class="small hidden-phone">
             <?php echo $this->escape($item->category_name); ?>

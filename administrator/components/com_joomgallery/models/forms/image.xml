@@ -253,7 +253,7 @@
       type="radio"
       default="0"
       class="btn-group"
-      label="COM_JOOMGALLERY_IMGMAN_FEATURED"
+      label="COM_JOOMGALLERY_COMMON_FEATURED"
       description="COM_JOOMGALLERY_IMGMAN_FEATURED_TIP"
     >
       <option value="0">
