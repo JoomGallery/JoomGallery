@@ -81,6 +81,30 @@
       default=""
     />
     <field
+      name="metakey"
+      type="cbtextarea"
+      class="inputbox"
+      cbname="change[]"
+      cbvalue="metakey"
+      label="COM_JOOMGALLERY_COMMON_METAKEYS"
+      description="COM_JOOMGALLERY_COMMON_METAKEYS_TIP"
+      default=""
+      rows="5"
+      cols="40"
+    />
+    <field
+      name="metadesc"
+      type="cbtextarea"
+      class="inputbox"
+      cbname="change[]"
+      cbvalue="metadesc"
+      label="COM_JOOMGALLERY_COMMON_METADESC"
+      description="COM_JOOMGALLERY_COMMON_METADESC_TIP"
+      default=""
+      rows="5"
+      cols="40"
+    />
+    <field
       name="published"
       type="cblist"
       cbname="change[]"
