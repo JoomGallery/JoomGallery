@@ -345,7 +345,7 @@ class JFormFieldJoomUser extends JFormFieldUser
 
     if(empty($this->onchange))
     {
-      $extraData['onchnage'] = 'if (this.val() == 0) {'
+      $extraData['onchange'] = 'if (this.val() == 0) {'
                                  . 'setTimeout(function(){ jQuery("#' . $this->id. '").val("'
                                  . JText::_((!empty($this->hint) ? $this->hint : 'COM_JOOMGALLERY_COMMON_NO_USER'))
                                  . '"); }, 200);}';
