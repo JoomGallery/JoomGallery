@@ -207,6 +207,7 @@
       <?php if($this->_user->authorise('core.admin', _JOOM_OPTION.'.category.'.$this->item->cid)): ?>
         <div class="tab-pane" id="permissions">
           <?php echo $this->form->getInput('rules'); ?>
+          <?php $this->_doc->addScript($this->_ambit->getScript('permissions.js')); ?>
         </div>
       <?php endif; ?>
     </div>

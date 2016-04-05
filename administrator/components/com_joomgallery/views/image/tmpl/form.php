@@ -328,6 +328,7 @@ Joomla.submitbutton = function(task)
 <?php if($this->_user->authorise('core.admin', _JOOM_OPTION.'.image.'.$this->item->id)): ?>
         <div class="tab-pane" id="permissions">
           <?php echo $this->form->getInput('rules'); ?>
+          <?php $this->_doc->addScript($this->_ambit->getScript('permissions.js')); ?>
         </div>
 <?php endif; ?>
         <!-- End Tab Permissions -->
