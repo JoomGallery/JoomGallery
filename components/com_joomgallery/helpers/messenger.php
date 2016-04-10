@@ -454,7 +454,25 @@ class JoomMessenger extends JObject
       return true;
     }
 
-    if(JFactory::getMailer()->sendMail($from, $fromname, null, $this->_subject,  $this->_text, false, null, $recipients) !== true)
+
+    try
+    {
+      $mailer = JFactory::getMailer();
+
+      $mailer->setSubject($this->_subject);
+      $mailer->setBody($this->_text);
+      $mailer->isHtml(false);
+      $mailer->addBcc($recipients);
+      $mailer->setSender(array($from, $fromname));
+
+      $result = $mailer->Send();
+    }
+    catch(phpmailerException $ex)
+    {
+      return false;
+    }
+
+    if($result !== true)
     {
       return false;
     }
