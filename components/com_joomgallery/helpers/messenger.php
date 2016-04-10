@@ -454,6 +454,7 @@ class JoomMessenger extends JObject
       return true;
     }
 
+    $result = false;
 
     try
     {
