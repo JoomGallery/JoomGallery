@@ -282,6 +282,13 @@ class JoomGalleryModelImages extends JoomGalleryModel
           JFactory::getApplication()->setUserState('joom.images.filter.' . $name, $value);
         }
 
+        // Special case for owner filter since Joomla! 3.5 when using modal user selection
+        if($name == 'owner' && $value == 0)
+        {
+          $value = '';
+          JFactory::getApplication()->setUserState('joom.images.filter.' . $name, $value);
+        }
+
         $this->setState('filter.' . $name, $value);
 
         if($value)
