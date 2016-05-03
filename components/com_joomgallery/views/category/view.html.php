@@ -67,7 +67,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
     // Categories pagination
     if($this->_config->get('jg_hideemptycats') == 2)
     {
-      $totalcategories = &$this->get('TotalCategoriesWithoutEmpty');
+      $totalcategories = $this->get('TotalCategoriesWithoutEmpty');
     }
     else
     {
@@ -428,7 +428,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
       // is chosen ('Also those which contain empty sub-categories'),
       // we need additional code to exclude these categories.
       // (For the second alternative only the query in the model is modified.)
-      $categories = &$this->get('CategoriesWithoutEmpty');
+      $categories = $this->get('CategoriesWithoutEmpty');
     }
     else
     {
