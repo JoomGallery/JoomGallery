@@ -1,5 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.3.0" published="">
+    <entries date="20160410">
+      <logentry type="#">Fix sending messages via phpmailer</logentry>
+    </entries>
+    <entries date="20160406">
+      <logentry type="#">Fix setting of permissions in the backend category and image view</logentry>
+    </entries>
+    <entries date="20160401">
+      <logentry type="#">Fix form field joomuser popup</logentry>
+    </entries>
+    <entries date="20160322">
+      <logentry type="#">Fix E_STRICT errors in category view</logentry>
+    </entries>
+    <entries date="20160119">
+      <logentry type="+">Featured images</logentry>
+    </entries>
+    <entries date="20151113">
+      <logentry type="+">Proportional watermark</logentry>
+      <logentry type="+">Backend batch edit metadata</logentry>
+    </entries>
+    <entries date="20151005">
+      <logentry type="^">Use different language constant for default ordering entry</logentry>
+    </entries>
+    <entries date="20151001">
+      <logentry type="+">Optimize tables</logentry>
+    </entries>
+    <entries date="20150929">
+      <logentry type="#">Fix links to managers (approval) in JoomGallery control panel</logentry>
+    </entries>
+    <entries date="20150928">
+      <logentry type="+">Owner filter in the back end categories view</logentry>
+    </entries>
+    <entries date="20150927">
+      <logentry type="#">Setting about allowing users to change access level of categories was not applied</logentry>
+      <logentry type="#">Icomoon Icons were missing in the MiniJoom</logentry>
+    </entries>
+    <entries date="20150922">
+      <logentry type="+">New, changed and moved configuration options</logentry>
+    </entries>
+    <entries date="20150910">
+      <logentry type="^">Refactor back end categories view (search tools)</logentry>
+      <logentry type="#">Fix pagination glitches in back end images view</logentry>
+    </entries>
+    <entries date="20150908">
+      <logentry type="^">Refactor back end categories view (search tools)</logentry>
+    </entries>
+    <entries date="20150907">
+      <logentry type="^">Refactor back end images view (search tools)</logentry>
+      <logentry type="^">Use listbox for owner selection up to specified user count</logentry>
+    </entries>
+    <entries date="20150814">
+      <logentry type="#">Fix concealed buttons in the reject popup of the back end images view</logentry>
+    </entries>
+    <entries date="20150814">
+      <logentry type="#">Fix wrong entries for images in maintenance orphans table</logentry>
+    </entries>
+    <entries date="20150812">
+      <logentry type="#">Fix filtering in user panel view</logentry>
+      <logentry type="#">Fix filtering in user categories view</logentry>
+    </entries>
+    <entries date="20150811">
+      <logentry type="^">Clean up member vars in JoomConfig and TableJoomgalleryConfig</logentry>
+      <logentry type="^">Use Bootstrap styled button in report view</logentry>
+      <logentry type="-">Remove unused option jg_showdetailfavourite</logentry>
+    </entries>
+    <entries date="20150606">
+      <logentry type="-">Removal of Cooliris integration</logentry>
+    </entries>
+    <entries date="20150531">
+      <logentry type="+">New responsive motion gallery with touch gesture support</logentry>
+    </entries>
+    <entries date="20150416">
+      <logentry type="+">Quick editing of image data in the userpanel view</logentry>
+    </entries>
+    <entries date="20150405">
+      <logentry type="+">Limit the number of images in the motion bar</logentry>
+    </entries>
+    <entries date="20150803">
+      <logentry type="^">Use of https for retrieving Google Maps, if necessary</logentry>
+    </entries>
+  </release>
   <release version="3.2.2" published="20150726">
     <entries date="20150726">
       <logentry type="#">Fix filename validation in drag'n'drop upload</logentry>
