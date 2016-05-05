@@ -158,6 +158,9 @@ class JoomGalleryViewImage extends JoomGalleryView
     }
     $form->setValue('imagelib', null, $thumbsource);
 
+    JText::script('JLIB_RULES_NOT_ALLOWED');
+    JText::script('JLIB_RULES_ALLOWED');
+
     $this->assignRef('item',              $item);
     $this->assignRef('isNew',             $isNew);
     $this->assignRef('form',              $form);
