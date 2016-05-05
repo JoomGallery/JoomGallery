@@ -101,6 +101,9 @@ class JoomGalleryViewCategory extends JoomGalleryView
       $form->setValue('notice', null, JText::sprintf('COM_JOOMGALLERY_CATMAN_THUMBNAIL_NOT_AVAILABLE', $item->thumbnail));
     }
 
+    JText::script('JLIB_RULES_NOT_ALLOWED');
+    JText::script('JLIB_RULES_ALLOWED');
+
     $this->assignRef('item', $item);
     $this->assignRef('isNew', $isNew);
     $this->assignRef('form', $form);
