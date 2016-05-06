@@ -54,6 +54,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
         'category', 'category_name',
         'published', 'a.published',
         'approved', 'a.approved',
+        'featured', 'a.featured',
         'access', 'a.access', 'access_level',
         'owner', 'a.owner',
         'imgauthor', 'a.imgauthor',
@@ -563,6 +564,10 @@ class JoomGalleryModelImages extends JoomGalleryModel
     {
       $column = 'published';
     }
+    if($task == 'feature')
+    {
+      $column = 'featured';
+    }
 
     foreach($cid as $id)
     {
@@ -866,6 +871,14 @@ class JoomGalleryModelImages extends JoomGalleryModel
       case 5:
         // Rejected
         $query->where('a.approved = -1');
+        break;
+      case 6:
+        // Featured
+        $query->where('a.featured = 1');
+        break;
+      case 7:
+        // Not featured
+        $query->where('a.featured = 0');
         break;
       default:
         // No filter by state

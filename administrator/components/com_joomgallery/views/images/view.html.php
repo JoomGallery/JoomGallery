@@ -88,4 +88,34 @@ class JoomGalleryViewImages extends JoomGalleryView
     //}
 
   }
+
+  /**
+   * Returns feature/unfeature buttons for the images list view
+   *
+   * @access  public
+   * @param   integer       $value     The featured state.
+   * @param   integer       $i         The row index
+   * @param   string|array  $prefix    An optional task prefix or an array of options
+   * @param   boolean       $enabled   An optional setting for access control on the action.
+   * @param   string        $checkbox  An optional prefix for checkboxes.
+   * @return  string  The HTML markup
+   * @since   3.3
+   */
+  public function featured($value, $i, $prefix = '', $enabled = true, $checkbox = 'cb')
+  {
+    if (is_array($prefix))
+    {
+      $options = $prefix;
+      $enabled = array_key_exists('enabled', $options) ? $options['enabled'] : $enabled;
+      $checkbox = array_key_exists('checkbox', $options) ? $options['checkbox'] : $checkbox;
+      $prefix = array_key_exists('prefix', $options) ? $options['prefix'] : '';
+    }
+
+    $states = array(
+      0 => array('feature', '', 'JGLOBAL_TOGGLE_FEATURED', 'COM_JOOMGALLERY_COMMON_UNFEATURED', true, 'unfeatured', 'unfeatured'),
+      1 => array('unfeature', '', 'JGLOBAL_TOGGLE_FEATURED', 'COM_JOOMGALLERY_COMMON_FEATURED', true, 'featured', 'featured'),
+    );
+
+    return JHtml::_('jgrid.state', $states, $value, $i, $prefix, $enabled, true, $checkbox);
+  }
 }

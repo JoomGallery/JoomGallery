@@ -10,7 +10,8 @@ ALTER TABLE `#__joomgallery_config` DROP `jg_showdetailfavourite`;
 ALTER TABLE `#__joomgallery_config` ADD `jg_use_listbox_max_user_count` INT(1) NOT NULL AFTER `jg_disableunrequiredchecks`;
 UPDATE `#__joomgallery_config` SET `jg_use_listbox_max_user_count` = 25;
 
-ALTER TABLE `#__joomgallery_config` ADD `jg_watermarkzoom` int(1) NOT NULL AFTER `jg_watermarkpos`;
+ALTER TABLE `#__joomgallery` ADD `featured` tinyint(1) NOT NULL AFTER `hidden`;
 
+ALTER TABLE `#__joomgallery_config` ADD `jg_watermarkzoom` int(1) NOT NULL AFTER `jg_watermarkpos`;
 ALTER TABLE `#__joomgallery_config` ADD `jg_watermarksize` int(1) NOT NULL AFTER `jg_watermarkzoom`;
 UPDATE `#__joomgallery_config` SET `jg_watermarksize` = 15;
