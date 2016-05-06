@@ -31,6 +31,10 @@ class JoomGalleryControllerImage extends JControllerLegacy
   {
     $model = $this->getModel('edit');
 
+    $array = JRequest::getVar('id',  0, '', 'array');
+
+    $model->setId((int)$array[0]);
+
     /*$data = JRequest::get('post');
 
     //editing more than one image?
@@ -118,6 +122,10 @@ class JoomGalleryControllerImage extends JControllerLegacy
   {
     $model = $this->getModel('edit');
 
+    $array = JRequest::getVar('id',  0, '', 'array');
+
+    $model->setId((int)$array[0]);
+
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
     if(JRequest::getVar('limitstart', null) != null)
@@ -160,6 +168,10 @@ class JoomGalleryControllerImage extends JControllerLegacy
   public function publish()
   {
     $model = $this->getModel('edit');
+
+    $array = JRequest::getVar('id',  0, '', 'array');
+
+    $model->setId((int)$array[0]);
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';

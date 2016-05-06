@@ -98,6 +98,14 @@ Joomla.submitbutton = function(task)
               </div>
               <div class="control-group">
                 <div class="control-label">
+                  <?php echo $this->form->getLabel('featured'); ?>
+                </div>
+                <div class="controls">
+                  <?php echo $this->form->getInput('featured'); ?>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="control-label">
                   <?php echo $this->form->getLabel('access'); ?>
                 </div>
                 <div class="controls">

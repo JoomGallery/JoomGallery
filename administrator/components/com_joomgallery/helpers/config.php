@@ -72,12 +72,11 @@ class JoomConfig extends JObject
   var $jg_msg_rejectimg_type;
   var $jg_msg_global_from;
   var $jg_realname;
-  var $jg_cooliris;
-  var $jg_coolirislink;
   var $jg_contentpluginsenabled;
   var $jg_itemid;
   var $jg_ajaxcategoryselection;
   var $jg_disableunrequiredchecks;
+  var $jg_use_listbox_max_user_count;
   var $jg_userspace;
   var $jg_useruploaddefaultcat;
   var $jg_approve;
@@ -100,6 +99,7 @@ class JoomConfig extends JObject
   var $jg_newpiccopyright;
   var $jg_newpicnote;
   var $jg_redirect_after_upload;
+  var $jg_edit_metadata;
   var $jg_download;
   var $jg_download_unreg;
   var $jg_download_hint;
@@ -247,6 +247,8 @@ class JoomConfig extends JObject
   var $jg_downloadwithwatermark;
   var $jg_watermark;
   var $jg_watermarkpos;
+  var $jg_watermarkzoom;
+  var $jg_watermarksize;
   var $jg_bigpic;
   var $jg_bigpic_unreg;
   var $jg_bigpic_open;
@@ -258,6 +260,7 @@ class JoomConfig extends JObject
   var $jg_motionminis;
   var $jg_motionminiWidth;
   var $jg_motionminiHeight;
+  var $jg_motionminiLimit;
   var $jg_miniWidth;
   var $jg_miniHeight;
   var $jg_minisprop;

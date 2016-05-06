@@ -193,22 +193,56 @@ echo $this->loadTemplate('header'); ?>
   <div class="jg_minis">
 <?php   if($this->_config->get('jg_motionminis') == 2): ?>
     <div id="motioncontainer">
-      <div id="motiongallery">
-        <div style="white-space:nowrap;" id="trueContainer">
+      <ul>
 <?php   endif;
-        if(count($this->images)):
-          foreach($this->images as $row): ?>
+        $rows  = array();
+        $limit = $this->_config->get('jg_motionminiLimit');
+
+        if ($limit > 0)
+        {
+          $imageposition = ($this->image->position + 1) - $limit/2;
+          $imageposition = min($imageposition, count($this->images) - $limit);
+          $rows = array_splice($this->images, max(0, $imageposition), $limit);
+        }
+        else
+        {
+          $rows = $this->images;
+        }
+
+        foreach($rows as $row):
+          if($this->_config->get('jg_motionminis') == 2): ?>
+        <li>
+<?php     endif; ?>
           <a title="<?php echo $row->imgtitle; ?>" href="<?php echo JRoute::_('index.php?view=detail&id='.$row->id).JHTML::_('joomgallery.anchor'); ?>">
 <?php       $cssid = '';
-            if($row->id == $this->image->id):
-              $cssid = ' id="jg_mini_akt"';
-            endif; ?>
+          if($row->id == $this->image->id):
+            $cssid = ' id="jg_mini_akt"';
+          endif; ?>
             <img src="<?php echo $this->_ambit->getImg('thumb_url', $row); ?>"<?php echo $cssid; ?> class="jg_minipic" alt="<?php echo $row->imgtitle; ?>" /></a>
-<?php     endforeach;
-        endif;
+<?php     if($this->_config->get('jg_motionminis') == 2): ?>
+        </li>
+<?php     endif; ?>
+<?php   endforeach;
         if($this->_config->get('jg_motionminis') == 2): ?>
-        </div>
-      </div>
+      </ul>
+      <script>
+        (function($){
+          $(window).load(function(){
+            $("#motioncontainer").mThumbnailScroller({
+              axis:"x",
+              type:"hover-20",
+              callbacks:{
+                onInit:function(){
+                  var $this = $(this);
+                  var moveTo = $("#jg_mini_akt").position().left + ($("#jg_mini_akt").width() / 2) - ($("#motioncontainer").find(".mTSWrapper").width() / 2);
+                  $this.mThumbnailScroller("scrollTo", (moveTo > 0 ? moveTo : "left"));
+                  setTimeout(function() { $this.addClass("jg_scroller-ready"); }, 300);
+                }
+              },
+            });
+          });
+        })(jQuery);
+      </script>
     </div>
 <?php   endif; ?>
   </div>
