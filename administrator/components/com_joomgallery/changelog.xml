@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.3.1" published="20160509">
+    <entries date="20160509">
+      <logentry type="#">Fix broken thumbnail selection for categories with MiniJoom </logentry>
+    </entries>
+  </release>
   <release version="3.3.0" published="20160508">
     <entries date="20160506">
       <logentry type="+">Pass selected image type to the selectimage method in the MiniJoom</logentry>
