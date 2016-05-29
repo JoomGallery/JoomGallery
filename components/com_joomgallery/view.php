@@ -88,7 +88,7 @@ class JoomGalleryView extends JViewLegacy
 
     // Add the main CSS file
     $this->_doc->addStyleSheet($this->_ambit->getStyleSheet('joomgallery.css'));
-  
+
     // Add the RTL CSS file if an RTL language is used
     if(JFactory::getLanguage()->isRTL())
     {
@@ -100,20 +100,6 @@ class JoomGalleryView extends JViewLegacy
     {
       $this->_doc->addStyleSheet($this->_ambit->getStyleSheet('joom_local.css'));
     }
-
-    $pngbehaviour = "  <!-- Do not edit IE conditional style below -->"
-                  . "\n"
-                  ."  <!--[if lte IE 6]>"
-                  . "\n"
-                  . "  <style type=\"text/css\">\n"
-                  . "    .pngfile {\n"
-                  . "      behavior:url('".JURI::root()."media/joomgallery/js/pngbehavior.htc') !important;\n"
-                  . "    }\n"
-                  . "  </style>\n"
-                  . "  <![endif]-->"
-                  . "\n"
-                  . "  <!-- End Conditional Style -->";
-    $this->_doc->addCustomTag($pngbehaviour);
 
     // Set documents meta data taken from menu entry definition
     $params = $this->_mainframe->getParams();
