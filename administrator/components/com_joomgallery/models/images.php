@@ -283,13 +283,6 @@ class JoomGalleryModelImages extends JoomGalleryModel
           JFactory::getApplication()->setUserState('joom.images.filter.' . $name, $value);
         }
 
-        // Special case for owner filter since Joomla! 3.5 when using modal user selection
-        if($name == 'owner' && $value == 0)
-        {
-          $value = '';
-          JFactory::getApplication()->setUserState('joom.images.filter.' . $name, $value);
-        }
-
         $this->setState('filter.' . $name, $value);
 
         if($value)
@@ -964,6 +957,14 @@ class JoomGalleryModelImages extends JoomGalleryModel
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
     $new_state = JRequest::getVar($request, null, 'default', $type);
+
+    // Special case for owner filter since Joomla! 3.5 when using modal user selection
+    if(    !is_null($new_state) && isset($new_state['owner'])
+        && ($new_state['owner'] === 0 || $new_state['owner'] === '0')
+      )
+    {
+      $new_state['owner'] = '';
+    }
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
