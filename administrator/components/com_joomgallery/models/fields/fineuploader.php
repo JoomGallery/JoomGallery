@@ -176,7 +176,7 @@ class JFormFieldFineuploader extends JFormField
         },
         onValidate: function(fileData) {
           if(!jg_filenamewithjs) {
-            var searchwrongchars = /[^a-zA-Z0-9_-]/;
+            var searchwrongchars = /[^a-zA-Z0-9 _-]/;
             if(searchwrongchars.test(fileData.name.substr(0, fileData.name.lastIndexOf('.')))) {
               this._itemError('fileNameError', fileData.name);
               return false;
