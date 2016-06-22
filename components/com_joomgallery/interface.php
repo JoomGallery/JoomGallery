@@ -278,7 +278,7 @@ class JoomInterface
    */
   public function getGalleryVersion()
   {
-    return '3.2';
+    return '3.3';
   }
 
   /**

@@ -67,7 +67,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
     // Categories pagination
     if($this->_config->get('jg_hideemptycats') == 2)
     {
-      $totalcategories = &$this->get('TotalCategoriesWithoutEmpty');
+      $totalcategories = $this->get('TotalCategoriesWithoutEmpty');
     }
     else
     {
@@ -428,7 +428,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
       // is chosen ('Also those which contain empty sub-categories'),
       // we need additional code to exclude these categories.
       // (For the second alternative only the query in the model is modified.)
-      $categories = &$this->get('CategoriesWithoutEmpty');
+      $categories = $this->get('CategoriesWithoutEmpty');
     }
     else
     {
@@ -870,18 +870,6 @@ class JoomGalleryViewCategory extends JoomGalleryView
       else
       {
         $images[$key]->show_elems = true;
-      }
-    }
-
-    if($this->_config->get('jg_cooliris') && count($images))
-    {
-      $href = JRoute::_('index.php?view=category&catid='.$cat->cid.'&page='.$page.'&format=raw');
-      $attribs = array('id' => 'gallery', 'type' => 'application/rss+xml', 'title' => 'Cooliris');
-      $this->_doc->addHeadLink($href, 'alternate', 'rel', $attribs);
-
-      if($this->_config->get('jg_coolirislink'))
-      {
-        $this->_doc->addScript('http://lite.piclens.com/current/piclens.js');
       }
     }
 

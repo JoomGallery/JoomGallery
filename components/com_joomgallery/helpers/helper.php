@@ -675,7 +675,7 @@ class JoomHelper
     {
       if($view != 'favourites')
       {
-        if(   (/*$config->get('jg_showdetailfavourite') && */ $user->get('id'))
+        if(     $user->get('id')
            || (($config->get('jg_usefavouritesforpubliczip') == 1) && !$user->get('id'))
           )
         {

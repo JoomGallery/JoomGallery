@@ -15,10 +15,10 @@ $approved_states  = array(1 => array('reject', 'COM_JOOMGALLERY_COMMON_APPROVED'
                       <?php echo JHTML::_('jgrid.state', $approved_states, $item->approved, $i, '', false); ?>
                     </td>
                     <td class="center" width="25">
-                      <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', 'href="'.JRoute::_('index.php?option='._JOOM_OPTION.'&controller=comments&filter_state=4&filter_order=c.cmtdate&filter_order_Dir=desc'), true); ?>
+                      <?php echo JHTML::_('joomgallery.minithumbimg', $item, 'jg_minithumb', 'href="'.JRoute::_('index.php?option='._JOOM_OPTION.'&controller=comments&filter[state]=4&list[fullordering]=c.cmtdate DESC'), true); ?>
                     </td>
                     <td>
-                      <a href="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=comments&filter_state=4&filter_order=c.cmtdate&filter_order_Dir=desc');?>">
+                      <a href="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=comments&filter[state]=4&list[fullordering]=c.cmtdate DESC');?>">
                         <?php echo $item->cmttext; ?></a>
                     </td>
                     <td class="small nowrap">

@@ -69,6 +69,9 @@ class JoomGalleryViewImage extends JoomGalleryView
       }
     }
 
+    // Set maximum allowed user count to switch from listbox to modal popup selection
+    $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
+
     // Bind the data to the form
     $form->bind($item);
 
@@ -157,6 +160,9 @@ class JoomGalleryViewImage extends JoomGalleryView
       $thumbsource = '../media/system/images/blank.png';
     }
     $form->setValue('imagelib', null, $thumbsource);
+
+    JText::script('JLIB_RULES_NOT_ALLOWED');
+    JText::script('JLIB_RULES_ALLOWED');
 
     $this->assignRef('item',              $item);
     $this->assignRef('isNew',             $isNew);

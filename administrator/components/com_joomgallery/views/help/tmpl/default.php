@@ -64,80 +64,11 @@
     <div class="span5">
       <div class="well well-small">
         <div class="module-title nav-header"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM'); ?></div>
-        <table class="table table-striped">
-          <tr>
-            <td>
-              <a href="mailto:mab@joomgallery.net">M. Andreas B&ouml;ttcher (aka mab)</a>
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <a href="mailto:aha@joomgallery.net">Andreas Hartmann (aka aHa)</a>
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-        <!--
-          <tr>
-            <td>
-              <a href="mailto:hypnotoad@joomgallery.net">Armin Hornung (aka hypnotoad)</a>
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-        -->
-        <!--
-          <tr>
-            <td>
-              <a href="mailto:djanesch@joomgallery.net">Daniel Janesch (aka deejay_)</a>
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-        -->
-          <tr>
-            <td>
-              <a href="mailto:chraneco@joomgallery.net">Patrick Alt (aka chraneco)</a>
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-        <!--
-          <tr>
-            <td>
-              Benjamin Malte Meier (aka b2m)
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_ADVISORY').', '.JText::_('COM_JOOMGALLERY_HLPIFO_PROGRAMMING'); ?>
-            </td>
-          </tr>
-        -->
-        <!--
-          <tr>
-            <td>
-              Dennis Rowedder (aka Wuslon)
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_QUALITY'); ?>
-            </td>
-          </tr>
-        -->
-          <tr>
-            <td>
-              Claudia Engel (aka Claudia E.)
-            </td>
-            <td>
-              <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_SUPPORT').', '.JText::_('COM_JOOMGALLERY_HLPIFO_QUALITY'); ?>
-            </td>
-          </tr>
-        </table>
+        <div class="text-center">
+          <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="http://en.joomgallery.net/team.html" target="_blank">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGallery" target="_blank">GitHub</a>'); ?></p>
+          <p><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS'); ?></p>
+          <p><small class="muted"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS_HINT'); ?></small></p>
+          <a href="https://github.com/JoomGallery" target="_blank"><img width="300" src="<?php echo $this->_ambit->getIcon('others/GitHub_logo.png'); ?>" alt="GitHub Logo"></a></div>
       </div>
     </div>
   </div>

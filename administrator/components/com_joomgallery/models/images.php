@@ -54,6 +54,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
         'category', 'category_name',
         'published', 'a.published',
         'approved', 'a.approved',
+        'featured', 'a.featured',
         'access', 'a.access', 'access_level',
         'owner', 'a.owner',
         'imgauthor', 'a.imgauthor',
@@ -203,7 +204,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
     {
       $form = JForm::getInstance($name, $source, $options, false, $xpath);
 
-      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', '250', 'filter');
+      $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'), 'filter');
 
       if(isset($options['load_data']) && $options['load_data'])
       {
@@ -563,6 +564,10 @@ class JoomGalleryModelImages extends JoomGalleryModel
     {
       $column = 'published';
     }
+    if($task == 'feature')
+    {
+      $column = 'featured';
+    }
 
     foreach($cid as $id)
     {
@@ -832,8 +837,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
     }
 
     // Filter by owner
-    $owner = $this->getState('filter.owner');
-    if($owner !== '')
+    if($owner = $this->getState('filter.owner'))
     {
       $query->where('a.owner = '.(int) $owner);
     }
@@ -867,6 +871,14 @@ class JoomGalleryModelImages extends JoomGalleryModel
       case 5:
         // Rejected
         $query->where('a.approved = -1');
+        break;
+      case 6:
+        // Featured
+        $query->where('a.featured = 1');
+        break;
+      case 7:
+        // Not featured
+        $query->where('a.featured = 0');
         break;
       default:
         // No filter by state
@@ -945,6 +957,14 @@ class JoomGalleryModelImages extends JoomGalleryModel
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
     $new_state = JRequest::getVar($request, null, 'default', $type);
+
+    // Special case for owner filter since Joomla! 3.5 when using modal user selection
+    if(    !is_null($new_state) && isset($new_state['owner'])
+        && ($new_state['owner'] === 0 || $new_state['owner'] === '0')
+      )
+    {
+      $new_state['owner'] = '';
+    }
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {

@@ -10,13 +10,22 @@ $listOrder      = $this->escape($this->state->get('list.ordering'));
 $listDirn       = $this->escape($this->state->get('list.direction'));
 $columns        = 11;
 $ordering       = $this->state->get('ordering.array');
-$saveOrder      = (($listOrder == 'c.lft' || !$listOrder) && (strtoupper($listDirn) == 'ASC' || !$listDirn) && !$this->state->get('filter.published') && !$this->state->get('filter.search'));
+$saveOrder      = (($listOrder == 'c.lft' || !$listOrder) && (strtoupper($listDirn) == 'ASC' || !$listDirn) && !$this->state->get('filter.published') && !$this->state->get('filter.search') && !$this->state->get('filter.owner'));
 $originalOrders = array();
 
 if($saveOrder):
   $saveOrderingUrl = 'index.php?option='._JOOM_OPTION.'&controller=categories&task=saveorder&format=json';
   JHtml::_('sortablelist.sortable', 'categoryList', 'adminForm', strtolower($listDirn), $saveOrderingUrl, false, true);
 endif;
+
+JFactory::getDocument()->addScriptDeclaration(
+  '
+  jQuery(document).ready(function() {
+    jQuery(\'.js-stools-btn-clear\').click(function() {
+      jQuery(\'#filter_owner\').val(\'\');
+    });
+  });'
+);
 ?>
 
 <form action="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=categories');?>" method="post" name="adminForm" id="adminForm">

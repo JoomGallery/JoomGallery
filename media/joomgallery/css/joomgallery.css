@@ -340,27 +340,16 @@ td.jg_cmtf {
 #jg_mini_akt {
   border:2px solid #000;
 }
-#motiongallery {
-  position:absolute;
-  left:0;
-  top:0;
-  white-space:nowrap;
-}
 #motioncontainer {
   margin:0 auto;  /*centers on page */
-  position:relative;
   overflow:hidden;
+  max-width:100%;
 }
-#statusdiv {
-  background-color:#FFFFE0;
-  border:1px solid #7F7F7F;
-  padding:2px;
-  position:absolute; /* Stop Editing Gallery Styles */
-  left:-300px;
-  visibility:hidden;
+#motioncontainer ul { 
+  opacity: 0;
 }
-#motioncontainer a:hover {
-  color:#F00; /* Dummy definition to overcome IE bug */
+#motioncontainer.jg_scroller-ready ul {
+  opacity: 1;
 }
 /* Nameshield */
 .nameshield {
@@ -645,4 +634,39 @@ div.current .formu td {
 }
 .jg_minicount{
   margin:5px 0 15px 0;
+}
+
+/* Userpanel */
+#jg-quick-edit-btn-bar {
+	width: 100%;
+	position:fixed;
+	bottom:0;
+	left:0;
+  display:none;
+	background-color: #fff;
+	text-align: center;
+	padding: 16px 0;
+	margin: auto;
+  box-shadow: 0px -1px 21px rgba(68, 68, 68, 0.25);
+  z-index:1000;
+}
+.jg-quick-edit-row div.span9 {
+	padding-right:6px;
+}
+.jg-quick-edit-row.changed td > div > div.span9 {
+	padding-right:2px;
+  border-right: 4px solid #3D88CC;
+}
+.jg-quick-edit-row label {
+  margin-top:5px;
+}
+.jg-quick-edit-row .jg-editor-wrapper {
+  padding-right:4px;
+}
+.jg-quick-edit-row .jg-editor-wrapper > textarea {
+  box-sizing:border-box;
+}
+
+.jg-icon-disabled img {
+  filter:grayscale(100%);
 }
