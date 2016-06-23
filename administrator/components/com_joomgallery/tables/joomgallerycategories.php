@@ -84,7 +84,7 @@ class TableJoomgalleryCategories extends JTableNested
    * @param   object  $db A database connector object
    * @since   1.5.5
    */
-  public function TableJoomgalleryCategories(&$db)
+  public function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_CATEGORIES, 'cid', $db);
   }
