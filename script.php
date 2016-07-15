@@ -285,6 +285,8 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/motiongallery.js';
     // Old raw view for Cooliris 
     $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/view.raw.php';
+    // Override function for setting permissions via AJAX
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/permissions.js';
 
     foreach($delete_files as $delete_file)
     {
