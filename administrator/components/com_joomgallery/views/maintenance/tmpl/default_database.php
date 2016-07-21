@@ -8,19 +8,9 @@
       <div class="span10">
           <?php echo JText::_('COM_JOOMGALLERY_MAIMAN_DB_OPTIMIZE_LONG'); ?> 
       </div>
+      <input type="hidden" name="option" value="<?php echo _JOOM_OPTION; ?>" />
+      <input type="hidden" name="controller" value="maintenance" />
+      <input type="hidden" name="task" value="" />
     </div>
-  </div>
-  <div class="well">
-    <div class="row-fluid">
-      <div class="span2 center">
-        <button type="submit" class="btn" onclick="document.adminFormDatabase.task.value = 'resetconfig';"><?php echo JText::_('COM_JOOMGALLERY_MAIMAN_DB_RESETCONFIG'); ?></button>
-      </div>
-      <div class="span10">
-          <?php echo JText::_('COM_JOOMGALLERY_MAIMAN_DB_RESETCONFIG_LONG'); ?> 
-      </div>
-    </div>
-    <input type="hidden" name="option" value="<?php echo _JOOM_OPTION; ?>" />
-    <input type="hidden" name="controller" value="maintenance" />
-    <input type="hidden" name="task" value="" />
   </div>
 </form>
