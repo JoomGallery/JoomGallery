@@ -62,6 +62,9 @@ class JoomGalleryViewConfigs extends JoomGalleryView
     JToolbarHelper::editList('edit');
 
     JToolbarHelper::deleteList('','remove');
+
+    $toolbar->appendButton('Popup', 'refresh', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=resetconfig&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'jg-reset-popup', 'warning-2');
+
   }
 
   /**

@@ -968,3 +968,4 @@ echo JHtml::_('tabs.end');
     <?php JHtml::_('joomgallery.credits'); ?>
   </div>
 </form>
+<?php echo $this->loadTemplate('reset'); ?>
