@@ -184,3 +184,4 @@ $sortFields = $this->getSortFields(); ?>
   </div>
 </form>
 <?php echo $this->loadTemplate('new'); ?>
+<?php echo $this->loadTemplate('reset'); ?>

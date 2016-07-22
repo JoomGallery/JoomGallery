@@ -39,10 +39,12 @@ class JoomGalleryControllerConfig extends JoomGalleryController
     }
 
     // Register tasks
-    $this->registerTask('new',        'edit');
-    $this->registerTask('apply',      'save');
-    $this->registerTask('orderup',    'order');
-    $this->registerTask('orderdown',  'order');
+    $this->registerTask('new',          'edit');
+    $this->registerTask('apply',        'save');
+    $this->registerTask('orderup',      'order');
+    $this->registerTask('orderdown',    'order');
+    $this->registerTask('resetconfig',  'resetconfig');
+    $this->registerTask('resetconfigs', 'resetconfig');
 
     // Set view
     if($this->_config->isExtended())
@@ -259,5 +261,75 @@ class JoomGalleryControllerConfig extends JoomGalleryController
   function cancel()
   {
     $this->setRedirect($this->_ambit->getRedirectUrl());
+  }
+
+  /**
+   * Reset of the entire configuration
+   *
+   * @return  void
+   * @since   3.4.0
+   */
+  public function resetconfig()
+  {
+    $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.mysql.utf8.sql';
+    if(file_exists($path))
+    {
+      $task = JRequest::getCmd('task');
+      // delete old databse entries and joom_settings css files
+      if($task == 'resetconfigs')
+      {
+        $config = JoomConfig::getInstance('admin');
+        $db = JFactory::getDbo();
+        $query = $db->getQuery(true);
+        $query  = $this->_db->getQuery(true)
+            ->select('id')
+            ->from(_JOOM_TABLE_CONFIG)
+            ->where('id != 1');
+        $db->setQuery($query);
+        if(!$db->query())
+        {
+          JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
+          return false;
+        }
+        else
+        {
+          $ids = $db->loadObjectList('id');
+          foreach($ids as $key => $config_id)
+          {
+            if($key !== 1)
+            {
+              if(!$config->delete($key))
+              {
+                JError::raiseWarning(500, $config->getError());
+              }
+            }
+          }
+        }
+      }
+
+      // Delete default entry with id = 1
+      $query = 'DELETE FROM '._JOOM_TABLE_CONFIG;
+      $this->_db->setQuery($query);
+      if(!$this->_db->query())
+      {
+        JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
+        return false;
+      }
+
+      // Set default values in database
+      $query = file_get_contents($path);  
+      $this->_db->setQuery($query);
+      if(!$this->_db->query())
+      {
+        JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
+        return false;
+      }
+
+      $this->setRedirect($this->_ambit->getRedirectUrl(), JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_SUCCESSFUL'), 'message');
+    }
+    else
+    {
+      $this->setRedirect($this->_ambit->getRedirectUrl(), JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'), 'error');
+    }
   }
 }
