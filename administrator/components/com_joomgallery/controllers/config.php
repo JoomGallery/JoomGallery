@@ -43,8 +43,6 @@ class JoomGalleryControllerConfig extends JoomGalleryController
     $this->registerTask('apply',        'save');
     $this->registerTask('orderup',      'order');
     $this->registerTask('orderdown',    'order');
-    $this->registerTask('resetconfig',  'resetconfig');
-    $this->registerTask('resetconfigs', 'resetconfig');
 
     // Set view
     if($this->_config->isExtended())
@@ -272,56 +270,53 @@ class JoomGalleryControllerConfig extends JoomGalleryController
   public function resetconfig()
   {
     $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.mysql.utf8.sql';
+
     if(file_exists($path))
     {
-      $task = JRequest::getCmd('task');
-      // delete old databse entries and joom_settings css files
-      if($task == 'resetconfigs')
-      {
-        $config = JoomConfig::getInstance('admin');
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
-        $query  = $this->_db->getQuery(true)
+      $config = JoomConfig::getInstance('admin');
+
+      // Get all configuration sets
+      $query = $this->_db->getQuery(true)
             ->select('id')
             ->from(_JOOM_TABLE_CONFIG)
-            ->where('id != 1');
-        $db->setQuery($query);
-        if(!$db->query())
-        {
-          JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
-          return false;
-        }
-        else
-        {
-          $ids = $db->loadObjectList('id');
-          foreach($ids as $key => $config_id)
-          {
-            if($key !== 1)
-            {
-              if(!$config->delete($key))
-              {
-                JError::raiseWarning(500, $config->getError());
-              }
-            }
-          }
-        }
-      }
-
-      // Delete default entry with id = 1
-      $query = 'DELETE FROM '._JOOM_TABLE_CONFIG;
+            ->order('id DESC');
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+
+      try
       {
-        JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
+        $ids = $this->_db->loadObjectList();
+      }
+      catch(Exception $e)
+      {
+        $this->setRedirect($this->_ambit->getRedirectUrl(), $e->getMessage(), 'error');
         return false;
       }
 
-      // Set default values in database
-      $query = file_get_contents($path);  
-      $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      // Delete all configuration sets
+      foreach($ids as $id)
       {
-        JError::raiseWarning(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_RESETCONFIG_NOT_SUCCESSFUL'));
+        if(!$config->delete((int)$id->id, true))
+        {
+          $this->setRedirect($this->_ambit->getRedirectUrl(), $config->getError(), 'error');
+          return false;
+        }
+      }
+
+      // Create a new configuration set with id = 1 with default values
+      $query = file_get_contents($path);
+      $this->_db->setQuery($query);
+
+      try
+      {
+        $this->_db->execute();
+
+        // Load configuration set with id = 1 and save the CSS file joom_settings.css
+        $config = new JoomAdminConfig(1);
+        $config->saveCSS();
+      }
+      catch(Exception $e)
+      {
+        $this->setRedirect($this->_ambit->getRedirectUrl(), $e->getMessage(), 'error');
         return false;
       }
 
