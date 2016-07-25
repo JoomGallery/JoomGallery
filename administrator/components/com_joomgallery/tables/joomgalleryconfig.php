@@ -329,7 +329,7 @@ class TableJoomgalleryConfig extends JTable
    * @return  void
    * @since   1.5.5
    */
-  public function TableJoomGalleryConfig(&$db)
+  public function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_CONFIG, 'id', $db);
   }

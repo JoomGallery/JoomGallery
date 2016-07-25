@@ -30,7 +30,7 @@ class TableJoomgalleryCountstop extends JTable
   /** @var string */
   var $cstime       = null;
   
-  function TableJoomgalleryCounststop(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_COUNTSTOP, 'id', $db);
   }

@@ -34,7 +34,7 @@ class TableJoomgalleryUser extends JTable
   /** @var string */
   var $zipname  = null;
 
-  function TableJoomgalleryUser(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_USER, 'id', $db);
   }
