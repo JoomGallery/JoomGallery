@@ -46,7 +46,7 @@ class TableJoomgalleryMaintenance extends JTable
   /** @var int */
   var $type         = null;
   
-  function TableJoomgalleryMaintenance(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_MAINTENANCE, 'id', $db);
   }

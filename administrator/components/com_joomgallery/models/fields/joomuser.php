@@ -156,7 +156,12 @@ class JFormFieldJoomUser extends JFormFieldUser
       }
     }
 
-    return $this->getPopupInput();
+    if(version_compare(JVERSION, '3.5', 'lt'))
+    {
+      return $this->getPopupInput();
+    }
+
+    return parent::getInput();
   }
 
   /**
@@ -289,24 +294,9 @@ class JFormFieldJoomUser extends JFormFieldUser
     // Add the script to the document head.
     JFactory::getDocument()->addScriptDeclaration(implode("\n", $script));
 
-    // Load the current user name if available.
-    $config = JoomConfig::getInstance();
-    $type   = $config->get('jg_realname') ? 'name' : 'username';
-    $table  = JTable::getInstance('user');
-
-    if($this->value)
-    {
-      $table->load($this->value);
-    }
-    else
-    {
-      $table->$type = JText::_($hint);
-      $this->value = '';
-    }
-
     // Create a dummy text field with the user name.
     $html[] = '<div class="input-append">';
-    $html[] = '  <input type="text" id="' . $this->id . '_name"' . ' value="' . htmlspecialchars($table->$type, ENT_COMPAT, 'UTF-8')
+    $html[] = '  <input type="text" id="' . $this->id . '_name"' . ' value="' . htmlspecialchars($this->loadUser(), ENT_COMPAT, 'UTF-8')
                 . '"' . ' readonly' . $attr . ' />';
 
     // Create the user select button.
@@ -334,5 +324,59 @@ class JFormFieldJoomUser extends JFormFieldUser
     $html[] = '<input type="hidden" id="' . $this->id . '" name="' . $this->name . '" value="' . $this->value . '"' . $required . ' />';
 
     return implode("\n", $html);
+  }
+
+  /**
+   * Get the data that is going to be passed to the layout
+   *
+   * @return  array
+   * @since 3.2
+   */
+  public function getLayoutData()
+  {
+    // Get the basic field data
+    $data = JFormField::getLayoutData();
+
+    $extraData = array(
+        'userName'  => $this->loadUser(),
+        'groups'    => $this->getGroups(),
+        'excluded'  => $this->getExcluded()
+    );
+
+    if(empty($this->onchange))
+    {
+      $extraData['onchange'] = 'if (this.val() == 0) {'
+                                 . 'setTimeout(function(){ jQuery("#' . $this->id. '").val("'
+                                 . JText::_((!empty($this->hint) ? $this->hint : 'COM_JOOMGALLERY_COMMON_NO_USER'))
+                                 . '"); }, 200);}';
+    }
+
+    return array_merge($data, $extraData);
+  }
+
+  /**
+   * Load the user if available.
+   *
+   * @return  string  User's name resp. user's username.
+   * @since 3.2
+   */
+  protected function loadUser()
+  {
+    // Load the current user name if available.
+    $config = JoomConfig::getInstance();
+    $type   = $config->get('jg_realname') ? 'name' : 'username';
+    $table  = JTable::getInstance('user');
+
+    if($this->value)
+    {
+      $table->load($this->value);
+    }
+    else
+    {
+      $table->$type = JText::_((!empty($this->hint) ? $this->hint : 'COM_JOOMGALLERY_COMMON_NO_USER'));
+      $this->value = '';
+    }
+
+    return $table->$type;
   }
 }

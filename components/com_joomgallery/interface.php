@@ -84,7 +84,7 @@ class JoomInterface
    * @return  void
    * @since   1.5.5
    */
-  public function JoomInterface()
+  public function __construct()
   {
     // Load JoomGallery defines
     require_once JPATH_ADMINISTRATOR.'/components/com_joomgallery/includes/defines.php';
@@ -278,7 +278,7 @@ class JoomInterface
    */
   public function getGalleryVersion()
   {
-    return '3.2';
+    return '3.3';
   }
 
   /**

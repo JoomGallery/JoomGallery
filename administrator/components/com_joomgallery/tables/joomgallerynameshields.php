@@ -40,7 +40,7 @@ class TableJoomgalleryNameshields extends JTable
   /** @var int */
   var $nzindex  = null;
 
-  function TableJoomgalleryNameshields(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_NAMESHIELDS, 'nid', $db);
   }

@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Restricted access'); ?>
-<?php echo JHtml::_('bootstrap.startaccordion', 'joomgallery-images-sliders', array('active' => $this->extended > 0 ? 'param-page-images-options' : 'param-page-images-search'));
+<?php echo JHtml::_('bootstrap.startaccordion', 'joomgallery-images-sliders', array('active' => $this->extended > 0 ? 'param-page-images-options' : 'param-page-images-search', 'parent' => 'joomgallery-images-sliders'));
       if($this->extended > 0):
         echo JHtml::_('bootstrap.addslide', 'joomgallery-images-sliders', JText::_('COM_JOOMGALLERY_MINI_EXTENDED'), 'param-page-images-options'); ?>
   <script type="text/javascript">

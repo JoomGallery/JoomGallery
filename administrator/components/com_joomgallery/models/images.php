@@ -958,6 +958,14 @@ class JoomGalleryModelImages extends JoomGalleryModel
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
     $new_state = JRequest::getVar($request, null, 'default', $type);
 
+    // Special case for owner filter since Joomla! 3.5 when using modal user selection
+    if(    !is_null($new_state) && isset($new_state['owner'])
+        && ($new_state['owner'] === 0 || $new_state['owner'] === '0')
+      )
+    {
+      $new_state['owner'] = '';
+    }
+
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
       JRequest::setVar('limitstart', 0);
