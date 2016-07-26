@@ -271,7 +271,7 @@ class JoomGalleryViewConfig extends JoomGalleryView
     }
     else
     {
-      $toolbar->appendButton('Popup', 'refresh', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=resetconfig&amp;tmpl=component', 400, 150, 0, 0, '', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'jg-reset-popup', 'warning-2');
+      $toolbar->appendButton('Popup', 'reset', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=reset&amp;tmpl=component', 400, 150, 0, 0, '', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'jg-reset-popup', 'warning-2');
     }
   }
 

@@ -1019,12 +1019,13 @@ joom_local.css.README umbenennen und anpassen
    * Deletes a specific configuration row and corresponding CSS file
    *
    * @param   int     $id The Id of the row to delete
+   * @param   boolean $force If set to true the configuration row with id = 1 is allowed to be deleted too
    * @return  boolean True on success, false otherwise
    * @since   2.0
    */
-  public function delete($id)
+  public function delete($id, $force = false)
   {
-    if($id == 1)
+    if($id == 1 && !$force)
     {
       $this->setError(JText::_('COM_JOOMGALLERY_CONFIGS_DEFAULT_ROW_NOT_DELETABLE'));
 
