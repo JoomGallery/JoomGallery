@@ -269,7 +269,7 @@ class JoomGalleryControllerConfig extends JoomGalleryController
    */
   public function resetconfig()
   {
-    $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.mysql.utf8.sql';
+    $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.install.mysql.utf8.sql';
 
     if(file_exists($path))
     {
@@ -309,6 +309,27 @@ class JoomGalleryControllerConfig extends JoomGalleryController
       try
       {
         $this->_db->execute();
+
+        $configfile = JRequest::getCmd('task');
+    $configfile = 'setdefault.mini.mysql.utf8.sql';
+
+        if($configfile != 'setdefault.install.mysql.utf8.sql')
+        {
+          // load additional alternative configuration
+          $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/' . $configfile;
+          $query = file_get_contents($path);
+          $this->_db->setQuery($query);
+
+          try
+          {
+            $this->_db->execute();
+          }
+          catch(Exception $e)
+          {
+            $this->setRedirect($this->_ambit->getRedirectUrl(), $e->getMessage(), 'error');
+            return false;
+          }
+        }
 
         // Load configuration set with id = 1 and save the CSS file joom_settings.css
         $config = new JoomAdminConfig(1);

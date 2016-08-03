@@ -7,6 +7,15 @@
     </div>
     <div class="modal-body">
       <p><?php echo JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_INFO'); ?></p>
+      <div class="span3">
+        <fieldset class="batch">
+          <?php echo $this->lists['reset_list']; ?>
+          <div id="batchjobs"></div>
+        </fieldset>
+      </div>
+      <div class="span9">
+        <p><?php echo JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_CONFIGS_INFO'); ?></p>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo JText::_('JTOOLBAR_CANCEL'); ?></button>
