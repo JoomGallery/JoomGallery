@@ -16,6 +16,17 @@
       alert(msg.join('\n'));
     }
   }
+  // Ensure that changing permissions via AJAX is working correctly by adding some additional URL parameters
+  jQuery(document).ready(function() {
+    var modifiedURL = window.location.href;
+    if(modifiedURL.search('&view=category') == (-1)) {
+      modifiedURL += '&view=category';
+    }
+    if(modifiedURL.search('&cid=') > 0 && modifiedURL.search('&id=') == (-1)) {
+      modifiedURL += '&id=' + '<?php echo $this->item->cid; ?>';
+    }
+    history.replaceState(null, null, modifiedURL);
+  });
 </script>
 <form action="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=categories'); ?>" method="post" name="adminForm" id="item-form" class="form-validate form-horizontal">
   <fieldset>
@@ -207,7 +218,6 @@
       <?php if($this->_user->authorise('core.admin', _JOOM_OPTION.'.category.'.$this->item->cid)): ?>
         <div class="tab-pane" id="permissions">
           <?php echo $this->form->getInput('rules'); ?>
-          <?php $this->_doc->addScript($this->_ambit->getScript('permissions.js')); ?>
         </div>
       <?php endif; ?>
     </div>
