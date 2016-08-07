@@ -63,6 +63,14 @@ class JoomGalleryControllerConfig extends JoomGalleryController
    */
   public function edit()
   {
+    $id  = JRequest::getInt('id');
+    $cid = JRequest::getVar('cid', array(), 'post', 'array');
+
+    if(!$id && count($cid) && $cid[0])
+    {
+      JRequest::setVar('id', (int) $cid[0]);
+    }
+
     JRequest::setVar('view', 'config');
     JRequest::setVar('hidemainmenu', 1);
 
