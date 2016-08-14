@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.3.3" published="20160814">
+    <entries date="20160807">
+      <logentry type="#">Fix edit button not working correctly in extended configuration manager</logentry>
+    </entries>
+    <entries date="20160803">
+      <logentry type="#">Fix setting of permissions in the backend category and image view</logentry>
+    </entries>
+    <entries date="20160724">
+      <logentry type="#">Allow spaces in uploaded image file names</logentry>
+      <logentry type="#">Fix deprecation warnings in PHP7</logentry>
+    </entries>
+  </release>
   <release version="3.3.2" published="20160609">
     <entries date="20160529">
       <logentry type="#">Fix pagination glitches in the back end image manager</logentry>

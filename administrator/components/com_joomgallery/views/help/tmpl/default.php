@@ -68,7 +68,7 @@
           <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="http://en.joomgallery.net/team.html" target="_blank">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGallery" target="_blank">GitHub</a>'); ?></p>
           <p><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS'); ?></p>
           <p><small class="muted"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS_HINT'); ?></small></p>
-          <a href="https://github.com/JoomGallery" target="_blank"><img width="300" src="<?php echo $this->_ambit->getIcon('others/GitHub_logo.png'); ?>" alt="GitHub Logo"></a></div>
+          <a href="https://github.com/JoomGallery" target="_blank"><img width="200" src="<?php echo $this->_ambit->getIcon('others/GitHub_Logo.png'); ?>" alt="GitHub Logo"></a></div>
       </div>
     </div>
   </div>
