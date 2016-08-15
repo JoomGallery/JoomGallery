@@ -62,6 +62,31 @@ class JHTMLJoomConfig
   }
 
   /**
+   * Displays a selectable list of predefined configurations
+   *
+   * @return  string  The HTML output created
+   * @since   3.4
+   *
+   */
+  public static function reset()
+  {
+    $options    = array();
+    $options[]  = JHtml::_('select.option', 0, JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_OPTION_INSTALL'));
+    $options[]  = JHtml::_('select.option', 1, JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_OPTION_MINI'));
+    $options[]  = JHtml::_('select.option', 2, JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_OPTION_MIDDLE'));
+    $options[]  = JHtml::_('select.option', 3, JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_OPTION_FULL'));
+
+    $path = JPATH_ADMINISTRATOR . '/components/com_joomgallery/sql/setdefault.user.mysql.utf8.sql';
+
+    if(file_exists($path))
+    {
+      $options[] = JHtml::_('select.option', 99, JText::_('COM_JOOMGALLERY_CONFIG_RESETCONFIG_OPTION_USERDEFINED'));
+    }
+
+    return JHtml::_( 'select.genericlist', $options, 'reset_to');
+  }
+
+  /**
    * Displays the title, the current setting and the description of
    * one single option of the configuration manager in a table row
    *

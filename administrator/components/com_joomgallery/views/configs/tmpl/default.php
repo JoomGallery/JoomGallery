@@ -183,5 +183,8 @@ $sortFields = $this->getSortFields(); ?>
     <?php JHtml::_('joomgallery.credits'); ?>
   </div>
 </form>
-<?php echo $this->loadTemplate('new'); ?>
-<?php echo $this->loadTemplate('reset'); ?>
+<?php
+echo $this->loadTemplate('new');
+$layout = new JLayoutFile('joomgallery.config.reset', JPATH_COMPONENT . '/layouts');
+echo $layout->render();
+?>

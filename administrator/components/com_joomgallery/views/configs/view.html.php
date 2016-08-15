@@ -38,22 +38,6 @@ class JoomGalleryViewConfigs extends JoomGalleryView
     $this->pagination = $this->get('Pagination');
     $this->usergroups = $this->get('Usergroups');
 
-    // Select list of predefined configurations
-    $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.user.mysql.utf8.sql';
-    $c_options              = array();
-    $c_options[]            = JHTML::_('select.option', 'setdefault.install.mysql.utf8.sql', JText::_('install'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.mini.mysql.utf8.sql',    JText::_('mini'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.middle.utf8.sql',        JText::_('middle'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.full.mysql.utf8.sql',    JText::_('full'));
-    if(file_exists($path))
-    {
-      $c_options[]          = JHTML::_('select.option', 'setdefault.user.mysql.utf8.sql',    JText::_('user definied'));
-    }
-    $lists['reset_list']    = JHTML::_( 'select.genericlist', $c_options, 'job',
-                                        'class="inputbox" size="1"',
-                                        'value', 'text');
-    $this->assignRef('lists',                     $lists);
-
     $this->addToolbar();
     $this->sidebar = JHtmlSidebar::render();
 
