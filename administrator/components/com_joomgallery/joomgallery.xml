@@ -36,7 +36,7 @@
   <install>
     <sql>
       <file charset="utf8" driver="mysql">sql/install.mysql.utf8.sql</file>
-      <file charset="utf8" driver="mysql">sql/setdefault.mysql.utf8.sql</file>
+      <file charset="utf8" driver="mysql">sql/setdefault.install.mysql.utf8.sql</file>
     </sql>
   </install>
   <uninstall>
