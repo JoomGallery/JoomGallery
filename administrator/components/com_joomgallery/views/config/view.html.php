@@ -211,20 +211,6 @@ class JoomGalleryViewConfig extends JoomGalleryView
     1 => array ('TAG' => 'IPTC', 'JG' => $iptctags, 'NAME' => 'jg_iptctags[]', 'HEAD' => JText::_('COM_JOOMGALLERY_IPTCTAGS')),
     );
 
-    // Select list of predefined configurations
-    $path = JPATH_ADMINISTRATOR.'/components/com_joomgallery/sql/setdefault.user.mysql.utf8.sql';
-    $c_options              = array();
-    $c_options[]            = JHTML::_('select.option', 'setdefault.install.mysql.utf8.sql', JText::_('install'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.mini.mysql.utf8.sql',    JText::_('mini'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.middle.utf8.sql',        JText::_('middle'));
-    $c_options[]            = JHTML::_('select.option', 'setdefault.full.mysql.utf8.sql',    JText::_('full'));
-    if(file_exists($path))
-    {
-      $c_options[]          = JHTML::_('select.option', 'setdefault.user.mysql.utf8.sql',    JText::_('user definied'));
-    }
-    $lists['reset_list']    = JHTML::_( 'select.genericlist', $c_options, 'job',
-                                        'class="inputbox" size="1"',
-                                        'value', 'text');
     // Include javascript for form validation, cleaning and submitting
     $this->_doc->addScript($this->_ambit->getScript('config.js'));
 
@@ -246,7 +232,6 @@ class JoomGalleryViewConfig extends JoomGalleryView
     $this->assignRef('exif_config_array',         $exif_config_array);
     $this->assignRef('iptc_definitions',          $iptc_definitions);
     $this->assignRef('iptc_config_array',         $iptc_config_array);
-    $this->assignRef('lists',                     $lists);
 
     $this->addToolbar();
 
