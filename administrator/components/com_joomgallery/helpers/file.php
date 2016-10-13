@@ -299,11 +299,12 @@ class JoomFile
    * @param   int     $dest_qual              $config->jg_thumbquality/jg_picturequality
    * @param   boolean $max_width              true=resize to maxwidth
    * @param   int     $cropposition           $config->jg_cropposition
+   * @param   int     $angle                  $angle to rotate the created image anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   1.0.0
    */
   public static function resizeImage(&$debugoutput, $src_file, $dest_file, $useforresizedirection,
-                                     $new_width, $thumbheight, $method, $dest_qual, $max_width = false, $cropposition)
+                                     $new_width, $thumbheight, $method, $dest_qual, $max_width = false, $cropposition, $angle)
   {
     $config = JoomConfig::getInstance();
 
@@ -340,8 +341,16 @@ class JoomFile
     $imginfo[2] = $imagetype[$imginfo[2]];
 
     // Height/width
-    $srcWidth  = $imginfo[0];
-    $srcHeight = $imginfo[1];
+    if($angle == 0 || $angle == 180)
+    {
+      $srcWidth  = $imginfo[0];
+      $srcHeight = $imginfo[1];
+    }
+    else
+    {
+      $srcWidth  = $imginfo[1];
+      $srcHeight = $imginfo[0];
+    }
 
     if(   ($max_width && $srcWidth <= $new_width && $srcHeight <= $new_width)
       ||  (!$max_width && $srcWidth <= $new_width && $srcHeight <= $thumbheight)
@@ -492,16 +501,19 @@ class JoomFile
         if($imginfo[2] == 'JPG')
         {
           $src_img = imagecreatefromjpeg($src_file);
+          $src_img = imagerotate($src_img, $angle, 0);
         }
         else
         {
           if ($imginfo[2] == 'PNG')
           {
             $src_img = imagecreatefrompng($src_file);
+            $src_img = imagerotate($src_img, $angle);
           }
           else
           {
             $src_img = imagecreatefromgif($src_file);
+            $src_img = imagerotate($src_img, $angle);
           }
         }
         if(!$src_img)
@@ -562,6 +574,11 @@ class JoomFile
           return false;
         }
         $dst_img = imagecreatetruecolor($destWidth, $destHeight);
+
+        if($angle > 0)
+        {
+          $src_img = imagerotate($src_img, $angle, 0);
+        }
 
         if($config->jg_fastgd2thumbcreation == 0)
         {
@@ -628,6 +645,10 @@ class JoomFile
         if(!is_null($offsetx) && !is_null($offsety))
         {
           $commands .= ' -crop "'.$srcWidth.'x'.$srcHeight.'+'.$offsetx.'+'.$offsety.'" +repage';
+        }
+        if($angle > 0)
+        {
+          $commands .= ' -rotate "-'.$angle.'"';
         }
         // Finally the resize
         $commands  .= ' -resize "'.$destWidth.'x'.$destHeight.'" -quality "'.$dest_qual.'" -unsharp "3.5x1.2+1.0+0.10"';

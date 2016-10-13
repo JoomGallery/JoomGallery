@@ -684,6 +684,73 @@ class JoomGalleryControllerImages extends JoomGalleryController
     $this->setRedirect($this->_ambit->getRedirectUrl(), $msg, $type);
   }
 
+ /**
+   * Rotate images clockwise
+   *
+   * @return  void
+   * @since   3.3.0
+   */
+  public function rotateright()
+  {
+    $model  = $this->getModel('images');
+    $angle = 270;
+    $count  = $model->rotate($angle);
+    //$count  = $model->rotate();
+    if(!$count[0])
+    {
+      $type = 'error';
+      $msg  = $model->getError();
+    }
+    else
+    {
+      $type = 'message';
+      if($count[0] == 1)
+      {
+        $msg  = JText::_('COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_ROTATED');
+      }
+      else
+      {
+        $msg  = JText::sprintf('COM_JOOMGALLERY_IMGMAN_MSG_IMAGES_ROTATED', $count[0]);
+      }
+    }
+
+    // Some messages are enqueued by the model
+    $this->setRedirect($this->_ambit->getRedirectUrl(), $msg, $type);
+  }
+
+  /**
+   * Rotate images anti clockwise
+   *
+   * @return  void
+   * @since   3.4.0
+   */
+  public function rotateleft()
+  {
+    $model  = $this->getModel('images');
+    $angle = 90;
+    $count  = $model->rotate($angle);
+    if(!$count[0])
+    {
+      $type = 'error';
+      $msg  = $model->getError();
+    }
+    else
+    {
+      $type = 'message';
+      if($count[0] == 1)
+      {
+        $msg  = JText::_('COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_ROTATED');
+      }
+      else
+      {
+        $msg  = JText::sprintf('COM_JOOMGALLERY_IMGMAN_MSG_IMAGES_ROTATED', $count[0]);
+      }
+    }
+
+    // Some messages are enqueued by the model
+    $this->setRedirect($this->_ambit->getRedirectUrl(), $msg, $type);
+  }
+
   /**
    * Resets hits of an image
    *

@@ -1252,7 +1252,7 @@ class JoomInterface
     }
 
     $query->select('jg.id, jg.catid, jg.imgthumbname, jg.imgfilename, jg.owner, jg.imgauthor,
-                    jg.imgdate, jg.imgtitle, jg.imgtext, jg.hits, jg.downloads, jg.imgvotes,
+                    jg.imgdate, jg.imgtitle, jg.imgtext, jg.hits, jg.downloads, jg.imgvotes, jg.rotation,
                     '.JoomHelper::getSQLRatingClause('jg').' AS rating,
                     jgc.name AS cattitle, jgc.catpath AS catpath')
           ->from(_JOOM_TABLE_IMAGES.' AS jg')

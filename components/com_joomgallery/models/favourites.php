@@ -554,6 +554,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
           ->select('id')
           ->select('catid')
           ->select('imgfilename')
+          ->select('rotation')
           ->from(_JOOM_TABLE_IMAGES.' AS a')
           ->from(_JOOM_TABLE_CATEGORIES.' AS c')
           ->where('id IN ('.$this->piclist.')')
@@ -617,10 +618,12 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       // Get the original image if existent, otherwise the detail image
       $orig = $this->_ambit->getImg('orig_path', $row->id);
       $img = $this->_ambit->getImg('img_path', $row->id);
+      $angle = 0;
 
       if(file_exists($orig))
       {
         $image = $orig;
+        $angle = $row->rotation;
       }
       else if(file_exists($img))
       {
@@ -637,7 +640,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       if($include_watermark)
       {
         // Get the image resource of watermarked image
-        $imgres = $imageModel->includeWatermark($image);
+        $imgres = $imageModel->includeWatermark($image, null, 0, 0, $angle);
 
         // Start output buffering
         ob_start();

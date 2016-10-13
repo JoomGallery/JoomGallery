@@ -66,6 +66,8 @@ class TableJoomgalleryImages extends JTable
   /** @var int */
   var $useruploaded = null;
   /** @var int */
+  var $rotation     = 0;
+  /** @var int */
   var $ordering     = null;
   /** @var string */
   var $params       = null;

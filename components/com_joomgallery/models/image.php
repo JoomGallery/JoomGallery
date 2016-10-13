@@ -237,10 +237,11 @@ class JoomGalleryModelImage extends JoomGalleryModel
    *
    * @param   string    $file     Path to the image into which the watermark shall be included
    * @param   resource  $src_img  GD image resource, will be used instead of $file if it is set
+   * @return  resource  $angle    Rotation angle
    * @return  resource  image resource
    * @since   1.5.5
    */
-  public function includeWatermark($file, $src_img = null, $cropwidth = 0, $cropheight = 0)
+    public function includeWatermark($file, $src_img = null, $cropwidth = 0, $cropheight = 0, $angle = 0)
   {
     // Path to the watermarkfile
     $watermark = JPath::clean($this->_ambit->get('wtm_path').$this->_config->get('jg_wmfile'));
@@ -257,6 +258,13 @@ class JoomGalleryModelImage extends JoomGalleryModel
     if(!$src_img)
     {
       $info_img = getimagesize($file);
+      if($angle != 0 && $angle != 180)
+      {
+        $widthold    = $info_img[0];
+        $heightold   = $info_img[1];
+        $info_img[0] = $heightold;
+        $info_img[1] = $widthold;
+      } 
     }
     else
     {
@@ -392,6 +400,11 @@ class JoomGalleryModelImage extends JoomGalleryModel
       }
     }
 
+    if($angle > 0)
+    {
+      $src_img = imagerotate($src_img, $angle, 0);
+    } 
+
     // Check if image is smaller than watermark and return image without watermark
     if($info_img[0] < $info_wat[0] || $info_img[1] < $info_wat[1])
     {
@@ -467,18 +480,28 @@ class JoomGalleryModelImage extends JoomGalleryModel
    * @param   int       $croppos    Offset position of cropping window
    * @param   int       $offsetx    Offset x-coordinate
    * @param   int       $offsety    Offset y-coordinate
+   * @param   int       $angle      Rotation angle
    * @return  image     Image ressource of cropped image or image if no cropping
    *                    false if no cropping has been done
    * @since   1.5.6
    */
-  public function cropImage(&$img, &$cropwidth, &$cropheight, &$croppos, $offsetx = 0, $offsety = 0)
+  public function cropImage(&$img, &$cropwidth, &$cropheight, &$croppos, $offsetx = 0, $offsety = 0, $angle = 0)
   {
     // Get information of image
     $imginfo    = getimagesize($img);
-    // Height/width
-    $srcWidth    = $imginfo[0];
-    $srcHeight   = $imginfo[1];
     $srcImgtype  = $imginfo[2];
+    // Height/width
+    if($angle == 0 || $angle == 180)
+    {
+      $srcWidth    = $imginfo[0];
+      $srcHeight   = $imginfo[1];
+    }
+    else
+    {
+      $srcWidth    = $imginfo[1];
+      $srcHeight   = $imginfo[0];
+    }
+
 
     // If both crop settings identical to the source dimensions, return null
     if($srcWidth == $cropwidth && $srcHeight == $cropheight)
