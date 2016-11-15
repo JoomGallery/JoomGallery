@@ -199,56 +199,23 @@ class JoomGalleryViewImage extends JoomGalleryView
     }
     JResponse::setHeader('Content-disposition', $disposition.'; filename='.basename($img));
 
-    $img_resource = null;
-    if($type == 'orig')
+    // Inlude watermark and crop
+    if(($include_watermark || $crop_image) && !$model->isGif($img))
     {
-      $angle = $image->rotation;
-    }
-    else
-    {
-      $angle = 0;
-    }
-
-    // Inlude watermark and crop and rotate
-    if(($include_watermark || $crop_image || !$angle == 0 ) && !$model->isGif($img))
-    {
-      // $img_resource = null;
+      $img_resource = null;
       if($crop_image)
       {
         $croppos  = JRequest::getInt('pos');
         $offsetx  = JRequest::getInt('x');
         $offsety  = JRequest::getInt('y');
-        $img_resource = $model->cropImage($img, $cropwidth, $cropheight, $croppos, $offsetx, $offsety, $angle);
+        $img_resource = $model->cropImage($img, $cropwidth, $cropheight, $croppos, $offsetx, $offsety);
       }
 
       if($include_watermark)
       {
-        if(!$img_resource = $model->includeWatermark($img, $img_resource, $cropwidth, $cropheight, $angle))
+        if(!$img_resource = $model->includeWatermark($img, $img_resource, $cropwidth, $cropheight))
         {
           return $this->displayError($model->getError());
-        }
-      }
-      else
-      {
-        // rotate without watermark
-        if($angle != 0 && !$download)
-        {
-          switch($info[2])
-          {
-            case 1:
-              $img_resource  = imagecreatefromgif($img);
-              break;
-            case 2:
-              $img_resource  = imagecreatefromjpeg($img);
-              break;
-            case 3:
-              $img_resource  = imagecreatefrompng($img);
-              break;
-            default:
-              $this->setError(JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $info[2]));
-              return false;
-          }
-          $img_resource = imagerotate($img_resource, $angle, 0);
         }
       }
 

@@ -407,58 +407,8 @@ class JoomUpload extends JObject
         continue;
       }*/
 
-      // Begin rotation
-      $autorotate_images = $this->_config->get('jg_be_exif_rotation');
-      if($autorotate_images == 0)
-      {
-        $angle = 0;
-      }
-      else
-      {
-        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-        $imginfo[2] = $imagetype[$imginfo[2]];
-        if($imginfo[2] == 'JPG')
-        {
-          if(extension_loaded('exif') && function_exists('exif_read_data'))
-          {
-            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
-            if(empty($exif['Orientation']))
-            {
-              $angle = 0;
-              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
-            }
-            else
-            {
-              switch ($exif['Orientation'])
-              {
-                case 3:
-                  $angle = 180;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
-                  break;
-                case 6:
-                  $angle = 270;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
-                  break;
-                case 8:
-                  $angle = 90;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
-                  break;
-                default:
-                  $angle = 0;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
-                  break;
-              }
-            }
-          }
-        }
-      }
-
       // Create thumbnail and detail image
-      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
+      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -470,7 +420,7 @@ class JoomUpload extends JObject
 
       // Insert database entry
       $row = JTable::getInstance('joomgalleryimages', 'Table');
-      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter, $angle))
+      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -824,58 +774,8 @@ class JoomUpload extends JObject
 
       $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_UPLOAD_COMPLETE').'<br />';
 
-      // Begin rotation
-      $autorotate_images = $this->_config->get('jg_be_exif_rotation');
-      if($autorotate_images == 0)
-      {
-        $angle = 0;
-      }
-      else
-      {
-        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-        $imginfo[2] = $imagetype[$imginfo[2]];
-        if($imginfo[2] == 'JPG')
-        {
-          if(extension_loaded('exif') && function_exists('exif_read_data'))
-          {
-            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
-            if(empty($exif['Orientation']))
-            {
-              $angle = 0;
-              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
-            }
-            else
-            {
-              switch ($exif['Orientation'])
-              {
-                case 3:
-                  $angle = 180;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
-                  break;
-                case 6:
-                  $angle = 270;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
-                  break;
-                case 8:
-                  $angle = 90;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
-                  break;
-                default:
-                  $angle = 0;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
-                  break;
-              }
-            }
-          }
-        }
-      }
-
       // Create thumbnail and detail image
-      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
+      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -888,7 +788,7 @@ class JoomUpload extends JObject
 
       // Insert the database entry
       $row  = JTable::getInstance('joomgalleryimages', 'Table');
-      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter, $angle))
+      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1169,66 +1069,6 @@ class JoomUpload extends JObject
           continue;
         }*/
 
-        // Begin rotation
-        $autorotate_images = $this->_config->get('jg_be_exif_rotation');
-        if($autorotate_images == 0)
-        {
-          $angle = 0;
-        }
-        else
-        {
-          // Copy original image into original folder
-          $return = JFile::copy($this->_ambit->get('ftp_path').$subdirectory.$origfilename,
-                                $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-          if(!$return)
-          {
-            $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_COPYING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
-            $this->debug        = true;
-            return false;
-          }
-
-          $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-          $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                             6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                             11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-          $imginfo[2] = $imagetype[$imginfo[2]];
-          if($imginfo[2] == 'JPG')
-          {
-            if(extension_loaded('exif') && function_exists('exif_read_data'))
-            {
-              $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
-              if(empty($exif['Orientation']))
-              {
-                $angle = 0;
-                $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
-              }
-              else
-              {
-                switch ($exif['Orientation'])
-                {
-                  case 3:
-                    $angle = 180;
-                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
-                    break;
-                  case 6:
-                    $angle = 270;
-                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
-                    break;
-                  case 8:
-                    $angle = 90;
-                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
-                    break;
-                  default:
-                    $angle = 0;
-                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
-                    break;
-                }
-              }
-            }
-          }
-        }
-
         // Create thumbnail
         $return = JoomFile::resizeImage($this->_debugoutput,
                                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1239,8 +1079,7 @@ class JoomUpload extends JObject
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_thumbquality'),
                                         false,
-                                        $this->_config->get('jg_cropposition'),
-                                        $angle
+                                        $this->_config->get('jg_cropposition')
                                         );
         if(!$return)
         {
@@ -1278,7 +1117,7 @@ class JoomUpload extends JObject
         }*/
 
         // Create thumbnail and detail image
-        if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
+        if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
         {
           $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                           $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1291,7 +1130,7 @@ class JoomUpload extends JObject
 
       // Insert the database entry
       $row = JTable::getInstance('joomgalleryimages', 'Table');
-      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $angle))
+      if(!$this->registerImage($row, $origfilename, $newfilename, $tag))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1480,69 +1319,9 @@ class JoomUpload extends JObject
 
       $newfilename = $this->_genFilename($newfilename, $tag, $filecounter);
 
-      // Begin rotation
-      $autorotate_images = $this->_config->get('jg_be_exif_rotation');
-      if($autorotate_images == 0)
-      {
-        $angle = 0;
-      }
-      else
-      {
-        // Copy original image into original folder
-        $return = JFile::copy($this->_ambit->get('ftp_path').$subdirectory.$origfilename,
-                              $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-        if(!$return)
-        {
-          $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_COPYING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
-          $this->debug        = true;
-          return false;
-        }
-
-        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-        $imginfo[2] = $imagetype[$imginfo[2]];
-        if($imginfo[2] == 'JPG')
-        {
-          if(extension_loaded('exif') && function_exists('exif_read_data'))
-          {
-            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
-            if(empty($exif['Orientation']))
-            {
-              $angle = 0;
-              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
-            }
-            else
-            {
-              switch ($exif['Orientation'])
-              {
-                case 3:
-                  $angle = 180;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
-                  break;
-                case 6:
-                  $angle = 270;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
-                  break;
-                case 8:
-                  $angle = 90;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
-                  break;
-                default:
-                  $angle = 0;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
-                  break;
-              }
-            }
-          }
-        }
-      }
-
       // Resize image
       $delete_file = $this->_mainframe->getUserStateFromRequest('joom.upload.file_delete', 'file_delete', false, 'bool');
-      if(!$this->resizeImage(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename), $newfilename, false, $delete_file, $angle))
+      if(!$this->resizeImage(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename), $newfilename, false, $delete_file))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1554,7 +1333,7 @@ class JoomUpload extends JObject
       }
 
       $row = JTable::getInstance('joomgalleryimages', 'Table');
-      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter, $angle))
+      if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1624,7 +1403,6 @@ class JoomUpload extends JObject
     $screenshot          = $image['tmp_name'];
     $origfilename        = JRequest::getString('qqfilename', '');
     $screenshot_filesize = $image['size'];
-    $angle               = 0;
     if(empty($origfilename))
     {
       $origfilename = $image['name'];
@@ -1837,58 +1615,8 @@ class JoomUpload extends JObject
       //       return false;
       //     }
 
-      // Begin rotation
-      $autorotate_images = $this->_config->get('jg_be_exif_rotation');
-      if($autorotate_images == 0)
-      {
-        $angle = 0;
-      }
-      else
-      {
-        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
-        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-        $imginfo[2] = $imagetype[$imginfo[2]];
-        if($imginfo[2] == 'JPG')
-        {
-          if(extension_loaded('exif') && function_exists('exif_read_data'))
-          {
-            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
-            if(empty($exif['Orientation']))
-            {
-              $angle = 0;
-              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
-            }
-            else
-            {
-              switch ($exif['Orientation'])
-              {
-                case 3:
-                  $angle = 180;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
-                  break;
-                case 6:
-                  $angle = 270;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
-                  break;
-                case 8:
-                  $angle = 90;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
-                  break;
-                default:
-                  $angle = 0;
-                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
-                  break;
-              }
-            }
-          }
-        }
-      }
-
     // Create thumbnail and detail image
-    if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
+    if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
     {
       $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
               $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1900,7 +1628,7 @@ class JoomUpload extends JObject
 
     // Insert database entry
     $row = JTable::getInstance('joomgalleryimages', 'Table');
-    if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter, $angle))
+    if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter))
     {
       $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
               $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -2222,11 +1950,10 @@ class JoomUpload extends JObject
    * @param   string  $filename       The file name for the created files
    * @param   boolean $is_in_original Determines whether the source file is already in the original images folders
    * @param   boolean $delete_source  Determines whether the source file shall be deleted after the procedure
-   * @param   int     $angle          The degrees of rotation anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   1.5.7
    */
-  protected function resizeImage($source, $filename, $is_in_original = true, $delete_source = false, $angle = 0)
+  protected function resizeImage($source, $filename, $is_in_original = true, $delete_source = false)
   {
     if(!getimagesize($source))
     {
@@ -2255,8 +1982,7 @@ class JoomUpload extends JObject
                                     $this->_config->get('jg_thumbcreation'),
                                     $this->_config->get('jg_thumbquality'),
                                     false,
-                                    $this->_config->get('jg_cropposition'),
-                                    $angle
+                                    $this->_config->get('jg_cropposition')
                                     );
     if(!$return)
     {
@@ -2287,9 +2013,7 @@ class JoomUpload extends JObject
                                       $this->_config->get('jg_thumbcreation'),
                                       $this->_config->get('jg_picturequality'),
                                       true,
-                                      0,
-                                      $angle
-
+                                      0
                                       );
       if(!$return)
       {
@@ -2421,11 +2145,10 @@ class JoomUpload extends JObject
    * @param   string  $newfilename  The new file name for the image
    * @param   string  $tag          The extension of the uploaded image
    * @param   int     $serial       The counter for the numbering of the image titles
-   * @param   int     $angle        The degrees of rotation anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   1.5.7
    */
-  protected function registerImage($row, $origfilename, $newfilename, $tag, $serial = null, $angle = 0)
+  protected function registerImage($row, $origfilename, $newfilename, $tag, $serial = null)
   {
     // Get the specified image information (either from session or from post)
     $old_info = $this->_mainframe->getUserState('joom.upload.post');
@@ -2507,7 +2230,6 @@ class JoomUpload extends JObject
     $row->imgthumbname = $newfilename;
     $row->useruploaded = intval($this->_site);
     $row->ordering     = $this->_getOrdering($row);
-    $row->rotation     = $angle;
 
     if(!$row->check())
     {

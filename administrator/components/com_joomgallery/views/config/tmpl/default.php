@@ -113,7 +113,6 @@ JHTML::_('joomconfig.start', 'page4');
     $delete_original[] = JHTML::_('select.option','2', JText::_('COM_JOOMGALLERY_CONFIG_GS_BU_DELETE_ORIGINAL_CHECKBOX'));
     $mc_jg_delete_original = JHTML::_('select.genericlist',$delete_original, 'jg_delete_original', 'class="inputbox" size="3"', 'value', 'text', $this->_config->jg_delete_original);
     JHTML::_('joomconfig.row', 'jg_delete_original', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_BU_DELETE_ORIGINAL', $mc_jg_delete_original);
-    JHTML::_('joomconfig.row', 'jg_be_exif_rotation', 'yesno', 'COM_JOOMGALLERY_COMMON_ROTATE_USE_AUTOROTATE', $this->_config->jg_be_exif_rotation);
 JHTML::_('joomconfig.end');
 
 // start Tab "Grundlegende Einstellungen->Benachrichtigungen"
@@ -217,7 +216,6 @@ JHTML::_('joomconfig.start', 'page7');
     $mc_jg_redirect_after_upload = JHTML::_('select.genericlist', $redirect_after_upload, 'jg_redirect_after_upload', 'class="inputbox" size="4"', 'value', 'text', $this->_config->jg_redirect_after_upload);
     JHTML::_('joomconfig.row', 'jg_redirect_after_upload', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_BU_REDIRECT_AFTER_UPLOAD', $mc_jg_redirect_after_upload);
     JHtml::_('joomconfig.row', 'jg_edit_metadata', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_UU_EDIT_METADATA', $this->_config->jg_edit_metadata);
-    JHtml::_('joomconfig.row', 'jg_fe_exif_rotation', 'yesno', 'COM_JOOMGALLERY_COMMON_ROTATE_USE_AUTOROTATE', $this->_config->jg_fe_exif_rotation);
 JHTML::_('joomconfig.end');
 
 // start Tab "Benutzer-Rechte->Download"

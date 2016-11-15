@@ -582,14 +582,6 @@ abstract class JHtmlJoomGallery
         break;
       case 2: // JavaScript window
         $imginfo = getimagesize($img_path);
-        $angle = $image->rotation;
-        if($angle != 0 && $angle != 180)
-        {
-          $widthold   = $imginfo[0];
-          $heightold  = $imginfo[1];
-          $imginfo[0] = $heightold;
-          $imginfo[1] = $widthold;
-        } 
         $link    = "javascript:joom_openjswindow('".$img_url."','".JoomHelper::fixForJS($image->imgtitle)."', '".$imginfo[0]."','".$imginfo[1]."')";
 
         if(!isset($loaded[2]))
@@ -604,14 +596,6 @@ abstract class JHtmlJoomGallery
         break;
       case 3: // DHTML container
         $imginfo = getimagesize($img_path);
-        $angle = $image->rotation;
-        if($angle != 0 && $angle != 180)
-        {
-          $widthold    = $imginfo[0];
-          $heightold   = $imginfo[1];
-          $imginfo[0]  = $heightold;
-          $imginfo[1]  = $widthold;
-        } 
         $link    = "javascript:joom_opendhtml('".$img_url."','";
 
         if($config->get('jg_show_title_in_popup'))

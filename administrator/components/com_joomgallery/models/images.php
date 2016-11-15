@@ -675,7 +675,6 @@ class JoomGalleryModelImages extends JoomGalleryModel
       $orig   = $this->_ambit->getImg('orig_path', $row);
       $img    = $this->_ambit->getImg('img_path', $row);
       $thumb  = $this->_ambit->getImg('thumb_path', $row);
-      $angle  = $row->rotation;
 
       // Check if there is an original image
       if(JFile::exists($orig))
@@ -718,8 +717,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_thumbquality'),
                                         false,
-                                        $this->_config->get('jg_cropposition'),
-                                        $angle
+                                        $this->_config->get('jg_cropposition')
                                         );
         if(!$return)
         {
@@ -753,9 +751,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_picturequality'),
                                         true,
-                                        0,
-                                        $angle
-
+                                        0
                                         );
         if(!$return)
         {
@@ -792,217 +788,6 @@ class JoomGalleryModelImages extends JoomGalleryModel
     $this->_mainframe->setUserState('joom.recreate.recreated', null);
 
     return array($thumb_count, $img_count, $recreated);
-  }
-
-  /**
-   * Rotate the selected images clockwise or anti clockwise and stores the angle in the database.
-   *
-   * @return  array   An array of result information (thumbnail number, detail image number, array with information which image types have been rotated)
-   * @since   3.4.0
-   */
-  public function rotate($angle)
-  {
-    jimport('joomla.filesystem.file');
-
-    $cids         = $this->_mainframe->getUserStateFromRequest('joom.rotate.cids', 'cid', array(), 'array');
-    $type         = $this->_mainframe->getUserStateFromRequest('joom.rotate.type', 'type', '', 'cmd');
-    $thumb_count  = $this->_mainframe->getUserState('joom.rotate.thumbcount');
-    $img_count    = $this->_mainframe->getUserState('joom.rotate.imgcount');
-    $rotated      = $this->_mainframe->getUserState('joom.rotate.rotated');
-
-    $row  = $this->getTable('joomgalleryimages');
-
-    // Before first loop check for selected images
-    if(is_null($thumb_count) && !count($cids))
-    {
-      $this->setError(JText::_('COM_JOOMGALLERY_COMMON_MSG_NO_IMAGES_SELECTED'));
-      return array(false);
-    }
-
-    if(is_null($rotated))
-    {
-      $rotated = array();
-    }
-
-    require_once JPATH_COMPONENT.'/helpers/refresher.php';
-
-    $refresher = new JoomRefresher(array('controller' => 'images', 'task' => 'rotate', 'remaining' => count($cids), 'start' => JRequest::getBool('cid')));
-
-    $debugoutput = '';
-
-    // Loop through selected images
-    foreach($cids as $key => $cid)
-    {
-      $row->load($cid);
-
-      $orig   = $this->_ambit->getImg('orig_path', $row);
-      $img    = $this->_ambit->getImg('img_path', $row);
-      $thumb  = $this->_ambit->getImg('thumb_path', $row);
-
-      // Check if there is an original image
-      if(JFile::exists($orig))
-      {
-        $orig_existent = true;
-      }
-      else
-      {
-        $orig_existent = false;
-        if(JFile::exists($img))
-        {
-          $orig = $img;
-        }
-        else
-        {
-          JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_NOT_EXISTENT', $img));
-          $this->_mainframe->setUserState('joom.rotate.cids', array());
-          $this->_mainframe->setUserState('joom.rotate.imgcount', null);
-          $this->_mainframe->setUserState('joom.rotate.thumbcount', null);
-          $this->_mainframe->setUserState('joom.rotate.rotated', null);
-          return false;
-        }
-      }
-
-      // GD can only handle JPG & PNG images
-      if(    $imginfo[2] != IMAGETYPE_JPEG
-         &&  $imginfo[2] != IMAGETYPE_PNG
-         &&  $imginfo[2] != IMAGETYPE_GIF
-         &&  ($method == 'gd1' || $method == 'gd2')
-        )
-      {
-        $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_GD_ONLY_JPG_PNG').'<br />';
-
-        return false;
-      }
-
-      $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
-                         6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
-                         11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
-
-      $imginfo[2] = $imagetype[$imginfo[2]];
-
-      switch($imginfo[2])
-      {
-           case 'PNG':
-           // Rotate thumbnail
-           if(!$type || $type == 'thumb')
-           {
-             if(JFile::exists($thumb))
-             {
-               $src_img = imagecreatefrompng($thumb);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagepng($rotated_img, $thumb);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'thumb';
-             $thumb_count++;
-           }
-
-           // Rotate detail image
-           if(!$type || $type == 'img')
-           {
-             if(JFile::exists($img))
-             {
-               $src_img = imagecreatefrompng($img);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagepng($rotated_img, $img);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'img';
-             $img_count++;
-           }
-           break;
-         case 'GIF':
-           // Rotate thumbnail
-           if(!$type || $type == 'thumb')
-           {
-             if(JFile::exists($thumb))
-             {
-               $src_img = imagecreatefromgif($thumb);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagegif($rotated_img, $thumb);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'thumb';
-             $thumb_count++;
-           }
-
-           // Rotate detail image
-           if(!$type || $type == 'img')
-           {
-             if(JFile::exists($img))
-             {
-               $src_img = imagecreatefromgif($img);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagegif($rotated_img, $img);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'img';
-             $img_count++;
-           }
-           break;
-         // JPEG images 
-         default:
-           // Rotate thumbnail
-           if(!$type || $type == 'thumb')
-           {
-             if(JFile::exists($thumb))
-             {
-               $src_img = imagecreatefromjpeg($thumb);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagejpeg($rotated_img, $thumb, 95);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'thumb';
-             $thumb_count++;
-           }
-
-           // Rotate detail image
-           if(!$type || $type == 'img')
-           {
-             if(JFile::exists($img))
-             {
-               // JFile::delete($img);
-               $src_img = imagecreatefromjpeg($img);
-               $rotated_img = imagerotate($src_img, $angle, 0);
-               imagejpeg($rotated_img, $img, 95);
-               imagedestroy($rotated_img);
-             }
-             $rotated[$cid][] = 'img';
-             $img_count++;
-           }
-           break;
-         }
-      // Change Database entry
-      $row = JTable::getInstance('joomgalleryimages', 'Table');
-      $row->load($cid);
-      $newangle = $row->rotation + $angle;
-      if($newangle >= 360)
-      {
-        $newangle = $newangle - 360;
-      }
-      $row->rotation = $newangle;
-      $row->store();
-
-      unset($cids[$key]);
-
-      // Check remaining time
-      if(!$refresher->check())
-      {
-        $this->_mainframe->setUserState('joom.rotate.cids', $cids);
-        $this->_mainframe->setUserState('joom.rotate.thumbcount', $thumb_count);
-        $this->_mainframe->setUserState('joom.rotate.imgcount', $img_count);
-        $this->_mainframe->setUserState('joom.rotate.rotated', $rotated);
-        $refresher->refresh(count($cids));
-      }
-    }
-
-    $this->_mainframe->setUserState('joom.rotate.cids', array());
-    $this->_mainframe->setUserState('joom.rotate.type', null);
-    $this->_mainframe->setUserState('joom.rotate.thumbcount', null);
-    $this->_mainframe->setUserState('joom.rotate.imgcount', null);
-    $this->_mainframe->setUserState('joom.rotate.rotated', null);
-
-    return array($thumb_count, $img_count, $rotated);
   }
 
   /**
