@@ -299,11 +299,12 @@ class JoomFile
    * @param   int     $dest_qual              $config->jg_thumbquality/jg_picturequality
    * @param   boolean $max_width              true=resize to maxwidth
    * @param   int     $cropposition           $config->jg_cropposition
+   * @param   int     $angle                  $angle to rotate the created image anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   1.0.0
    */
   public static function resizeImage(&$debugoutput, $src_file, $dest_file, $useforresizedirection,
-                                     $new_width, $thumbheight, $method, $dest_qual, $max_width = false, $cropposition)
+                                     $new_width, $thumbheight, $method, $dest_qual, $max_width = false, $cropposition, $angle = 0)
   {
     $config = JoomConfig::getInstance();
 
@@ -340,8 +341,16 @@ class JoomFile
     $imginfo[2] = $imagetype[$imginfo[2]];
 
     // Height/width
-    $srcWidth  = $imginfo[0];
-    $srcHeight = $imginfo[1];
+    if($angle == 0 || $angle == 180)
+    {
+      $srcWidth  = $imginfo[0];
+      $srcHeight = $imginfo[1];
+    }
+    else
+    {
+      $srcWidth  = $imginfo[1];
+      $srcHeight = $imginfo[0];
+    }
 
     if(   ($max_width && $srcWidth <= $new_width && $srcHeight <= $new_width)
       ||  (!$max_width && $srcWidth <= $new_width && $srcHeight <= $thumbheight)
@@ -508,7 +517,14 @@ class JoomFile
         {
           return false;
         }
+
+        if($angle > 0)
+        {
+          $src_img = imagerotate($src_img, $angle, 0);
+        }
+
         $dst_img = imagecreate($destWidth, $destHeight);
+
         if (!is_null($offsetx) && !is_null($offsety))
         {
           imagecopyresized( $dst_img, $src_img, 0, 0, $offsetx, $offsety,
@@ -561,6 +577,12 @@ class JoomFile
         {
           return false;
         }
+
+        if($angle > 0)
+        {
+          $src_img = imagerotate($src_img, $angle, 0);
+        }
+
         $dst_img = imagecreatetruecolor($destWidth, $destHeight);
 
         if($config->jg_fastgd2thumbcreation == 0)
@@ -629,6 +651,10 @@ class JoomFile
         {
           $commands .= ' -crop "'.$srcWidth.'x'.$srcHeight.'+'.$offsetx.'+'.$offsety.'" +repage';
         }
+        if($angle > 0)
+        {
+          $commands .= ' -rotate "-'.$angle.'"';
+        }
         // Finally the resize
         $commands  .= ' -resize "'.$destWidth.'x'.$destHeight.'" -quality "'.$dest_qual.'" -unsharp "3.5x1.2+1.0+0.10"';
         $convert    = $convert_path.' '.$commands.' "'.$src_file.'" "'.$dest_file.'"';
@@ -659,6 +685,283 @@ class JoomFile
 
     // We check that the image is valid
     $imginfo = getimagesize($dest_file);
+    if(!$imginfo)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Rotate original image only with functions from gd/gd2/imagemagick during upload
+   *
+   * @param   &string $debugoutput            debug information
+   * @param   string  $orig                   Path to source file
+   * @param   int     $method                 gd1/gd2/im
+   * @param   int     $dest_qual              $config->jg_thumbquality/jg_picturequality
+   * @param   int     $angle                  $angle to rotate the created image anticlockwise
+   * @return  boolean True on success, false otherwise
+   * @since   3.4.0
+   */
+  public static function rotateOriginal($debugoutput, $orig, $method = 'gd2', $dest_qual, $angle)
+  {
+    $config = JoomConfig::getInstance();
+
+    // Ensure that the pathes are valid and clean
+    $orig  = JPath::clean($orig);
+
+    $imginfo = getimagesize($orig);
+
+    if(!$imginfo)
+    {
+      $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_FILE_NOT_FOUND').'<br />';
+
+      return false;
+    }
+
+    // GD can only handle JPG & PNG images
+    if(    $imginfo[2] != IMAGETYPE_JPEG
+       &&  $imginfo[2] != IMAGETYPE_PNG
+       &&  $imginfo[2] != IMAGETYPE_GIF
+       &&  ($method == 'gd1' || $method == 'gd2')
+      )
+    {
+      $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_GD_ONLY_JPG_PNG').'<br />';
+
+      return false;
+    }
+
+    $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                       6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                       11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+    $imginfo[2] = $imagetype[$imginfo[2]];
+
+    // Height/width
+    if($angle == 0 || $angle == 180)
+    {
+      $srcWidth  = $imginfo[0];
+      $srcHeight = $imginfo[1];
+    }
+    else
+    {
+      $srcWidth  = $imginfo[1];
+      $srcHeight = $imginfo[0];
+    }
+
+    switch($method)
+    {
+      case 'gd1':
+        if(!function_exists('imagecreatefromjpeg'))
+        {
+          $debugoutput.=JText::_('COM_JOOMGALLERY_UPLOAD_GD_LIBARY_NOT_INSTALLED');
+          return false;
+        }
+        if($imginfo[2] == 'JPG')
+        {
+          $src_img = imagecreatefromjpeg($orig);
+        }
+        if(!$src_img)
+        {
+          return false;
+        }
+
+        //JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel');
+        //require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelDataWindow.php';
+        //require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelTiff.php';
+        require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelJpeg.php';
+
+        $exif = false;
+        $iptc = false;
+
+        // load IPTC-Data
+        $iptcdata = getImageSize($orig, $iptcinfo);
+        if(isset($iptcinfo['APP13']))
+        {
+          $iptc = true;
+        }
+
+        // load Exif-Data
+        $jpegold = new PelJpeg($orig);
+        $exifdata = $jpegold->getExif();
+        if($exifdata != null)
+        {
+          $exif = true;
+          $ifd0old = $jpegold->getExif()->getTiff()->getIfd();
+          $orientation = $ifd0old->getEntry(PelTag::ORIENTATION);
+        }
+
+        // Beginn Rotation
+        $rotated_img = imagerotate($src_img, $angle, 0);
+
+        if(!@imagejpeg($rotated_img, $orig, $dest_qual))
+        {
+          // Workaround for servers with wwwrun problem
+          $dir = dirname($orig);
+          JoomFile::chmod($dir, '0777', true);
+          imagejpeg($rotated_img, $orig, $dest_qual);
+          JoomFile::chmod($dir, '0755', true);
+        }
+        imagedestroy($src_img);
+        imagedestroy($rotated_img);
+
+        // Write IPTC-Data
+        if($iptc) 
+        {
+          $iptcdata = iptcembed($iptcinfo['APP13'], $orig); 
+          $fw = fopen($orig, 'w');
+          fwrite($fw, $iptcdata);
+          fclose($fw);
+        }
+
+        // Write Exif-Data
+        if($exif)
+        {
+          $jpegnew = new PelJpeg($orig);
+          $exifnew = new PelExif();
+          $tiffnew = new PelTiff();
+          $jpegnew->setExif($exifnew);
+          $exifnew->setTiff($tiffnew);
+          $ifd0 = $ifd0old; 
+          $tiffnew->setIfd($ifd0);
+          $ifd0->addEntry(new PelEntryshort(PelTag::ORIENTATION, 1));        // Set Orientation to "Top-left"
+          file_put_contents($orig, $jpegnew->getBytes());
+        }
+
+        break;
+      case 'gd2':
+        if(!function_exists('imagecreatefromjpeg'))
+        {
+          $debugoutput.=JText::_('COM_JOOMGALLERY_UPLOAD_GD_LIBARY_NOT_INSTALLED');
+          return false;
+        }
+        if(!function_exists('imagecreatetruecolor'))
+        {
+          $debugoutput.=JText::_('COM_JOOMGALLERY_UPLOAD_GD_NO_TRUECOLOR');
+          return false;
+        }
+
+        if(JFile::exists($orig) && $imginfo[2] == 'JPG')
+        {
+          require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelJpeg.php';
+
+          $exif = false;
+          $iptc = false;
+
+          // load IPTC-Data
+          $iptcdata = getImageSize($orig, $iptcinfo);
+          if(isset($iptcinfo['APP13']))
+          {
+            $iptc = true;
+          }
+
+          // load Exif-Data
+          $jpegold = new PelJpeg($orig);
+          $exifdata = $jpegold->getExif();
+          if($exifdata != null)
+          {
+            $exif = true;
+            $ifd0old = $jpegold->getExif()->getTiff()->getIfd();
+            $orientation = $ifd0old->getEntry(PelTag::ORIENTATION);
+          }
+
+          // Beginn Rotation
+          $src_img = imagecreatefromjpeg($orig);
+          $rotated_img = imagerotate($src_img, $angle, 0);
+          if(!@imagejpeg($rotated_img, $orig, $dest_qual))
+          {
+            // Workaround for servers with wwwrun problem
+            $dir = dirname($orig);
+            JoomFile::chmod($dir, '0777', true);
+            imagejpeg($rotated_img, $orig, $dest_qual);
+            JoomFile::chmod($dir, '0755', true);
+          }
+          imagedestroy($src_img);
+          imagedestroy($rotated_img);
+
+          // Write IPTC-Data
+          if($iptc) 
+          {
+            $iptcdata = iptcembed($iptcinfo['APP13'], $orig); 
+            $fw = fopen($orig, 'w');
+            fwrite($fw, $iptcdata);
+            fclose($fw);
+          }
+
+          // Write Exif-Data
+          if($exif)
+          {
+            $jpegnew = new PelJpeg($orig);
+            $exifnew = new PelExif();
+            $tiffnew = new PelTiff();
+            $jpegnew->setExif($exifnew);
+            $exifnew->setTiff($tiffnew);
+            $ifd0 = $ifd0old; 
+            $tiffnew->setIfd($ifd0);
+            $ifd0->addEntry(new PelEntryshort(PelTag::ORIENTATION, 1));        // Set Orientation to "Top-left"
+            file_put_contents($orig, $jpegnew->getBytes());
+          }
+        }
+
+        break;
+      case 'im':
+        $disabled_functions = explode(',', ini_get('disabled_functions'));
+        foreach($disabled_functions as $disabled_function)
+        {
+          if(trim($disabled_function) == 'exec')
+          {
+            $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_EXEC_DISABLED').'<br />';
+
+            return false;
+          }
+        }
+
+        if(!empty($config->jg_impath))
+        {
+          $convert_path=$config->jg_impath.'convert';
+        }
+        else
+        {
+          $convert_path='convert';
+        }
+        
+        if($angle > 0)
+        {
+          $commands = ' -rotate -'.$angle;
+          // Finally the rotate, save exif/iptc not needed
+          $commands  .= ' -quality '.$dest_qual;
+          $convert    = $convert_path.' '.$commands.' "'.$orig.'" "'.$orig.'"';
+
+          $return_var = null;
+          $dummy      = null;
+          @exec($convert, $dummy, $return_var);
+
+          if($return_var != 0)
+          {
+            // Workaround for servers with wwwrun problem
+            $dir = dirname($orig);
+            JoomFile::chmod($dir, '0777', true);
+            @exec($convert, $dummy, $return_var);
+            JoomFile::chmod($dir, '0755', true);
+            if($return_var != 0)
+            {
+              $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_ORIGINAL_NOT_ROTATED').'<br />';
+              return false;
+            }
+          }
+        }
+        break;
+      default:
+        JError::raiseError(500, JText::_('COM_JOOMGALLERY_UPLOAD_UNSUPPORTED_RESIZING_METHOD'));
+        break;
+    }
+
+    // Set mode of uploaded picture
+    JPath::setPermissions($orig);
+
+    // We check that the image is valid
+    $imginfo = getimagesize($orig);
     if(!$imginfo)
     {
       return false;

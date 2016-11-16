@@ -87,6 +87,11 @@ class JoomGalleryViewImages extends JoomGalleryView
       JToolbarHelper::deleteList('', 'remove');
     //}
 
+    if(($canDo->get('core.edit') || $canDo->get('core.edit.own')) && $this->pagination->total)
+    {
+      JToolbarHelper::custom('rotateleft', 'undo-2.png', 'undo-2.png', 'COM_JOOMGALLERY_COMMON_TOOLBAR_ROTATE_ANTICLOCKWISE');
+      JToolbarHelper::custom('rotateright', 'refresh.png', 'refresh.png', 'COM_JOOMGALLERY_COMMON_TOOLBAR_ROTATE_CLOCKWISE');
+    }
   }
 
   /**
