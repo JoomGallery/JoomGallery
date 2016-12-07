@@ -248,7 +248,10 @@ class JoomGalleryModelCategory extends JoomGalleryModel
         $data['alias']  = $alias;
       //}
     }
-
+		if (empty(trim($data['alias']))) { // Transliterate category alias
+			$data['alias'] = JFilterOutput::stringURLSafe($data['name']);
+			$this->generateNewTitle($data['parent_id'], $data['alias'], $data['name']);
+		}
     if(isset($data['password']) && $data['password'])
     {
       $salt = JUserHelper::genRandomPassword(32);
