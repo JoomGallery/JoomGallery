@@ -747,4 +747,19 @@ class JoomFile
 
     return JFile::copy($src, $dest);
   }
+
+  /**
+   * Wrapper for JFile::upload()
+   *
+   * Allows certain file extensions in the content of uploaded files (as opposed to the default security settings of JFile::upload)
+   *
+   * @param   string  $src  The name of the temporary uploaded file
+   * @param   string  $dest The path (including filename) to move the uploaded file to
+   * @return  boolean True on success, false otherwise
+   * @since   3.3
+   */
+  public static function upload($src, $dest)
+  {
+    return JFile::upload($src, $dest, false, false, array('php_tag_in_content' => false, 'shorttag_in_content' => false, 'fobidden_ext_in_content' => false));
+  }
 }

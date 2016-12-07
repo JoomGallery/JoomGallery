@@ -384,7 +384,7 @@ class JoomUpload extends JObject
 
       // We'll assume that this file is ok because with open_basedir,
       // we can move the file, but may not be able to access it until it's moved
-      $return = JFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+      $return = JoomFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
       if(!$return)
       {
         $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_ERROR_UPLOADING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
@@ -565,7 +565,7 @@ class JoomUpload extends JObject
       // because the uploaded archive is saved like php8900.tmp and JArchive
       // needs a valid extension
       $zipfile = $extractdir.'/'.$zippack['name'];
-      JFile::upload($zippack['tmp_name'], $zipfile);
+      JoomFile::upload($zippack['tmp_name'], $zipfile);
 
       // Extract archive to new directory, JArchive chooses the right adapter
       // according to the extension
@@ -1049,7 +1049,7 @@ class JoomUpload extends JObject
         )
       {
         // Upload image to detail images folder
-        $return = JFile::upload($screenshot, $this->_ambit->getImg('img_path', $newfilename, null, $this->catid));
+        $return = JoomFile::upload($screenshot, $this->_ambit->getImg('img_path', $newfilename, null, $this->catid));
         if(!$return)
         {
           $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_UPLOADING', $this->_ambit->getImg('img_path', $newfilename, null, $this->catid));
@@ -1096,7 +1096,7 @@ class JoomUpload extends JObject
       else
       {
         // Upload image into original images folder
-        $return = JFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+        $return = JoomFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
         if(!$return)
         {
           $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_UPLOADING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'\n';
@@ -1459,7 +1459,7 @@ class JoomUpload extends JObject
 
       // Save chunk in target folder
       $target  = $targetFolder.'/'.$partIndex;
-      if(JFile::upload($screenshot, $target) === true)
+      if(JoomFile::upload($screenshot, $target) === true)
       {
         // Last chunk
         if(($totalParts - 1) == $partIndex)
@@ -1590,7 +1590,7 @@ class JoomUpload extends JObject
     {
       // We'll assume that this file is ok because with open_basedir,
       // we can move the file, but may not be able to access it until it's moved
-      $return = JFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+      $return = JoomFile::upload($screenshot, $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
     }
 
     if(!$return)
