@@ -53,6 +53,11 @@ JHtml::_('bootstrap.tooltip');
 <?php       echo $this->loadTemplate('notapprovedcomments');  ?>
           </div>
         </div>
+        <div class="row-fluid">
+          <div class="span12">
+<?php       echo $this->loadTemplate('statistics');  ?>
+          </div>
+        </div>
         <!-- End Statistics -->
       </div>
     </div>
