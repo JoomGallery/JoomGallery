@@ -95,7 +95,7 @@
       class="inputbox"
       filter="JComponentHelper::filterText"
       buttons="true"
-      hide="readmore,pagebreak"
+      hide="pagebreak"
     />
     <field
       name="publishhiddenstate"

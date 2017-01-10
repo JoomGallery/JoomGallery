@@ -968,4 +968,61 @@ class JoomHelper
 
     return $val;
   }
+
+  /**
+   * Returns the introtext of a description
+   *
+   * @return  object  
+   * @since   3.4
+   */
+  public static function getintrotext($description)
+  {
+    $introtext = null;
+
+    if (isset($description))
+    {
+      $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
+      $tagPos = preg_match($pattern, $description);
+
+      if ($tagPos == 0)
+      {
+        $introtext = $description;
+      }
+      else
+      {
+        $ergebnis = preg_split($pattern, $description, 0);
+        $introtext = $ergebnis[0];
+      }
+    }
+
+    return $introtext;
+  }
+
+  /**
+   * Returns the fulltext of a description
+   *
+   * @return  object  
+   * @since   3.4
+   */
+  public static function getfulltext($description)
+  {
+    $fulltext = null;
+
+    if (isset($description))
+    {
+      $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
+      $tagPos = preg_match($pattern, $description);
+
+      if ($tagPos == 0)
+      {
+        $fulltext = $description;
+      }
+      else
+      {
+        $fulltext = preg_replace($pattern, '', $description);
+      }
+    }
+
+    return $fulltext;
+  }
 }

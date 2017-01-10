@@ -55,7 +55,7 @@
       description="COM_JOOMGALLERY_EDITCATEGORY_DESCRIPTION_TIP"
       filter="JComponentHelper::filterText"
       buttons="true"
-      hide="readmore,pagebreak"
+      hide="pagebreak"
     />
     <field
       name="access"

@@ -221,6 +221,9 @@ class JoomGalleryViewDetail extends JoomGalleryView
       $this->_doc->setMetaData('author', $image->author);
     }
 
+    // Show fulltext of description
+    $image->imgtext = JoomHelper::getfulltext($image->imgtext);
+
     // Set the title attribute in a tag with title and/or description of image
     // if a box is activated
     if(    (!is_numeric($this->_config->get('jg_bigpic_open')) || $this->_config->get('jg_bigpic_open') > 1)
@@ -438,7 +441,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
           // Description
           if($row->imgtext != '')
           {
-            $description =JoomHelper::fixForJS($row->imgtext);
+            $description = JoomHelper::fixForJS(JoomHelper::getintrotext($row->imgtext));
           }
           else
           {
