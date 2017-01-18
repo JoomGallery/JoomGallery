@@ -24,7 +24,7 @@ echo $this->loadTemplate('header'); ?>
         <div class="jg_imgalign_search">
           <div  class="jg_searchelem_photo">
             <a <?php echo $row->atagtitle; ?> href="<?php echo $row->link; ?>">
-              <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" alt="<?php echo $row->imgtitle; ?>" />
+              <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" title="<?php echo $row->imgtitle; ?>" alt="<?php echo $row->imgtitle; ?>" />
             </a>
           </div>
         </div>

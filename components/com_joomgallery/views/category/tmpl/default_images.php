@@ -32,7 +32,7 @@
     <div class="jg_element_cat">
       <div class="jg_imgalign_catimgs">
         <a <?php echo $row->atagtitle; ?> href="<?php echo $row->link; ?>" class="jg_catelem_photo jg_catelem_photo_align">
-          <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" <?php echo $row->imgwh; ?> alt="<?php echo $row->imgtitle; ?>" /></a>
+          <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" <?php echo $row->imgwh; ?> title="<?php echo $row->imgtitle; ?>" alt="<?php echo $row->imgtitle; ?>" /></a>
       </div>
 <?php if($row->show_elems): ?>
       <div class="jg_catelem_txt">
