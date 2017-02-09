@@ -699,7 +699,7 @@ class JoomFile
    * @param   &string $debugoutput            debug information
    * @param   string  $orig                   Path to source file
    * @param   int     $method                 gd1/gd2/im
-   * @param   int     $dest_qual              $config->jg_thumbquality/jg_picturequality
+   * @param   int     $dest_qual              $config->jg_picturequality
    * @param   int     $angle                  $angle to rotate the created image anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   3.4.0
@@ -767,9 +767,6 @@ class JoomFile
           return false;
         }
 
-        //JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel');
-        //require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelDataWindow.php';
-        //require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelTiff.php';
         require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelJpeg.php';
 
         $exif = false;

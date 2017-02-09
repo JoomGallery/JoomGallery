@@ -1640,7 +1640,7 @@ class JoomUpload extends JObject
 
       // Resize image
       $delete_file = $this->_mainframe->getUserStateFromRequest('joom.upload.file_delete', 'file_delete', false, 'bool');
-      if(!$this->resizeImage(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename), $newfilename, false, $delete_file, $angle))
+      if(!$this->resizeImage(JPath::clean($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)), $newfilename, true, $delete_file, $angle))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1649,6 +1649,23 @@ class JoomUpload extends JObject
         $this->debug = true;
         unset($ftpfiles[$key]);
         continue;
+      }
+      else
+      {
+        // Delete file from ftp path if needed
+        if($delete_file)
+        {
+          if(JFile::delete(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename)))
+          {
+            $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_ORIGINAL_DELETED_FROM_FTP').'<br />';
+          }
+          else
+          {
+            $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_DELETING_ORIGINAL_FROM_FTP', $this->_ambit->get('ftp_path').$subdirectory.$origfilename).' '.JText::_('COM_JOOMGALLERY_COMMON_CHECK_PERMISSIONS').'<br />';
+            $this->debug = true;
+            return false;
+          }
+        }
       }
 
       $row = JTable::getInstance('joomgalleryimages', 'Table');
@@ -2407,9 +2424,18 @@ class JoomUpload extends JObject
       $detail_image_created = true;
     }
 
+    $delete_original  = $this->_mainframe->getUserStateFromRequest('joom.upload.delete_original', 'original_delete', false, 'bool');
+    $delete_original  = (
+                            ($this->_site && $this->_config->get('jg_delete_original_user') == 1)
+                        ||  ($this->_site && $this->_config->get('jg_delete_original_user') == 2 && $delete_original)
+                        ||  (!$this->_site && $this->_config->get('jg_delete_original') == 1)
+                        ||  (!$this->_site && $this->_config->get('jg_delete_original') == 2 && $delete_original)
+                        );
     // Rotate original image if needed
-    if($angle > 0)
+    // since 3.4.0
+    if($angle > 0 && !$delete_original)
     {
+      // $this->_debugoutput .= JText::sprintf('source: '. $source).'<br />';
       $return = JoomFile::rotateOriginal($this->_debugoutput,
                                     $source,
                                     $this->_config->get('jg_thumbcreation'),
@@ -2424,13 +2450,7 @@ class JoomUpload extends JObject
       }
     }
 
-    $delete_original  = $this->_mainframe->getUserStateFromRequest('joom.upload.delete_original', 'original_delete', false, 'bool');
-    $delete_original  = (
-                            ($this->_site && $this->_config->get('jg_delete_original_user') == 1)
-                        ||  ($this->_site && $this->_config->get('jg_delete_original_user') == 2 && $delete_original)
-                        ||  (!$this->_site && $this->_config->get('jg_delete_original') == 1)
-                        ||  (!$this->_site && $this->_config->get('jg_delete_original') == 2 && $delete_original)
-                        );
+
     if(   ($delete_original && !$is_in_original && $delete_source)
       ||  ($delete_original && $is_in_original)
       )
