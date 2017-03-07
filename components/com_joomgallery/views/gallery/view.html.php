@@ -184,7 +184,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
       }
 
       // show only intro-text of category description
-      $categories[$key]->description = JoomHelper::getintrotext($categories[$key]->description);
+      $categories[$key]->description = JoomHelper::getIntrotext($categories[$key]->description);
 
       // Get number of images in category and sub-categories
       $imgshits = JoomHelper::getNumberOfImgHits($categories[$key]->cid);

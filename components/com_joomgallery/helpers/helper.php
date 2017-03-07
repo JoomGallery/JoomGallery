@@ -970,28 +970,28 @@ class JoomHelper
   }
 
   /**
-   * Returns the introtext of a description
+   * Returns the introtext of a category or image description
    *
-   * @return  object  
+   * @param   string  $description  The description where only the introtext should be returned
+   * @return  string  The introtext of the description
    * @since   3.4
    */
-  public static function getintrotext($description)
+  public static function getIntrotext($description)
   {
     $introtext = null;
 
-    if (isset($description))
+    if(isset($description))
     {
       $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
       $tagPos = preg_match($pattern, $description);
 
-      if ($tagPos == 0)
+      if($tagPos == 0)
       {
         $introtext = $description;
       }
       else
       {
-        $ergebnis = preg_split($pattern, $description, 0);
-        $introtext = $ergebnis[0];
+        $introtext = preg_split($pattern, $description, 0)[0];
       }
     }
 
@@ -999,21 +999,22 @@ class JoomHelper
   }
 
   /**
-   * Returns the fulltext of a description
+   * Returns the fulltext of a category or image description
    *
-   * @return  object  
+   * @param   string  $description  The description where the fulltext should be returned
+   * @return  string  The fulltext of the description
    * @since   3.4
    */
-  public static function getfulltext($description)
+  public static function getFulltext($description)
   {
     $fulltext = null;
 
-    if (isset($description))
+    if(isset($description))
     {
       $pattern = '#<hr\s+id=("|\')system-readmore("|\')\s*\/*>#i';
       $tagPos = preg_match($pattern, $description);
 
-      if ($tagPos == 0)
+      if($tagPos == 0)
       {
         $fulltext = $description;
       }

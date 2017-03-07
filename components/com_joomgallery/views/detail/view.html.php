@@ -222,7 +222,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
     }
 
     // Show fulltext of description
-    $image->imgtext = JoomHelper::getfulltext($image->imgtext);
+    $image->imgtext = JoomHelper::getFulltext($image->imgtext);
 
     // Set the title attribute in a tag with title and/or description of image
     // if a box is activated
@@ -441,7 +441,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
           // Description
           if($row->imgtext != '')
           {
-            $description = JoomHelper::fixForJS(JoomHelper::getintrotext($row->imgtext));
+            $description = JoomHelper::fixForJS(JoomHelper::getFulltext($row->imgtext));
           }
           else
           {

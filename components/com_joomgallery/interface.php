@@ -722,11 +722,11 @@ class JoomInterface
     {
       if($this->getConfig('showdescriptionintrotext') == 1)
       {
-        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getintrotext($obj->imgtext)).'</li>';
+        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getIntrotext($obj->imgtext)).'</li>';
       }
       else
       {
-        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getfulltext($obj->imgtext)).'</li>';
+        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getFulltext($obj->imgtext)).'</li>';
       }
     }
     if($this->getConfig('showcmtdate') == 1 && !is_null($obj->cmtdate))
