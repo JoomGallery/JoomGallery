@@ -81,7 +81,7 @@
       label="COM_JOOMGALLERY_COMMON_DESCRIPTION"
       filter="JComponentHelper::filterText"
       buttons="true"
-      hide="readmore,pagebreak"
+      hide="pagebreak"
     />
     <field 
       id="detail_catid"

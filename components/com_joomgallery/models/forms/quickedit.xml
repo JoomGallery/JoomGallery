@@ -35,7 +35,7 @@
       description="COM_JOOMGALLERY_EDIT_DESCRIPTION_TIP"
       filter="JComponentHelper::filterText"
       buttons="true"
-      hide="pagebreak,readmore"
+      hide="pagebreak"
     />
     <field
       name="imgauthor"
