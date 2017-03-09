@@ -32,7 +32,7 @@ class TableJoomgalleryOrphans extends JTable
   /** @var string */
   var $title        = null;
   
-  function TableJoomgalleryOrphans(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_ORPHANS, 'id', $db);
   }

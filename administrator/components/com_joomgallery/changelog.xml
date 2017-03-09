@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-  <release version="3.3.0" published="20160506">
+  <release version="3.3.3" published="20160814">
+    <entries date="20160807">
+      <logentry type="#">Fix edit button not working correctly in extended configuration manager</logentry>
+    </entries>
+    <entries date="20160803">
+      <logentry type="#">Fix setting of permissions in the backend category and image view</logentry>
+    </entries>
+    <entries date="20160724">
+      <logentry type="#">Allow spaces in uploaded image file names</logentry>
+      <logentry type="#">Fix deprecation warnings in PHP7</logentry>
+    </entries>
+  </release>
+  <release version="3.3.2" published="20160609">
+    <entries date="20160529">
+      <logentry type="#">Fix pagination glitches in the back end image manager</logentry>
+      <logentry type="#">Remove unused and invalid credits</logentry>
+      <logentry type="#">Add missing translation for back end AJAX upload form</logentry>
+    </entries>
+    <entries date="20160521">
+      <logentry type="#">Restore correct collapsing behavior in images tab of MiniJoom</logentry>
+    </entries>
+    <entries date="20160520">
+      <logentry type="#">Fix double translation of some language strings</logentry>
+      <logentry type="#">Add prefix for MiniJoom when selecting category thumbnails to prevent conflicts with other MiniJoom instances</logentry>
+    </entries>
+    <entries date="20160518">
+      <logentry type="#">Restrict valid Itemids based on language</logentry>
+    </entries>
+    <entries date="20160517">
+      <logentry type="#">GitHub logo was not showing and project pages should open in new tabs</logentry>
+    </entries>
+    <entries date="20160515">
+      <logentry type="#">Clean up and sort strings in language files</logentry>
+    </entries>
+  </release>
+  <release version="3.3.1" published="20160509">
+    <entries date="20160509">
+      <logentry type="#">Fix broken thumbnail selection for categories with MiniJoom</logentry>
+    </entries>
+  </release>
+  <release version="3.3.0" published="20160508">
     <entries date="20160506">
       <logentry type="+">Pass selected image type to the selectimage method in the MiniJoom</logentry>
     </entries>

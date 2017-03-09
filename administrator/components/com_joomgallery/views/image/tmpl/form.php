@@ -32,6 +32,17 @@ Joomla.submitbutton = function(task)
     alert(msg.join('\n'));
   }
 }
+// Ensure that changing permissions via AJAX is working correctly by adding some additional URL parameters
+jQuery(document).ready(function() {
+  var modifiedURL = window.location.href;
+  if(modifiedURL.search('&view=image') == (-1)) {
+    modifiedURL += '&view=image';
+  }
+  if(modifiedURL.search('&cid=') > 0 && modifiedURL.search('&id=') == (-1)) {
+    modifiedURL += '&id=' + '<?php echo $this->item->id; ?>';
+  }
+  history.replaceState(null, null, modifiedURL);
+});
 </script>
 <form action="<?php echo JRoute::_('index.php?option='._JOOM_OPTION.'&controller=images'); ?>" method="post" name="adminForm" id="item-form" enctype="multipart/form-data" class="form-validate">
   <div class="row-fluid">
@@ -336,7 +347,6 @@ Joomla.submitbutton = function(task)
 <?php if($this->_user->authorise('core.admin', _JOOM_OPTION.'.image.'.$this->item->id)): ?>
         <div class="tab-pane" id="permissions">
           <?php echo $this->form->getInput('rules'); ?>
-          <?php $this->_doc->addScript($this->_ambit->getScript('permissions.js')); ?>
         </div>
 <?php endif; ?>
         <!-- End Tab Permissions -->

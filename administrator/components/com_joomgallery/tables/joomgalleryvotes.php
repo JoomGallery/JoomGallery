@@ -34,7 +34,7 @@ class TableJoomgalleryVotes extends JTable
   /** @var int */
   var $vote       = null;
 
-  function TableJoomgalleryVotes(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_VOTES, 'voteid', $db);
   }

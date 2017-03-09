@@ -112,7 +112,7 @@ class JFormFieldThumbnail extends JFormField
 
     $title = htmlspecialchars($img->imgtitle, ENT_QUOTES, 'UTF-8');
 
-    $link = 'index.php?option=com_joomgallery&amp;view=mini&amp;extended=0&amp;format=raw&amp;object='
+    $link = 'index.php?option=com_joomgallery&amp;view=mini&amp;extended=0&amp;prefix=joom&amp;format=raw&amp;object='
               . $this->id . '&amp;type=category&amp;catid=' . $catid;
 
     $html[] = '<span class="input-append">';

@@ -102,7 +102,7 @@ function joomOnSubmit()
   if(!jg_filenamewithjs)
   {
     var filenames_not_ok = false;
-    var searchwrongchars = /[^a-zA-Z0-9_-]/;
+    var searchwrongchars = /[^a-zA-Z0-9 _-]/;
     var lastbackslash = new Array();
     var endoffilename = new Array();
     var filename = new Array();

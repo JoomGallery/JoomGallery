@@ -410,6 +410,7 @@ class JoomAmbit extends JObject
       {
         $user = JFactory::getUser();
         $db   = JFactory::getDBO();
+        $lang = JFactory::getLanguage();
 
         $query = $db->getQuery(true)
               ->select('id')
@@ -418,6 +419,7 @@ class JoomAmbit extends JObject
               ->where('access IN ('.implode(',', $user->getAuthorisedViewLevels()).')')
               ->where('published = 1')
               ->where('client_id = 0')
+              ->where('(language = '.$db->q($lang->getTag()).' OR language = '.$db->q('').' OR language = '.$db->q('*').')')
               ->order('id DESC');
 
         $db->setQuery($query);
@@ -429,7 +431,8 @@ class JoomAmbit extends JObject
                 ->where("link LIKE '%"._JOOM_OPTION."%'")
                 ->where('access IN ('.implode(',', $user->getAuthorisedViewLevels()).')')
                 ->where('published = 1')
-                ->where('client_id = 0');
+                ->where('client_id = 0')
+                ->where('(language = '.$db->q($lang->getTag()).' OR language = '.$db->q('').' OR language = '.$db->q('*').')');
 
           $db->setQuery($query);
           $Itemid = $db->loadResult();
