@@ -91,11 +91,6 @@ class JFormFieldThumbnail extends JFormField
 
     $doc->addScriptDeclaration(implode("\n", $script));
 
-    // Remove bottom border from modal header as we will not have a title
-    $css[] = '  #modalSelectThumbnail .modal-header {';
-    $css[] = '    border-bottom: none;';
-    $css[] = '  }';
-
     $doc->addStyleDeclaration(implode("\n", $css));
 
     // Get the image title
@@ -128,8 +123,10 @@ class JFormFieldThumbnail extends JFormField
     $html[] = JHtmlBootstrap::renderModal(
                 'modalSelectThumbnail', array(
                   'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
+                  'title'   => ($app->isAdmin() ? JText::_('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL_TIP') : JText::_('COM_JOOMGALLERY_COMMON_SELECT_THUMBNAIL_TIP')),
                   'width'   => '620px',
-                  'height'  => '390px'
+                  'height'  => '390px',
+                  'footer'  => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
                  )
               );
 
