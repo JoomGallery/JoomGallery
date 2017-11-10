@@ -246,12 +246,6 @@ label#rules-lbl {
   margin-left:100px;
 }
 
-/* Workaround for the bootstrap accordion to work in IE9 */
-/* should be removed with bootstrap 2.1.1 */ 
-.collapse {
-  overflow: hidden !important;
-}
-
 /* Edit images view: Space between boxes */
 #jg_movecopy{
   padding:0px 10px;
