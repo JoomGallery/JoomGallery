@@ -82,11 +82,11 @@
             </div>
           </div>
         </div>
-
         <div class="row-fluid">
           <h4><?php echo JText::_('JDETAILS');?></h4>
           <hr />
-
+        </div>
+        <div class="row-fluid">
           <div class="span6">
             <div class="control-group">
               <div class="control-label">
