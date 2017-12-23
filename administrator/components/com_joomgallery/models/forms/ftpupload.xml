@@ -110,6 +110,7 @@
         description="COM_JOOMGALLERY_UPLOAD_DELETE_AFTER_UPLOAD_DESC"
         value="1"
         default="1"
+        checked="true"
       />
       <field
         name="original_delete"
