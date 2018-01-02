@@ -287,6 +287,8 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/view.raw.php';
     // Override function for setting permissions via AJAX
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/permissions.js';
+    // Delete old PNG behavior shim
+    $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/pngbehavior.htc';
 
     foreach($delete_files as $delete_file)
     {
