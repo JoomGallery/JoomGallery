@@ -101,16 +101,6 @@ class JFormFieldImage extends JFormField
                 . '<i class="icon-image"></i> ' . JText::_('JSELECT')
                 . '</a>';
 
-    $html[] = JHtmlBootstrap::renderModal(
-                'modalSelectImage', array(
-                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
-                  'title'   => JText::_('COM_JOOMGALLERY_LAYOUT_COMMON_CHOOSE_IMAGE'),
-                  'width'   => '620px',
-                  'height'  => '390px',
-                  'footer'  => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
-                 )
-              );
-
     $html[] = '</span>';
 
     if($this->required)
@@ -123,6 +113,16 @@ class JFormFieldImage extends JFormField
     }
 
     $html[] = '<input class="' . $class . '" type="hidden" id="' . $this->id . '" name="' . $this->name . '" value="' . (int) $this->value . '"/>';
+
+    $html[] = JHtmlBootstrap::renderModal(
+                'modalSelectImage', array(
+                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
+                  'title'   => JText::_('COM_JOOMGALLERY_LAYOUT_COMMON_CHOOSE_IMAGE'),
+                  'width'   => '620px',
+                  'height'  => '390px',
+                  'footer'  => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
+                )
+              );
 
     return implode("\n", $html);
   }
