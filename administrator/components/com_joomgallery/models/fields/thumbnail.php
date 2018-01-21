@@ -120,6 +120,13 @@ class JFormFieldThumbnail extends JFormField
                 . ($app->isAdmin() ? JText::_('COM_JOOMGALLERY_CATMAN_SELECT_THUMBNAIL') : JText::_('COM_JOOMGALLERY_COMMON_SELECT'))
                 . '</a>';
 
+    $html[] = '<button id="' . $this->id . '_clear" class="btn' . ($this->value ? '' : ' hidden') . ' hasTooltip" title="'
+                . ($app->isAdmin() ? JHtml::tooltipText('COM_JOOMGALLERY_CATMAN_REMOVE_CATTHUMB_TIP') : JHtml::tooltipText('COM_JOOMGALLERY_COMMON_REMOVE_CATTHUMB_TIP'))
+                . '" onclick="return joom_clearthumb()"><span class="icon-remove"></span></button>';
+
+    $html[] = '</span>';
+    $html[] = '<input type="hidden" id="' . $this->id . '_id" name="' . $this->name . '" value="' . $this->value . '"/>';
+
     $html[] = JHtmlBootstrap::renderModal(
                 'modalSelectThumbnail', array(
                   'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
@@ -127,15 +134,8 @@ class JFormFieldThumbnail extends JFormField
                   'width'   => '620px',
                   'height'  => '390px',
                   'footer'  => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
-                 )
+                )
               );
-
-    $html[] = '<button id="' . $this->id . '_clear" class="btn' . ($this->value ? '' : ' hidden') . ' hasTooltip" title="'
-                . ($app->isAdmin() ? JHtml::tooltipText('COM_JOOMGALLERY_CATMAN_REMOVE_CATTHUMB_TIP') : JHtml::tooltipText('COM_JOOMGALLERY_COMMON_REMOVE_CATTHUMB_TIP'))
-                . '" onclick="return joom_clearthumb()"><span class="icon-remove"></span></button>';
-
-    $html[] = '</span>';
-    $html[] = '<input type="hidden" id="' . $this->id . '_id" name="' . $this->name . '" value="' . $this->value . '"/>';
 
     return implode("\n", $html);
   }
