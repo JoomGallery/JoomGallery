@@ -655,6 +655,9 @@ class JoomGalleryViewCategory extends JoomGalleryView
         $categories[$key]->link = JRoute::_('index.php?view=category&catid='.$category->cid);
       }
 
+      // show only intro-text in subcategories
+      $categories[$key]->description = JoomHelper::getIntrotext($categories[$key]->description);
+
       // Icon for quick upload at sub-category thumbnail
       if(     $this->_config->get('jg_uploadiconsubcat')
           &&  (   $this->_user->authorise('joom.upload', _JOOM_OPTION.'.category.'.$category->cid)
@@ -745,6 +748,9 @@ class JoomGalleryViewCategory extends JoomGalleryView
       }
     }
 
+    // Display Full text of category
+    $cat->description = JoomHelper::getFulltext($cat->description);
+
     foreach($images as $key => $image)
     {
       $cropx    = null;
@@ -826,6 +832,9 @@ class JoomGalleryViewCategory extends JoomGalleryView
         // Set the imgtitle by default
         $images[$key]->atagtitle = 'title="'.$images[$key]->imgtitle.'"';
       }
+
+      // show only intro-text of images
+      $images[$key]->imgtext = JoomHelper::getIntrotext($images[$key]->imgtext);
 
       $images[$key]->event  = new stdClass();
 
