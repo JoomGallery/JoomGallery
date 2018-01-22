@@ -26,7 +26,7 @@ echo $this->loadTemplate('header'); ?>
 <?php     endif; ?>
           <div class="jg_topelem_photo">
             <a <?php echo $row->atagtitle; ?> href="<?php echo $row->link; ?>">
-              <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" alt="<?php echo $row->imgtitle; ?>" />
+              <img src="<?php echo $row->thumb_src; ?>" class="jg_photo" title="<?php echo $row->imgtitle; ?>" alt="<?php echo $row->imgtitle; ?>" />
             </a>
           </div>
 <?php     if($this->_config->get('jg_imgalign') && $this->_config->get('jg_toplistcols') > 1): ?>
