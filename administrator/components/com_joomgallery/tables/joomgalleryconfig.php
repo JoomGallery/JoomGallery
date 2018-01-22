@@ -414,6 +414,25 @@ class TableJoomgalleryConfig extends JTable
       $this->jg_usercatorderlist  = implode(',', $this->jg_usercatorderlist);
     }
 
+    // Checking for a SQL injection in the image sorting ORDER BY clauses
+    if(!in_array($this->jg_firstorder, JoomConfig::getValidImageSortingOrderByClauses()))
+    {
+      JFactory::getApplication()->enqueueMessage('SQL injection hacking attempt prevented!', 'warning');
+      $this->jg_firstorder = JoomConfig::getValidImageSortingOrderByClauses(0);
+    }
+
+    if(!empty($this->jg_secondorder) && !in_array($this->jg_secondorder, JoomConfig::getValidImageSortingOrderByClauses()))
+    {
+      JFactory::getApplication()->enqueueMessage('SQL injection hacking attempt prevented!', 'warning');
+      $this->jg_secondorder = JoomConfig::getValidImageSortingOrderByClauses(2);
+    }
+
+    if(!empty($this->jg_thirdorder) && !in_array($this->jg_thirdorder, JoomConfig::getValidImageSortingOrderByClauses()))
+    {
+      JFactory::getApplication()->enqueueMessage('SQL injection hacking attempt prevented!', 'warning');
+      $this->jg_thirdorder = JoomConfig::getValidImageSortingOrderByClauses(4);
+    }
+
     // When no array there are no ticked checkboxes submitted per $_POST
     if(is_array($this->jg_subifdtags))
     {

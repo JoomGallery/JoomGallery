@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="3.0" method="upgrade">
   <name>JoomGallery</name>
-  <creationDate>2016/08/14</creationDate>
+  <creationDate>2018/01/21</creationDate>
   <author>JoomGallery::ProjectTeam</author>
   <copyright>This component is released under the GNU/GPL License</copyright>
   <authorEmail>team@joomgallery.net</authorEmail>
   <authorUrl>http://www.joomgallery.net</authorUrl>
-  <version>3.3.3</version>
+  <version>3.3.4</version>
   <description>JoomGallery 3 is a native Joomla! 3.x gallery component</description>
   <files folder="components/com_joomgallery">
     <folder>controllers</folder>
