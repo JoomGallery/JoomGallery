@@ -712,7 +712,7 @@ class JoomInterface
     }
     if ($this->getConfig('showimgdate'))
     {
-      $output .= '<li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_UPLOAD_DATE', '<br />'.JHTML::_('date', $obj->imgdate, JText::_($this->getConfig('dateformat')))).'</li>';
+      $output .= '<li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_UPLOAD_DATE', JHTML::_('date', $obj->imgdate, JText::_($this->getConfig('dateformat')))).'</li>';
     }
     if($this->getConfig('shownumcomments'))
     {
