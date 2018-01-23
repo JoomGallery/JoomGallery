@@ -28,7 +28,7 @@ class Com_JoomGalleryInstallerScript
    *
    * @var string
    */
-  private $version = '3.3.3';
+  private $version = '3.3.4';
 
   /**
    * Preflight method
@@ -283,7 +283,7 @@ class Com_JoomGalleryInstallerScript
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/thickbox3/js/jquery-latest.pack.js';
     // Old motion gallery
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/motiongallery.js';
-    // Old raw view for Cooliris 
+    // Old raw view for Cooliris
     $delete_files[] = JPATH_ROOT.'/components/com_joomgallery/views/category/view.raw.php';
     // Override function for setting permissions via AJAX
     $delete_files[] = JPATH_ROOT.'/media/joomgallery/js/permissions.js';

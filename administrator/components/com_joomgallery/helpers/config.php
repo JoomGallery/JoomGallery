@@ -338,6 +338,14 @@ class JoomConfig extends JObject
   protected $_extended = false;
 
   /**
+   * Contains all valid ORDER BY clauses for the image sorting
+   * options $jg_firstorder, $jg_secondorder and $jg_thirdorder.
+   *
+   * @var array
+   */
+  private static $_validImageSortingOrderByClauses = array('ordering ASC', 'ordering DESC', 'imgdate ASC', 'imgdate DESC', 'imgtitle ASC', 'imgtitle DESC');
+
+  /**
    * Constructor
    *
    * @return  void
@@ -471,5 +479,19 @@ class JoomConfig extends JObject
     }
 
     return 'joom_settings'.$this->_id.'.css';
+  }
+
+  /**
+   * Returns a string containing a valid image sorting ORDER BY clause for a given index or an
+   * array containing all of them.
+   *
+   * @param   mixed  $index
+   * @return  mixed  A string containing a valid image sorting ORDER BY clause or an array
+   *                 containing all of them.
+   * @since   3.3
+   */
+  public static function getValidImageSortingOrderByClauses($index = false)
+  {
+    return $index !== false ? self::$_validImageSortingOrderByClauses[$index] : self::$_validImageSortingOrderByClauses;
   }
 }

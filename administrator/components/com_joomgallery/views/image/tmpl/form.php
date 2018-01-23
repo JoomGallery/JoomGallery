@@ -304,7 +304,7 @@ jQuery(document).ready(function() {
 <?php if(!$this->isNew): ?>
         <div class="tab-pane" id="replace_files">
           <div class="control-group">
-            <div class="control-label alert alert-info">
+            <div class="alert alert-info">
               <?php echo $this->form->getLabel('spacer', 'files'); ?>
             </div>
             <div class="controls">

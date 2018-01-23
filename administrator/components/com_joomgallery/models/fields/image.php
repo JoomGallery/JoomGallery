@@ -77,11 +77,6 @@ class JFormFieldImage extends JFormField
 
     $doc->addScriptDeclaration(implode("\n", $script));
 
-    // Remove bottom border from modal header as we will not have a title
-    $css[] = '  #modalSelectImage .modal-header {';
-    $css[] = '    border-bottom: none;';
-    $css[] = '  }';
-
     $doc->addStyleDeclaration(implode("\n", $css));
 
     JTable::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_joomgallery/tables');
@@ -106,14 +101,6 @@ class JFormFieldImage extends JFormField
                 . '<i class="icon-image"></i> ' . JText::_('JSELECT')
                 . '</a>';
 
-    $html[] = JHtmlBootstrap::renderModal(
-                'modalSelectImage', array(
-                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
-                  'width'   => '620px',
-                  'height'  => '390px'
-                 )
-              );
-
     $html[] = '</span>';
 
     if($this->required)
@@ -126,6 +113,16 @@ class JFormFieldImage extends JFormField
     }
 
     $html[] = '<input class="' . $class . '" type="hidden" id="' . $this->id . '" name="' . $this->name . '" value="' . (int) $this->value . '"/>';
+
+    $html[] = JHtmlBootstrap::renderModal(
+                'modalSelectImage', array(
+                  'url'     => $link . '&amp;' . JSession::getFormToken() . '=1"',
+                  'title'   => JText::_('COM_JOOMGALLERY_LAYOUT_COMMON_CHOOSE_IMAGE'),
+                  'width'   => '620px',
+                  'height'  => '390px',
+                  'footer'  => '<a role="button" class="btn" data-dismiss="modal" aria-hidden="true">' . JText::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</a>'
+                )
+              );
 
     return implode("\n", $html);
   }

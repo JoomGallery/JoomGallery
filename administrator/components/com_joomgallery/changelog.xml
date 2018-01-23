@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.3.4" published="20180121">
+    <entries date="20180121">
+      <logentry type="#">Adding a modal header and footer to image selection field popup</logentry>
+      <logentry type="#">Adding a modal header and footer to thumbnail selection field popup</logentry>
+    </entries>
+    <entries date="20171223">
+      <logentry type="#">Fix FTP upload option 'Delete from FTP' not checked by default</logentry>
+    </entries>
+    <entries date="20171201">
+      <logentry type="#">Fix problems in backend views</logentry>
+    </entries>
+    <entries date="20171110">
+      <logentry type="#">Fix misaligned toolbar buttons in the backend views</logentry>
+    </entries>
+    <entries date="20171107">
+      <logentry type="#">Fix PHP Notice / Warning</logentry>
+    </entries>
+    <entries date="20171031">
+      <logentry type="#">Fix SQL Injection Attack Vulnerability via image sorting options</logentry>
+    </entries>
+    <entries date="20171022">
+      <logentry type="#">Fix double scheme in BBcode</logentry>
+    </entries>
+    <entries date="20161201">
+      <logentry type="#">Fix removing an image from the favourites</logentry>
+    </entries>
+  </release>
   <release version="3.3.3" published="20160814">
     <entries date="20160807">
       <logentry type="#">Fix edit button not working correctly in extended configuration manager</logentry>
