@@ -57,7 +57,7 @@ class JoomGalleryViewConfigs extends JoomGalleryView
     JToolBarHelper::title(JText::_('COM_JOOMGALLERY_CONFIGS_CONFIGURATION_MANAGER'), 'equalizer');
 
     $toolbar = JToolbar::getInstance('toolbar');
-    $toolbar->appendButton('Popup', 'new', 'JTOOLBAR_NEW', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=new&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIGS_NEW_HEADING', 'jg-new-popup', 'new');
+    $toolbar->appendButton('JoomPopup', 'new', 'JTOOLBAR_NEW', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=new&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIGS_NEW_HEADING', 'jg-new-popup', 'new');
 
     JToolbarHelper::editList('edit');
 
