@@ -18,14 +18,14 @@ defined('JPATH_PLATFORM') or die;
  * @subpackage  Toolbar
  * @since       3.0
  */
-class JToolbarButtonPopup extends JToolbarButton
+class JToolbarButtonJoomPopup extends JToolbarButton
 {
 	/**
 	 * Button type
 	 *
 	 * @var    string
 	 */
-	protected $_name = 'Popup';
+	protected $_name = 'JoomPopup';
 
 	/**
 	 * Fetch the HTML for the button
