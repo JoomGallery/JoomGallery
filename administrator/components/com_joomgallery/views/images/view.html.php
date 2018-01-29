@@ -76,8 +76,8 @@ class JoomGalleryViewImages extends JoomGalleryView
 
     if($canDo->get('core.edit.state') && $this->pagination->total)
     {
-      JToolbarHelper::publishList('publish', JText::_('COM_JOOMGALLERY_COMMON_PUBLISH'));
-      JToolbarHelper::unpublishList('unpublish', JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH'));
+      JToolbarHelper::publishList('publish', 'COM_JOOMGALLERY_COMMON_PUBLISH');
+      JToolbarHelper::unpublishList('unpublish', 'COM_JOOMGALLERY_COMMON_UNPUBLISH');
       JToolbarHelper::custom('approve', 'upload.png', 'upload_f2.png', 'COM_JOOMGALLERY_IMGMAN_TOOLBAR_APPROVE');
       JToolbarHelper::divider();
     }

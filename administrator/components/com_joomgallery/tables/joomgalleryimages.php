@@ -80,7 +80,7 @@ class TableJoomgalleryImages extends JTable
    * @param   object  $db A database connector object
    * @since   1.5.5
    */
-  public function TableJoomgalleryImages(&$db)
+  public function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_IMAGES, 'id', $db);
   }
