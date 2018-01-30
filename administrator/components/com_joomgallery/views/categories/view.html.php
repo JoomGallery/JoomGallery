@@ -79,8 +79,8 @@ class JoomGalleryViewCategories extends JoomGalleryView
 
     if(($this->_config->get('jg_disableunrequiredchecks') || count(JoomHelper::getAuthorisedCategories('core.edit.state'))) && $this->pagination->total)
     {
-      JToolbarHelper::publishList('publish', JText::_('COM_JOOMGALLERY_COMMON_PUBLISH'));
-      JToolbarHelper::unpublishList('unpublish', JText::_('COM_JOOMGALLERY_COMMON_UNPUBLISH'));
+      JToolbarHelper::publishList('publish', 'COM_JOOMGALLERY_COMMON_PUBLISH');
+      JToolbarHelper::unpublishList('unpublish', 'COM_JOOMGALLERY_COMMON_UNPUBLISH');
       JToolbarHelper::divider();
     }
 

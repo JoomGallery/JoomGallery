@@ -57,13 +57,13 @@ class JoomGalleryViewConfigs extends JoomGalleryView
     JToolBarHelper::title(JText::_('COM_JOOMGALLERY_CONFIGS_CONFIGURATION_MANAGER'), 'equalizer');
 
     $toolbar = JToolbar::getInstance('toolbar');
-    $toolbar->appendButton('Popup', 'new', 'JTOOLBAR_NEW', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=new&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIGS_NEW_HEADING', 'jg-new-popup', 'new');
+    $toolbar->appendButton('JoomPopup', 'new', 'JTOOLBAR_NEW', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=new&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIGS_NEW_HEADING', 'jg-new-popup', 'new');
 
     JToolbarHelper::editList('edit');
 
     JToolbarHelper::deleteList('','remove');
 
-    $toolbar->appendButton('Popup', 'reset', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=reset&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'jg-reset-popup', 'warning-2');
+    $toolbar->appendButton('JoomPopup', 'reset', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'index.php?option='._JOOM_OPTION.'&amp;controller=config&amp;layout=reset&amp;tmpl=component', 400, 350, 0, 0, '', 'COM_JOOMGALLERY_CONFIG_RESETCONFIG', 'jg-reset-popup', 'warning-2');
   }
 
   /**

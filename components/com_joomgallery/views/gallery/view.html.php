@@ -183,6 +183,9 @@ class JoomGalleryViewGallery extends JoomGalleryView
         $categories[$key]->isnew = JoomHelper::checkNewCatg($categories[$key]->cid);
       }
 
+      // show only intro-text of category description
+      $categories[$key]->description = JoomHelper::getIntrotext($categories[$key]->description);
+
       // Get number of images in category and sub-categories
       $imgshits = JoomHelper::getNumberOfImgHits($categories[$key]->cid);
       $categories[$key]->pictures = $imgshits[0];

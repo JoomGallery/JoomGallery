@@ -65,10 +65,10 @@
       <div class="well well-small">
         <div class="module-title nav-header"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM'); ?></div>
         <div class="text-center">
-          <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="http://en.joomgallery.net/">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGallery">GitHub</a>'); ?></p>
+          <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="http://en.joomgallery.net/team.html" target="_blank">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGallery" target="_blank">GitHub</a>'); ?></p>
           <p><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS'); ?></p>
           <p><small class="muted"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS_HINT'); ?></small></p>
-          <a href="https://github.com/JoomGallery"><img width="300" src="http://localhost/3.5.1/media/joomgallery/images/others/GitHub_logo.png" alt="GitHub Logo"></a></div>
+          <a href="https://github.com/JoomGallery" target="_blank"><img width="200" src="<?php echo $this->_ambit->getIcon('others/GitHub_Logo.png'); ?>" alt="GitHub Logo"></a></div>
       </div>
     </div>
   </div>

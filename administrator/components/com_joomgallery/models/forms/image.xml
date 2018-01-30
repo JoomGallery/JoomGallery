@@ -28,7 +28,7 @@
       name="imgtitle"
       type="text"
       class="inputbox"
-      id="title"
+      id="jform_title"
       label="COM_JOOMGALLERY_COMMON_TITLE"
       maxLength="255"
       required="true"
@@ -81,7 +81,7 @@
       label="COM_JOOMGALLERY_COMMON_DESCRIPTION"
       filter="JComponentHelper::filterText"
       buttons="true"
-      hide="readmore,pagebreak"
+      hide="pagebreak"
     />
     <field 
       id="detail_catid"
@@ -168,7 +168,7 @@
       label="COM_JOOMGALLERY_IMGMAN_IMAGE_PREVIEW"
     />
     <field
-      id="rules"
+      id="jform_rules"
       name="rules"
       type="rules"
       label="JFIELD_RULES_LABEL"

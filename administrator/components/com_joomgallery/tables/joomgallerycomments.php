@@ -40,7 +40,7 @@ class TableJoomgalleryComments extends JTable
   /** @var int */
   var $approved   = null;
   
-  function TableJoomgalleryComments(&$db)
+  function __construct($db)
   {
     parent::__construct(_JOOM_TABLE_COMMENTS, 'cmtid', $db);
   }
