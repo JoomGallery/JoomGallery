@@ -1029,6 +1029,7 @@ class JoomGalleryModelDetail extends JoomGalleryModel
       $valid_extensions = array('jpg', 'jpeg', 'jpe');
       $fileextension    = strtolower(JFile::getExt($this->_image->imgfilename));
       $iptc_array       = array();
+
       if(in_array($fileextension, $valid_extensions))
       {
         $iptcimage = getimagesize($this->_ambit->getImg('orig_path', $this->_image), $info);
@@ -1049,168 +1050,91 @@ class JoomGalleryModelDetail extends JoomGalleryModel
       $language = JFactory::getLanguage();
       $language->load('com_joomgallery.iptc');
 
-      require_once(JPATH_COMPONENT_ADMINISTRATOR.'/includes/iptcarray.php');
-
-      $ii = 0;
+      require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/iptcarray.php';
 
       $iptctags     = explode(',', $this->_config->get('jg_iptctags'));
+      $from_charset = '';
 
-      $charsets = array(
-                        'macintosh',
-                        'ASCII',
-                        'ISO-8859-1',
-                        'UCS-4',
-                        'UCS-4BE',
-                        'UCS-4LE',
-                        'UCS-2',
-                        'UCS-2BE',
-                        'UCS-2LE',
-                        'UTF-32',
-                        'UTF-32BE',
-                        'UTF-32LE',
-                        'UTF-16',
-                        'UTF-16BE',
-                        'UTF-16LE',
-                        'UTF-7',
-                        'UTF7-IMAP',
-                        'UTF-8',
-                        'EUC-JP',
-                        'SJIS',
-                        'eucJP-win',
-                        'SJIS-win',
-                        'ISO-2022-JP',
-                        'JIS',
-                        'ISO-8859-2',
-                        'ISO-8859-3',
-                        'ISO-8859-4',
-                        'ISO-8859-5',
-                        'ISO-8859-6',
-                        'ISO-8859-7',
-                        'ISO-8859-8',
-                        'ISO-8859-9',
-                        'ISO-8859-10',
-                        'ISO-8859-13',
-                        'ISO-8859-14',
-                        'ISO-8859-15',
-                        'byte2be',
-                        'byte2le',
-                        'byte4be',
-                        'byte4le',
-                        'BASE64',
-                        '7bit',
-                        '8bit',
-                        'EUC-CN',
-                        'CP936',
-                        'HZ',
-                        'EUC-TW',
-                        'CP950',
-                        'BIG-5',
-                        'EUC-KR',
-                        'UHC',
-                        'ISO-2022-KR',
-                        'Windows-1251',
-                        'Windows-1252',
-                        'CP866',
-                        'KOI8-R'
-                        );
+      // Get IPTC charset
+      if((isset($iptc_array['1#090'][0])))
+      {
+        $charset = $iptc_array['1#090'][0];
 
-      if((isset($iptc_array['1#090'][0])) && in_array($iptc_array['1#090'][0], $charsets))
-      {
-        $from_charset = $iptc_array['1#090'][0];
-      }
-      else
-      {
-        $from_charset = '';
+        if(($from_charset = $this->getIPTCCharset($charset)) === '')
+        {
+          $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_IPTC_ERROR_UNKNOWN_CHARSET'), 'warning');
+        }
       }
 
-      $to_charset = 'UTF-8';
+      $k          = 0;
+      $output     = '';
 
-      $k = 0;
-      $output = '';
       foreach($iptctags as $iptctag)
       {
         if(!empty($iptctag) && isset($iptc_config_array['IPTC'][$iptctag]['IMM']))
         {
           $realiptctag = str_replace(':', '#', $iptc_config_array['IPTC'][$iptctag]['IMM']);
+
           if(isset($iptc_array[$realiptctag]))
           {
             if($realiptctag != '2#025')
             {
-              $kk = $k%2+1;
+              $kk = $k % 2 + 1;
+
               $output .= "      <div class=\"jg_row".$kk."\">\n";
               $output .= "        <div class=\"jg_exif_left\">\n";
               $output .= "          ".$iptc_config_array['IPTC'][$iptctag]['Name']."\n";
               $output .= "        </div>\n";
               $output .= "        <div class=\"jg_exif_right\">\n";
-              if(function_exists('iconv'))
-              {
-                $fixedenteties = htmlentities($iptc_array[$realiptctag][0]);
-                $fixedcharset  = iconv($from_charset, $to_charset, $fixedenteties);
-              }
-              else
-              {
-                $fixedcharset = $iptc_array[$realiptctag][0];
-              }
-              if(!$this->isUtf8($fixedcharset))
-              {
-                $tagdata = htmlspecialchars_decode($this->utf8EncodeMix($fixedcharset, false));
-              }
-              else
-              {
-                $tagdata = htmlspecialchars_decode($fixedcharset);
-              }
+
+              $tagdata = $this->convertIPTC($iptc_array[$realiptctag][0], $from_charset);
+
               if($tagdata == '')
               {
                 $tagdata = '&nbsp;';
               }
+
               $output .= "          ".$tagdata."";
               $output .= "        </div>\n";
               $output .= "      </div>\n";
+
               $k++;
             }
             else
             {
               $num = count($iptc_array['2#025']);
+
               if($num > 0)
               {
-                $kk = $k % 2 + 1;
+                $kk      = $k % 2 + 1;
                 $tagdata = '';
+
                 $output .= "      <div class=\"jg_row".$kk."\">\n";
                 $output .= "        <div class=\"jg_exif_left\">\n";
                 $output .= "          ".$iptc_config_array['IPTC'][$iptctag]['Name']." \n";
                 $output .= "        </div>\n";
                 $output .= "        <div class=\"jg_exif_right\">\n";
+
                 for($i = 0; $i < $num; $i++)
                 {
-                  if(function_exists('iconv'))
-                  {
-                    $fixedenteties = htmlentities($iptc_array[$realiptctag][$i]);
-                    $fixedcharset  = iconv($from_charset, $to_charset, $fixedenteties);
-                  }
-                  else
-                  {
-                    $fixedcharset = $iptc_array[$realiptctag][$i];
-                  }
-                  if(!$this->isUtf8($fixedcharset))
-                  {
-                    $tagdata .= htmlspecialchars_decode(utf8_encode_mix($fixedcharset, false));
-                  }
-                  else
-                  {
-                    $tagdata .= htmlspecialchars_decode($fixedcharset);
-                  }
-                  if($i < $num-1)
+                  $tagdata .= $this->convertIPTC($iptc_array[$realiptctag][$i], $from_charset);
+
+                  if($i < $num - 1)
                   {
                     $tagdata .= ', ';
                   }
                 }
+
                 if(empty($tagdata))
                 {
                   $tagdata = '&nbsp;';
                 }
+
                 $output .= '          '.$tagdata;
                 $output .= "        </div>\n";
                 $output .= "      </div>\n";
+
+                $k++;
               }
             }
           }
@@ -1276,5 +1200,186 @@ class JoomGalleryModelDetail extends JoomGalleryModel
     }
 
     return $result;
+  }
+
+  /**
+   * Takes the value of IPTC 1:90 tag and returns a charset
+   *
+   * Warning, this function does not (and is not intended to) detect
+   * all iso 2022 escape codes. In practise, the code for utf-8 is the
+   * only code that seems to have wide use. It does detect that code.
+   *
+   * According to iim standard, charset is defined by the tag 1:90
+   * in which there are iso 2022 escape sequences to specify the character set.
+   * The iim standard seems to encourage that all necessary escape sequences are
+   * in the 1:90 tag, but says it doesn't have to be.
+   *
+   * This is in need of more testing probably. This is definitely not complete.
+   * However reading the docs of some other IPTC software, it appears that most IPTC software
+   * only recognizes utf-8. If 1:90 tag is not present content is
+   * usually ascii or iso-8859-1 (and sometimes utf-8), but no guarantee.
+   *
+   * This also won't work if there are more than one escape sequence in the 1:90 tag
+   * or if something is put in the G2, or G3 charsets, etc. It will only reliably recognize utf-8.
+   *
+   * This is just going through the charsets mentioned in appendix C of the iim standard.
+   *
+   * @param   string $tag 1:90 tag
+   * @return  string Charset name or empty string if not found
+   * @since 3.4.0
+   */
+  private function getIPTCCharset($tag)
+  {
+    //  \x1b = ESC.
+    switch($tag)
+    {
+      case "\x1b%G": // utf-8
+        // Also call things that are compatible with utf-8, utf-8 (e.g. ascii)
+      case "\x1b(B": // ascii
+      case "\x1b(@": // iso-646-IRV (ascii in latest version, $ different in older version)
+        $c = 'UTF-8';
+        break;
+      case "\x1b(A": // like ascii, but british.
+        $c = 'ISO646-GB';
+        break;
+      case "\x1b(C": // some obscure sweedish/finland encoding
+        $c = 'ISO-IR-8-1';
+        break;
+      case "\x1b(D":
+        $c = 'ISO-IR-8-2';
+        break;
+      case "\x1b(E": // some obscure danish/norway encoding
+        $c = 'ISO-IR-9-1';
+        break;
+      case "\x1b(F":
+        $c = 'ISO-IR-9-2';
+        break;
+      case "\x1b(G":
+        $c = 'SEN_850200_B'; // aka iso 646-SE; ascii-like
+        break;
+      case "\x1b(I":
+        $c = "ISO646-IT";
+        break;
+      case "\x1b(L":
+        $c = "ISO646-PT";
+        break;
+      case "\x1b(Z":
+        $c = "ISO646-ES";
+        break;
+      case "\x1b([":
+        $c = "GREEK7-OLD";
+        break;
+      case "\x1b(K":
+        $c = "ISO646-DE";
+        break;
+      case "\x1b(N": // crylic
+        $c = "ISO_5427";
+        break;
+      case "\x1b(`": // iso646-NO
+        $c = "NS_4551-1";
+        break;
+      case "\x1b(f": // iso646-FR
+        $c = "NF_Z_62-010";
+        break;
+      case "\x1b(g":
+        $c = "PT2"; // iso646-PT2
+        break;
+      case "\x1b(h":
+        $c = "ES2";
+        break;
+      case "\x1b(i": // iso646-HU
+        $c = "MSZ_7795.3";
+        break;
+      case "\x1b(w":
+        $c = "CSA_Z243.4-1985-1";
+        break;
+      case "\x1b(x":
+        $c = "CSA_Z243.4-1985-2";
+        break;
+      case "\x1b\$(B":
+      case "\x1b\$B":
+      case "\x1b&@\x1b\$B":
+      case "\x1b&@\x1b\$(B":
+        $c = "JIS_C6226-1983";
+        break;
+      case "\x1b-A": // iso-8859-1. at least for the high code characters.
+      case "\x1b(@\x1b-A":
+      case "\x1b(B\x1b-A":
+        $c = 'ISO-8859-1';
+        break;
+      case "\x1b-B": // iso-8859-2. at least for the high code characters.
+        $c = 'ISO-8859-2';
+        break;
+      case "\x1b-C": // iso-8859-3. at least for the high code characters.
+        $c = 'ISO-8859-3';
+        break;
+      case "\x1b-D": // iso-8859-4. at least for the high code characters.
+        $c = 'ISO-8859-4';
+        break;
+      case "\x1b-E": // iso-8859-5. at least for the high code characters.
+        $c = 'ISO-8859-5';
+        break;
+      case "\x1b-F": // iso-8859-6. at least for the high code characters.
+        $c = 'ISO-8859-6';
+        break;
+      case "\x1b-G": // iso-8859-7. at least for the high code characters.
+        $c = 'ISO-8859-7';
+        break;
+      case "\x1b-H": // iso-8859-8. at least for the high code characters.
+        $c = 'ISO-8859-8';
+        break;
+      case "\x1b-I": // CSN_369103. at least for the high code characters.
+        $c = 'CSN_369103';
+        break;
+      default:
+        // At this point just give up
+        $c = '';
+        break;
+    }
+
+    return $c;
+  }
+
+  /**
+   * Function to convert charset for IPTC values
+   *
+   * @param string $data The IPTC string
+   * @param string $charset The charset
+   * @return string The converted IPTC string
+   * @since 3.4.0
+   */
+  private function convertIPTC($data, $charset)
+  {
+    if($charset)
+    {
+      if(function_exists('iconv'))
+      {
+        $data = iconv($charset, "UTF-8//IGNORE", $data);
+
+        if($data === false)
+        {
+          $data = "";
+          $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_IPTC_ERROR_CONVERT_CHARSET', $charset), 'warning');
+        }
+      }
+      else
+      {
+        if(!$this->isUtf8($data))
+        {
+          $data = $this->utf8EncodeMix($data, false);
+        }
+      }
+    }
+    else
+    {
+      // Check for UTF-8, otherwise pretend its windows-1252
+      // most of the time if there is no 1:90 tag, it is either ascii, latin1, or utf-8
+      if(!$this->isUtf8($data))
+      {
+        return $this->convertIPTC($data, 'Windows-1252');
+      }
+    }
+
+    return trim($data);
   }
 }
