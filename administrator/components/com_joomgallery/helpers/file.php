@@ -519,13 +519,38 @@ class JoomFile
           imagecopyresized( $dst_img, $src_img, 0, 0, 0, 0, $destWidth,
                             (int)$destHeight, $srcWidth, $srcHeight);
         }
-        if(!@imagejpeg($dst_img, $dest_file, $dest_qual))
+        switch($imginfo[2])
         {
-          // Workaround for servers with wwwrun problem
-          $dir = dirname($dest_file);
-          JoomFile::chmod($dir, '0777', true);
-          imagejpeg($dst_img, $dest_file, $dest_qual);
-          JoomFile::chmod($dir, '0755', true);
+           case 'PNG':
+             if(!@imagepng($dst_img, $dest_file))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagepng($dst_img, $dest_file);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
+           case 'GIF':
+             if(!@imagegif($dst_img, $dest_file))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagegif($dst_img, $dest_file);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
+           default:
+             if(!@imagejpeg($dst_img, $dest_file, $dest_qual))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagejpeg($dst_img, $dest_file, $dest_qual);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
         }
         imagedestroy($src_img);
         imagedestroy($dst_img);
@@ -541,20 +566,17 @@ class JoomFile
           $debugoutput.=JText::_('COM_JOOMGALLERY_UPLOAD_GD_NO_TRUECOLOR');
           return false;
         }
-        if($imginfo[2] == 'JPG')
+        switch($imginfo[2])
         {
-          $src_img = imagecreatefromjpeg($src_file);
-        }
-        else
-        {
-          if($imginfo[2] == 'PNG')
-          {
-            $src_img = imagecreatefrompng($src_file);
-          }
-          else
-          {
-            $src_img = imagecreatefromgif($src_file);
-          }
+           case 'PNG':
+             $src_img = imagecreatefrompng($src_file);
+             break;
+           case 'GIF':
+             $src_img = imagecreatefromgif($src_file);
+             break;
+           default:
+             $src_img = imagecreatefromjpeg($src_file);
+             break;
         }
 
         if(!$src_img)
@@ -562,6 +584,8 @@ class JoomFile
           return false;
         }
         $dst_img = imagecreatetruecolor($destWidth, $destHeight);
+        imagealphablending($dst_img, false);
+        imagesavealpha($dst_img, true);
 
         if($config->jg_fastgd2thumbcreation == 0)
         {
@@ -590,13 +614,38 @@ class JoomFile
           }
         }
 
-        if(!@imagejpeg($dst_img, $dest_file, $dest_qual))
+        switch($imginfo[2])
         {
-          // Workaround for servers with wwwrun problem
-          $dir = dirname($dest_file);
-          JoomFile::chmod($dir, '0777', true);
-          imagejpeg($dst_img, $dest_file, $dest_qual);
-          JoomFile::chmod($dir, '0755', true);
+           case 'PNG':
+             if(!@imagepng($dst_img, $dest_file))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagepng($dst_img, $dest_file);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
+           case 'GIF':
+             if(!@imagegif($dst_img, $dest_file))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagegif($dst_img, $dest_file);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
+           default:
+             if(!@imagejpeg($dst_img, $dest_file, $dest_qual))
+             {
+                // Workaround for servers with wwwrun problem
+                $dir = dirname($dest_file);
+                JoomFile::chmod($dir, '0777', true);
+                imagejpeg($dst_img, $dest_file, $dest_qual);
+                JoomFile::chmod($dir, '0755', true);
+             }
+             break;
         }
         imagedestroy($src_img);
         imagedestroy($dst_img);
@@ -717,6 +766,8 @@ class JoomFile
     if($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h))
     {
       $temp = imagecreatetruecolor($dst_w * $quality + 1, $dst_h * $quality + 1);
+      imagealphablending($temp, false);
+      imagesavealpha($temp, true);
       imagecopyresized  ($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1,
                          $dst_h * $quality + 1, $src_w, $src_h);
       imagecopyresampled($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w,
