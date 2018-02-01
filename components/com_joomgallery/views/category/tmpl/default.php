@@ -6,8 +6,9 @@ if(count($this->categories)):
   echo $this->loadTemplate('subcategories');
 endif;
 
+echo $this->loadTemplate('head');
+
 if(count($this->images)):
-  echo $this->loadTemplate('head');
   echo $this->loadTemplate('images');
 endif;
 
