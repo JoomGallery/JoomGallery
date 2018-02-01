@@ -189,25 +189,24 @@ class JoomGalleryModelControl extends JoomGalleryModel
   /**
    * Method to count the images and categories.
    *
-   *
-   * @return  void
+   * @return  array   Array of objects containing the number of images and categories
    * @since   3.4.0
    */
-  public function statisticinfo()
+  public function getStatisticInfo()
   {
     // Array for storing the e.g. results and db query clauses
     $elems = array();
 
     // Retreive parameters and fill the array
     // Get parameters for images and fill array element
-    $elems['picspublished'] = new stdClass();
+    $elems['picspublished']                = new stdClass();
     $elems['picspublished']->enabled       = true;
     $elems['picspublished']->outputtext    = JText::_('COM_JOOMGALLERY_ADMENU_STATISTIC_PUBLISHEDIMAGES');
     $elems['picspublished']->queryselect   = 'COUNT(id)';
     $elems['picspublished']->queryfrom     = _JOOM_TABLE_IMAGES;
     $elems['picspublished']->querywhere    = 'published = 1';
 
-    $elems['picsunpublished'] = new stdClass();
+    $elems['picsunpublished']              = new stdClass();
     $elems['picsunpublished']->enabled     = true;
     $elems['picsunpublished']->outputtext  = JText::_('COM_JOOMGALLERY_ADMENU_STATISTIC_UNPUBLISHEDIMAGES');
     $elems['picsunpublished']->queryselect = 'COUNT(id)';
@@ -215,26 +214,24 @@ class JoomGalleryModelControl extends JoomGalleryModel
     $elems['picsunpublished']->querywhere  = 'published = 0';
 
     // Get parameters for categories and fill array element
-    $elems['catspublished'] = new stdClass();
+    $elems['catspublished']                = new stdClass();
     $elems['catspublished']->enabled       = true;
     $elems['catspublished']->outputtext    = JText::_('COM_JOOMGALLERY_ADMENU_STATISTIC_PUBLISHEDCATEGORIES');
     $elems['catspublished']->queryselect   = 'COUNT(cid)';
     $elems['catspublished']->queryfrom     = _JOOM_TABLE_CATEGORIES;
-    $elems['catspublished']->querywhere    = 'published = 1';
+    $elems['catspublished']->querywhere    = 'published = 1 and cid != 1';
 
-    $elems['catunspublished'] = new stdClass();
+    $elems['catunspublished']              = new stdClass();
     $elems['catunspublished']->enabled     = true;
     $elems['catunspublished']->outputtext  = JText::_('COM_JOOMGALLERY_ADMENU_STATISTIC_UNPUBLISHEDCATEGORIES');
     $elems['catunspublished']->queryselect = 'COUNT(cid)';
     $elems['catunspublished']->queryfrom   = _JOOM_TABLE_CATEGORIES;
-    $elems['catunspublished']->querywhere  = 'published = 0';
-
+    $elems['catunspublished']->querywhere  = 'published = 0 and cid != 1';
 
     // Get instance of database object
     $query = $this->_db->getQuery(true);
 
     // Iterate through array
-    // reference to element for adding the results
     foreach($elems as $elem)
     {
       // Fill the query
@@ -251,6 +248,5 @@ class JoomGalleryModelControl extends JoomGalleryModel
     }
 
     return $elems;
-
   }
 }
