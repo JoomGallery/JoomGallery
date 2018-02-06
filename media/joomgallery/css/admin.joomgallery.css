@@ -239,7 +239,9 @@ label#rules-lbl {
 }
 
 #jg-new-popup .modal-body{
-  min-height:250px;
+  min-height: 250px;
+  width: auto;
+  padding: 20px;
 }
 /* This is not perfect: */
 #jg-new-popup .chzn-container{
@@ -247,6 +249,21 @@ label#rules-lbl {
 }
 #jg-new-popup #formNew{
   margin: 0px;
+}
+
+#jg-reset-popup #FormResetConfig {
+  margin-bottom: 0px;
+}
+#jg-reset-popup .modal-body {
+  min-height: 250px;
+  max-height: none;
+  width: auto;
+  padding: 20px;
+}
+
+#jg-info-popup .modal-body {
+  width: auto;
+  padding: 20px;
 }
 
 /* Edit images view: Space between boxes */
@@ -321,9 +338,15 @@ dl.tabs dt h3 a:link {
 }
 
 /* Modal reject popup */
+#jg-reject-popup #formReject {
+  margin-bottom: 0px;
+}
+
 #jg-reject-popup .modal-body {
   max-height: 250px;
   overflow-y: auto;
+  width: auto;
+  padding: 20px;
 }
 
 #jg-reject-popup #jg-reject-image {
