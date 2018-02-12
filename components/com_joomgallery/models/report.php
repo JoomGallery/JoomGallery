@@ -32,7 +32,7 @@ class JoomGalleryModelReport extends JoomGalleryModel
    */
   public function send($redirect_url = 'index.php')
   {
-    $id = JRequest::getInt('id');
+    $id = $this->_mainframe->input->getInt('id');
 
     if(!$id)
     {

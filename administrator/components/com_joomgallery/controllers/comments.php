@@ -32,7 +32,7 @@ class JoomGalleryControllerComments extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    JRequest::setVar('view', 'comments');
+    $this->input->set('view', 'comments');
 
     // Register tasks
     $this->registerTask('unpublish',  'publish');
@@ -48,8 +48,8 @@ class JoomGalleryControllerComments extends JoomGalleryController
   public function publish()
   {
     // Initialize variables
-    $cid      = JRequest::getVar('cid', array(), 'post', 'array');
-    $task     = JRequest::getCmd('task');
+    $cid      = $this->input->post->get('cid', array(), 'array');
+    $task     = $this->input->getCmd('task');
     $publish  = ($task == 'publish');
 
     if(empty($cid))
@@ -84,8 +84,8 @@ class JoomGalleryControllerComments extends JoomGalleryController
   public function approve()
   {
     // Initialize variables
-    $cid      = JRequest::getVar('cid', array(), 'post', 'array');
-    $task     = JRequest::getCmd('task');
+    $cid      = $this->input->post->get('cid', array(), 'array');
+    $task     = $this->input->getCmd('task');
     $publish  = ($task == 'approve');
 
     if(empty($cid))
@@ -97,9 +97,12 @@ class JoomGalleryControllerComments extends JoomGalleryController
     $model = $this->getModel('comments');
     if($count = $model->publish($cid, $publish, 'approve'))
     {
-      if($count != 1){
+      if($count != 1)
+      {
         $msg = JText::sprintf($publish ? 'COM_JOOMGALLERY_COMMAN_MSG_COMMENTS_APPROVED' : 'COM_JOOMGALLERY_COMMAN_MSG_COMMENTS_REJECTED', $count);
-      } else {
+      }
+      else
+      {
         $msg = JText::_($publish ? 'COM_JOOMGALLERY_COMMAN_MSG_COMMENT_APPROVED' : 'COM_JOOMGALLERY_COMMAN_MSG_COMMENT_REJECTED');
       }
       $this->setRedirect($this->_ambit->getRedirectUrl(), $msg);
@@ -121,12 +124,19 @@ class JoomGalleryControllerComments extends JoomGalleryController
   {
     $model = $this->getModel('comments');
     $count = $model->delete();
-    if($count === false){
+
+    if($count === false)
+    {
       $msg = JText::_('COM_JOOMGALLERY_COMMAN_MSG_ERROR_DELETING_COMMENT');
-    } else {
-      if($count == 1){
+    }
+    else
+    {
+      if($count == 1)
+      {
         $msg = JText::_('COM_JOOMGALLERY_COMMAN_MSG_COMMENT_DELETED');
-      } else {
+      }
+      else
+      {
         $msg = JText::sprintf('COM_JOOMGALLERY_COMMAN_MSG_COMMENTS_DELETED', $count);
       }
     }
@@ -148,7 +158,7 @@ class JoomGalleryControllerComments extends JoomGalleryController
           ->from(_JOOM_TABLE_COMMENTS);
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       // Redirect to maintenance manager because this task is usually launched there
       $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), $this->_db->getErrorMsg(), 'error');
@@ -176,7 +186,7 @@ class JoomGalleryControllerComments extends JoomGalleryController
           ->where('i.id IS NULL');
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       // Redirect to maintenance manager because this task is usually launched there
       $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), $this->_db->getErrorMsg(), 'error');
@@ -191,7 +201,7 @@ class JoomGalleryControllerComments extends JoomGalleryController
           ->where('u.id IS NULL');
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       // Redirect to maintenance manager because this task is usually launched there
       $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), $this->_db->getErrorMsg(), 'error');

@@ -42,10 +42,10 @@ class JoomGalleryViewDetail extends JoomGalleryView
                                   JText::_('COM_JOOMGALLERY_DETAIL_MSG_NOT_ALLOWED_VIEW_DEFAULT_DETAIL_VIEW'), 'notice');
     }
 
-    $images     = $this->get('Images');
-    $image      = $this->get('Image');
-    $slideshow  = JRequest::getInt('slideshow');
-    $params     = $this->_mainframe->getParams();
+    $this->images     = $this->get('Images');
+    $this->image      = $this->get('Image');
+    $this->slideshow  = $this->_mainframe->input->getInt('slideshow');
+    $this->params     = $this->_mainframe->getParams();
 
     // Breadcrumbs
     if(     $this->_config->get('jg_completebreadcrumbs')
@@ -53,7 +53,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
         ||  $this->_config->get('jg_pagetitle_detail')
       )
     {
-      $parents  = JoomHelper::getAllParentCategories($image->catid, true);
+      $parents  = JoomHelper::getAllParentCategories($this->image->catid, true);
     }
 
     $menus = $this->_mainframe->getMenu();
@@ -72,7 +72,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
             $breadcrumbs->addItem($parent->name, 'index.php?view=category&catid='.$parent->cid);
           }
 
-          $breadcrumbs->addItem($image->imgtitle);
+          $breadcrumbs->addItem($this->image->imgtitle);
           break;
         case 'category':
           $skip = true;
@@ -93,104 +93,106 @@ class JoomGalleryViewDetail extends JoomGalleryView
 
           if(!$skip)
           {
-            $breadcrumbs->addItem($image->imgtitle);
+            $breadcrumbs->addItem($this->image->imgtitle);
           }
           break;
       }
     }
 
     // JoomGallery Pathway
-    $pathway = null;
+    $this->pathway = null;
     if($this->_config->get('jg_showpathway'))
     {
-      $pathway = '<a href="'.JRoute::_('index.php?view=gallery').'" class="jg_pathitem">'.JText::_('COM_JOOMGALLERY_COMMON_HOME').'</a> &raquo; ';
+      $this->pathway = '<a href="'.JRoute::_('index.php?view=gallery').'" class="jg_pathitem">'.JText::_('COM_JOOMGALLERY_COMMON_HOME').'</a> &raquo; ';
 
       foreach($parents as $parent)
       {
-        $pathway  .= '<a href="'.JRoute::_('index.php?view=category&catid='.$parent->cid).'" class="jg_pathitem">'.$parent->name.'</a> &raquo; ';
+        $this->pathway .= '<a href="'.JRoute::_('index.php?view=category&catid='.$parent->cid).'" class="jg_pathitem">'.$parent->name.'</a> &raquo; ';
       }
 
-      $pathway .= $image->imgtitle;
+      $this->pathway .= $this->image->imgtitle;
     }
 
     // Page Title
     if($this->_config->get('jg_pagetitle_detail'))
     {
       $pagetitle  = JoomHelper::createPagetitle($this->_config->get('jg_pagetitle_detail'),
-                                                $parents[$image->catid]->name,
-                                                $image->imgtitle,
-                                                $params->get('page_title') ? $params->get('page_title') : JText::_('COM_JOOMGALLERY_COMMON_GALLERY')
+                                                $parents[$this->image->catid]->name,
+                                                $this->image->imgtitle,
+                                                $this->params->get('page_title') ? $this->params->get('page_title') : JText::_('COM_JOOMGALLERY_COMMON_GALLERY')
                                               );
       $this->_doc->setTitle($pagetitle);
     }
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
     // Generate the backlink
     if($this->_config->get('jg_skipcatview'))
     {
-      $allsubcats = JoomHelper::getAllSubCategories($image->catid, false);
+      $allsubcats = JoomHelper::getAllSubCategories($this->image->catid, false);
       // Link to category view if it include subcategories
       if(count($allsubcats))
       {
-        $backtarget = JRoute::_('index.php?view=category&catid='.$image->catid);
-        $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
+        $this->backtarget = JRoute::_('index.php?view=category&catid='.$this->image->catid);
+        $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
       }
       else
       {
         // Get the parents including category itself if not read before
         if(!isset($parents))
         {
-          $parents  = JoomHelper::getAllParentCategories($image->catid, true);
+          $parents  = JoomHelper::getAllParentCategories($this->image->catid, true);
         }
         if(count($parents) == 1)
         {
           // Link to gallery view
-          $backtarget = JRoute::_('index.php?view=gallery');
-          $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
+          $this->backtarget = JRoute::_('index.php?view=gallery');
+          $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
         }
         else
         {
           // Link to parent of category
-          $backtarget = JRoute::_('index.php?view=category&catid='.$parents[$image->catid]->parent_id);
-          $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
+          $this->backtarget = JRoute::_('index.php?view=category&catid='.$parents[$this->image->catid]->parent_id);
+          $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
         }
       }
     }
     else
     {
-      $backtarget = JRoute::_('index.php?view=category&catid='.$image->catid);
-      $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
+      $this->backtarget = JRoute::_('index.php?view=category&catid='.$this->image->catid);
+      $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
     }
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
     // Load modules at position 'detailbtm'
-    $modules['detailbtm'] = JoomHelper::getRenderedModules('detailbtm');
-    if(count($modules['detailbtm']))
+    $this->modules['detailbtm'] = JoomHelper::getRenderedModules('detailbtm');
+    if(count($this->modules['detailbtm']))
     {
-      $params->set('show_detailbtm_modules', 1);
+      $this->params->set('show_detailbtm_modules', 1);
     }
 
     // Check whether this is the active menu item. This is a
     // special case in addition to code in constructor of parent class
     // because here we have to check the image ID, too.
     $active = $this->_mainframe->getMenu()->getActive();
-    if(!$active || strpos($active->link, '&id='.JRequest::getInt('id')) === false)
+    if(!$active || strpos($active->link, '&id='.$this->_mainframe->input->getInt('id')) === false)
     {
       // Get the default layout from the configuration
       if($layout = $this->_config->get('jg_alternative_layout'))
@@ -200,49 +202,49 @@ class JoomGalleryViewDetail extends JoomGalleryView
     }
 
     // Meta data
-    if($image->metadesc)
+    if($this->image->metadesc)
     {
-      $this->_doc->setDescription($image->metadesc);
+      $this->_doc->setDescription($this->image->metadesc);
     }
-    elseif($image->catmetadesc)
+    elseif($this->image->catmetadesc)
     {
-      $this->_doc->setDescription($image->catmetadesc);
+      $this->_doc->setDescription($this->image->catmetadesc);
     }
-    if($image->metakey)
+    if($this->image->metakey)
     {
-      $this->_doc->setMetadata('keywords', $image->metakey);
+      $this->_doc->setMetadata('keywords', $this->image->metakey);
     }
-    elseif($image->catmetakey)
+    elseif($this->image->catmetakey)
     {
-      $this->_doc->setMetadata('keywords', $image->catmetakey);
+      $this->_doc->setMetadata('keywords', $this->image->catmetakey);
     }
-    if($this->_mainframe->getCfg('MetaAuthor') == '1' && $image->author && strcmp(JText::_('COM_JOOMGALLERY_COMMON_NO_DATA'), $image->author) != 0)
+    if($this->_mainframe->getCfg('MetaAuthor') == '1' && $this->image->author && strcmp(JText::_('COM_JOOMGALLERY_COMMON_NO_DATA'), $this->image->author) != 0)
     {
-      $this->_doc->setMetaData('author', $image->author);
+      $this->_doc->setMetaData('author', $this->image->author);
     }
 
     // Show fulltext of description
-    $image->imgtext = JoomHelper::getFulltext($image->imgtext);
+    $this->image->imgtext = JoomHelper::getFulltext($this->image->imgtext);
 
     // Set the title attribute in a tag with title and/or description of image
     // if a box is activated
     if(    (!is_numeric($this->_config->get('jg_bigpic_open')) || $this->_config->get('jg_bigpic_open') > 1)
-        && !$slideshow
+        && !$this->slideshow
       )
     {
-      $image->atagtitle =  JHTML::_('joomgallery.getTitleforATag', $image);
+      $this->image->atagtitle =  JHTML::_('joomgallery.getTitleforATag', $this->image);
     }
     else
     {
       // Set the imgtitle by default
-      $image->atagtitle = 'title="'.$image->imgtitle.'"';
+      $this->image->atagtitle = 'title="'.$this->image->imgtitle.'"';
     }
 
     // Accordion
     if($this->_config->get('jg_showdetailaccordion'))
     {
-      $toggler = 'class="joomgallery-toggler"';
-      $slider  = 'class="joomgallery-slider"';
+      $this->toggler = 'class="joomgallery-toggler"';
+      $this->slider  = 'class="joomgallery-slider"';
       JHtml::_('behavior.framework', true);
       $accordionscript= 'window.addEvent(\'domready\', function(){
         new Fx.Accordion
@@ -271,75 +273,74 @@ class JoomGalleryViewDetail extends JoomGalleryView
     }
     else
     {
-      $toggler = '';
-      $slider  = '';
+      $this->toggler = '';
+      $this->slider  = '';
     }
 
     // Linked
     if( (     ($this->_config->get('jg_bigpic') == 1 && $this->_user->get('id'))
           ||  ($this->_config->get('jg_bigpic_unreg') == 1 && !$this->_user->get('id'))
         )
-        && !$slideshow
-        && $image->bigger_orig
+        && !$this->slideshow
+        && $this->image->bigger_orig
         &&
         (     !$this->_config->get('jg_nameshields')
           || (!$this->_config->get('jg_show_nameshields_unreg') && !$this->_user->get('id'))
         )
       )
     {
-      $params->set('image_linked', 1);
+      $this->params->set('image_linked', 1);
     }
 
     // Original size
-    if(     $image->orig_exists
+    if(     $this->image->orig_exists
         &&  $this->_config->get('jg_showoriginalfilesize')
-        && !$slideshow
+        && !$this->slideshow
       )
     {
-      $params->set('show_original_size', 1);
+      $this->params->set('show_original_size', 1);
     }
 
     // Pagination
-    if(isset($images[$image->position-1]) && !$slideshow)
+    if(isset($this->images[$this->image->position-1]) && !$this->slideshow)
     {
-      $params->set('show_previous_link', 1);
-      $pagination['previous']['link'] = JRoute::_('index.php?view=detail&id='.$images[$image->position-1]->id).JHTML::_('joomgallery.anchor');
+      $this->params->set('show_previous_link', 1);
+      $this->pagination['previous']['link'] = JRoute::_('index.php?view=detail&id='.$this->images[$this->image->position-1]->id).JHTML::_('joomgallery.anchor');
       if($this->_config->get('jg_showdetailnumberofpics'))
       {
-        $params->set('show_previous_text', 1);
-        $pagination['previous']['text'] = JText::sprintf('COM_JOOMGALLERY_DETAIL_IMG_IMAGE_OF_IMAGES', $image->position, count($images));
+        $this->params->set('show_previous_text', 1);
+        $this->pagination['previous']['text'] = JText::sprintf('COM_JOOMGALLERY_DETAIL_IMG_IMAGE_OF_IMAGES', $this->image->position, count($this->images));
       }
     }
-    if(isset($images[$image->position+1]) && !$slideshow)
+    if(isset($this->images[$this->image->position+1]) && !$this->slideshow)
     {
-      $params->set('show_next_link', 1);
-      $pagination['next']['link'] = JRoute::_('index.php?view=detail&id='.$images[$image->position+1]->id).JHTML::_('joomgallery.anchor');
+      $this->params->set('show_next_link', 1);
+      $this->pagination['next']['link'] = JRoute::_('index.php?view=detail&id='.$this->images[$this->image->position+1]->id).JHTML::_('joomgallery.anchor');
       if($this->_config->get('jg_showdetailnumberofpics'))
       {
-        $params->set('show_next_text', 1);
-        $pagination['next']['text'] = JText::sprintf('COM_JOOMGALLERY_DETAIL_IMG_IMAGE_OF_IMAGES', $image->position+2, count($images));
+        $this->params->set('show_next_text', 1);
+        $this->pagination['next']['text'] = JText::sprintf('COM_JOOMGALLERY_DETAIL_IMG_IMAGE_OF_IMAGES', $this->image->position+2, count($this->images));
       }
     }
 
     // Nametags
-    if(     !$slideshow
+    if(     !$this->slideshow
         &&  ( ($this->_config->get('jg_nameshields') && $this->_user->get('id'))
           ||  ($this->_config->get('jg_nameshields_unreg') && !$this->_user->get('id'))
             )
       )
     {
-      $nametags       = $this->get('Nametags');
+      $this->nametags = $this->get('Nametags');
 
-      if($this->_user->get('id') || $nametags)
+      if($this->_user->get('id') || $this->nametags)
       {
-        $params->set('show_nametags', 1);
-        $this->assignRef('nametags', $nametags);
+        $this->params->set('show_nametags', 1);
       }
 
       $already_tagged = false;
-      foreach($nametags as $nametag)
+      foreach($this->nametags as $this->nametag)
       {
-        if($nametag->nuserid == $this->_user->get('id'))
+        if($this->nametag->nuserid == $this->_user->get('id'))
         {
           $already_tagged = true;
           break;
@@ -348,18 +349,17 @@ class JoomGalleryViewDetail extends JoomGalleryView
 
       if(     $this->_config->get('jg_nameshields')
           &&  $this->_user->get('id')
-          && !$slideshow
+          && !$this->slideshow
           && (!$already_tagged || $this->_config->get('jg_nameshields_others'))
         )
       {
-        $params->set('show_movable_nametag', 1);
+        $this->params->set('show_movable_nametag', 1);
 
-        $length             = strlen($this->_user->get('username')) * $this->_config->get('jg_nameshields_width');
-        $nametag            = array();
-        $nametag['length']  = $length;
-        $nametag['name']    = $this->_user->get('username');
-        $nametag['link']    = JRoute::_('index.php?task=nametags.save');
-        $this->assignRef('nametag', $nametag);
+        $length                   = strlen($this->_user->get('username')) * $this->_config->get('jg_nameshields_width');
+        $this->nametag            = array();
+        $this->nametag['length']  = $length;
+        $this->nametag['name']    = $this->_user->get('username');
+        $this->nametag['link']    = JRoute::_('index.php?task=nametags.save');
 
         JHtml::_('behavior.framework');
         if($this->_config->get('jg_nameshields_others'))
@@ -374,9 +374,9 @@ class JoomGalleryViewDetail extends JoomGalleryView
     // Slideshow
     if($this->_config->get('jg_slideshow'))
     {
-      $params->set('slideshow_enabled', 1);
+      $this->params->set('slideshow_enabled', 1);
 
-      if($slideshow)
+      if($this->slideshow)
       {
         JHtml::_('behavior.framework', true);
         $this->_doc->addStyleSheet($this->_ambit->getScript('smoothgallery/css/jd.gallery.css'));
@@ -436,7 +436,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
         $maxwidth    = 0;
         $maxheight   = 0;
         $imgstartidx = 0;
-        foreach($images as $row)
+        foreach($this->images as $row)
         {
           // Description
           if($row->imgtext != '')
@@ -551,7 +551,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
             "'.JHTML::_('joomgallery.openimage', 0, $row).'"
           );';
           // set start image index for slideshow
-          if($row->id == $image->id)
+          if($row->id == $this->image->id)
           {
             $imgstartidx = $number;
           }
@@ -635,22 +635,22 @@ class JoomGalleryViewDetail extends JoomGalleryView
     }
 
     // Icons
-    if(!$slideshow)
+    if(!$this->slideshow)
     {
       // Zoom
-      if($image->bigger_orig)
+      if($this->image->bigger_orig)
       {
         if(    ($this->_config->get('jg_bigpic') == 1 && $this->_user->get('id'))
             || ($this->_config->get('jg_bigpic_unreg') == 1 && !$this->_user->get('id'))
           )
         {
-          $params->set('show_zoom_icon', 1);
+          $this->params->set('show_zoom_icon', 1);
         }
         else
         {
           if($this->_config->get('jg_bigpic') == 1 && !$this->_user->get('id'))
           {
-            $params->set('show_zoom_icon', -1);
+            $this->params->set('show_zoom_icon', -1);
           }
         }
       }
@@ -658,19 +658,19 @@ class JoomGalleryViewDetail extends JoomGalleryView
       // Download icon
       if(   $this->_config->get('jg_download')
         &&  $this->_config->get('jg_showdetaildownload')
-        &&  ($image->orig_exists || $this->_config->get('jg_downloadfile') != 1)
+        &&  ($this->image->orig_exists || $this->_config->get('jg_downloadfile') != 1)
         )
       {
         if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
         {
-          $params->set('show_download_icon', 1);
-          $params->set('download_link', JRoute::_('index.php?task=download&id='.$image->id));
+          $this->params->set('show_download_icon', 1);
+          $this->params->set('download_link', JRoute::_('index.php?task=download&id='.$this->image->id));
         }
         else
         {
           if($this->_config->get('jg_download_hint'))
           {
-            $params->set('show_download_icon', -1);
+            $this->params->set('show_download_icon', -1);
           }
         }
       }
@@ -682,17 +682,17 @@ class JoomGalleryViewDetail extends JoomGalleryView
         {
           if(!$already_tagged)
           {
-            $params->set('show_nametag_icon', 1);
+            $this->params->set('show_nametag_icon', 1);
           }
           else
           {
-            $params->set('show_nametag_icon', 2);
-            $params->set('nametag_link', JRoute::_('index.php?task=nametags.remove&id='.$image->id, false));
+            $this->params->set('show_nametag_icon', 2);
+            $this->params->set('nametag_link', JRoute::_('index.php?task=nametags.remove&id='.$this->image->id, false));
           }
         }
         else
         {
-          $params->set('show_nametag_icon', 3);
+          $this->params->set('show_nametag_icon', 3);
         }
       }
       else
@@ -702,27 +702,27 @@ class JoomGalleryViewDetail extends JoomGalleryView
             && $this->_config->get('jg_show_nameshields_unreg')
           )
         {
-          $params->set('show_nametag_icon', -1);
+          $this->params->set('show_nametag_icon', -1);
         }
       }
 
       // Favourites
-      if(!$params->get('disable_global_info') && $this->_config->get('jg_favourites'))
+      if(!$this->params->get('disable_global_info') && $this->_config->get('jg_favourites'))
       {
         if(   $this->_user->get('id')
            || ($this->_config->get('jg_usefavouritesforpubliczip') == 1 && !$this->_user->get('id'))
           )
         {
-          $params->set('favourites_link', JRoute::_('index.php?task=favourites.addimage&id='.$image->id));
+          $this->params->set('favourites_link', JRoute::_('index.php?task=favourites.addimage&id='.$this->image->id));
           if(     $this->_config->get('jg_usefavouritesforzip') == 1
               || ($this->_config->get('jg_usefavouritesforpubliczip') == 1 && !$this->_user->get('id'))
             )
           {
-            $params->set('show_favourites_icon', 2);
+            $this->params->set('show_favourites_icon', 2);
           }
           else
           {
-            $params->set('show_favourites_icon', 1);
+            $this->params->set('show_favourites_icon', 1);
           }
         }
         else
@@ -731,11 +731,11 @@ class JoomGalleryViewDetail extends JoomGalleryView
           {
             if($this->_config->get('jg_usefavouritesforzip') == 1)
             {
-              $params->set('show_favourites_icon', -2);
+              $this->params->set('show_favourites_icon', -2);
             }
             else
             {
-              $params->set('show_favourites_icon', -1);
+              $this->params->set('show_favourites_icon', -1);
             }
           }
         }
@@ -746,7 +746,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
       {
         if($this->_user->get('id') || $this->_config->get('jg_report_unreg'))
         {
-          $params->set('show_report_icon', 1);
+          $this->params->set('show_report_icon', 1);
 
           JHTML::_('behavior.modal');
         }
@@ -754,7 +754,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
         {
           if($this->_config->get('jg_report_hint'))
           {
-            $params->set('show_report_icon', -1);
+            $this->params->set('show_report_icon', -1);
           }
         }
       }
@@ -764,57 +764,55 @@ class JoomGalleryViewDetail extends JoomGalleryView
          && $this->_config->get('jg_userspace') == 1
         )
       {
-        if( (   $this->_user->authorise('core.edit', _JOOM_OPTION.'.image.'.$image->id)
-            ||  (   $this->_user->authorise('core.edit.own', _JOOM_OPTION.'.image.'.$image->id)
-                &&  $image->imgowner
-                &&  $image->imgowner == $this->_user->get('id')
+        if( (   $this->_user->authorise('core.edit', _JOOM_OPTION.'.image.'.$this->image->id)
+            ||  (   $this->_user->authorise('core.edit.own', _JOOM_OPTION.'.image.'.$this->image->id)
+                &&  $this->image->imgowner
+                &&  $this->image->imgowner == $this->_user->get('id')
                 )
             )
         )
         {
-          $params->set('show_edit_icon', 1);
+          $this->params->set('show_edit_icon', 1);
         }
 
-        if($this->_user->authorise('core.delete', _JOOM_OPTION.'.image.'.$image->id))
+        if($this->_user->authorise('core.delete', _JOOM_OPTION.'.image.'.$this->image->id))
         {
-          $params->set('show_delete_icon', 1);
+          $this->params->set('show_delete_icon', 1);
         }
       }
     }
 
-    $extra = '';
+    $this->extra = '';
     if($this->_config->get('jg_disable_rightclick_detail') == 1)
     {
-      $extra = 'onmouseover="javascript:joom_hover();" onmouseout="javascript:joom_hover();"';
+      $this->extra = 'onmouseover="javascript:joom_hover();" onmouseout="javascript:joom_hover();"';
     }
 
-    $event = new stdClass();
+    $this->event = new stdClass();
 
-    if(!$slideshow)
+    if(!$this->slideshow)
     {
       if($this->_config->get('jg_lightbox_slide_all'))
       {
-        $params->set('show_all_in_popup', 1);
+        $this->params->set('show_all_in_popup', 1);
 
-        $popup = array();
+        $this->popup = array();
 
-        $popup['before']  = JHTML::_('joomgallery.popup', $images, 0, $image->position, $params->get('image_linked') ? 'joomgalleryIcon' : null);
-        $popup['after']   = JHTML::_('joomgallery.popup', $images, $image->position + 1, null, $params->get('image_linked') ? 'joomgalleryIcon' : null);
-
-        $this->assignRef('popup', $popup);
+        $this->popup['before']  = JHTML::_('joomgallery.popup', $this->images, 0, $this->image->position, $this->params->get('image_linked') ? 'joomgalleryIcon' : null);
+        $this->popup['after']   = JHTML::_('joomgallery.popup', $this->images, $this->image->position + 1, null, $this->params->get('image_linked') ? 'joomgalleryIcon' : null);
       }
 
       // Pane
       // Load modules at position 'detailpane'
-      $modules['detailpane'] = JoomHelper::getRenderedModules('detailpane');
-      if(count($modules['detailpane']))
+      $this->modules['detailpane'] = JoomHelper::getRenderedModules('detailpane');
+      if(count($this->modules['detailpane']))
       {
-        $params->set('show_detailpane_modules', 1);
+        $this->params->set('show_detailpane_modules', 1);
       }
 
       // Exif data
       if(    $this->_config->get('jg_showexifdata')
-          && $image->orig_exists
+          && $this->image->orig_exists
           && extension_loaded('exif')
           && function_exists('exif_read_data')
         )
@@ -822,14 +820,14 @@ class JoomGalleryViewDetail extends JoomGalleryView
         $exifdata = $this->get('Exifdata');
         if($exifdata)
         {
-          $params->set('show_exifdata', 1);
-          $this->assignRef('exifdata', $exifdata);
+          $this->params->set('show_exifdata', 1);
+          $this->exifdata = &$exifdata;
         }
       }
 
       // GeoTagging data
       if(    $this->_config->get('jg_showgeotagging')
-          && $image->orig_exists
+          && $this->image->orig_exists
           && extension_loaded('exif')
           && function_exists('exif_read_data')
         )
@@ -867,8 +865,8 @@ class JoomGalleryViewDetail extends JoomGalleryView
 
           if($mapdata)
           {
-            $params->set('show_map', 1);
-            $this->assignRef('mapdata', $mapdata);
+            $this->params->set('show_map', 1);
+            $this->mapdata = $mapdata;
 
             $apikey = $this->_config->get('jg_geotaggingkey');
             $this->_doc->addScript('http'.(JUri::getInstance()->isSSL() ? 's' : '').'://maps.google.com/maps/api/js?sensor=false'.(!empty($apikey) ? '&amp;key='.$apikey : ''));
@@ -880,14 +878,14 @@ class JoomGalleryViewDetail extends JoomGalleryView
 
       // IPTC data
       if(    $this->_config->get('jg_showiptcdata')
-          && $image->orig_exists
+          && $this->image->orig_exists
         )
       {
         $iptcdata = $this->get('Iptcdata');
         if($iptcdata)
         {
-          $params->set('show_iptcdata', 1);
-          $this->assignRef('iptcdata', $iptcdata);
+          $this->params->set('show_iptcdata', 1);
+          $this->iptcdata = $iptcdata;
         }
       }
 
@@ -897,53 +895,48 @@ class JoomGalleryViewDetail extends JoomGalleryView
         if($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))
         {
           // Set voting_area to 3 to show only the message in template
-          $params->set('show_voting_area', 3);
-          $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
+          $this->params->set('show_voting_area', 3);
+          $this->params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
         }
         else
         {
-          if($this->_config->get('jg_votingonlyreg') && $image->owner == $this->_user->get('id'))
+          if($this->_config->get('jg_votingonlyreg') && $this->image->owner == $this->_user->get('id'))
           {
             // Set voting_area to 3 to show only the message in template
-            $params->set('show_voting_area', 3);
-            $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ON_OWN_IMAGES'));
+            $this->params->set('show_voting_area', 3);
+            $this->params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ON_OWN_IMAGES'));
           }
           else
           {
             // Set to 1 will show the voting area
             JHtml::_('behavior.framework');
-            $params->set('show_voting_area', 1);
-            $params->set('ajaxvoting', $this->_config->get('jg_ajaxrating'));
+            $this->params->set('show_voting_area', 1);
+            $this->params->set('ajaxvoting', $this->_config->get('jg_ajaxrating'));
             if($this->_config->get('jg_ratingdisplaytype') == 0)
             {
               // Set to 0 will show textual voting bar with radio buttons
-              $params->set('voting_display_type', 0);
+              $this->params->set('voting_display_type', 0);
 
-              $selected = floor($this->_config->get('jg_maxvoting') / 2) + 1;
-              $voting   = '';
+              $selected       = floor($this->_config->get('jg_maxvoting') / 2) + 1;
+              $this->voting   = '';
 
               $options = array();
               for($i = 1; $i <= $this->_config->get('jg_maxvoting'); $i++)
               {
                 $options[] = JHTML::_('select.option', $i);
                 // Delete options text manually, because it defaults to the value in JHTML::_('select.option'... ) if left empty
-                $options[$i-1]->text = '';
+                $options[$i - 1]->text = '';
               }
-              $voting .= JHTML::_('select.radiolist', $options, 'imgvote', null, 'value', 'text', $selected);
+              $this->voting .= JHTML::_('select.radiolist', $options, 'imgvote', null, 'value', 'text', $selected);
 
-              $maxvoting = $i-1;
-
-              $this->assignRef('voting', $voting);
-              $this->assignRef('maxvoting', $maxvoting);
+              $this->maxvoting = $i - 1;
             }
             else if($this->_config->get('jg_ratingdisplaytype') == 1)
             {
               // Set to 1 will show graphical voting bar with stars
-              $params->set('voting_display_type', 1);
+              $this->params->set('voting_display_type', 1);
 
-              $maxvoting = $this->_config->get('jg_maxvoting');
-
-              $this->assignRef('maxvoting', $maxvoting);
+              $this->maxvoting = $this->_config->get('jg_maxvoting');
             }
           }
         }
@@ -955,63 +948,62 @@ class JoomGalleryViewDetail extends JoomGalleryView
         $current_host   = $current_uri->getHost();
         $current_scheme = $current_uri->getScheme();
 
-        $params->set('show_bbcode', 1);
+        $this->params->set('show_bbcode', 1);
 
         if(    $this->_config->get('jg_bbcodelink') == 1
             || $this->_config->get('jg_bbcodelink') == 3
           )
         {
           // Ensure that the correct host and path is prepended
-          $uri = JFactory::getUri($image->img_src);
+          $uri = JFactory::getUri($this->image->img_src);
           $uri->setScheme($current_scheme);
           $uri->setHost($current_host);
-          $params->set('bbcode_img', str_replace('&', '&amp;', $uri->toString()));
+          $this->params->set('bbcode_img', str_replace('&', '&amp;', $uri->toString()));
         }
 
         if(    $this->_config->get('jg_bbcodelink') == 2
             || $this->_config->get('jg_bbcodelink') == 3
           )
         {
-          $url = JRoute::_('index.php?view=detail&id='.$image->id).JHTML::_('joomgallery.anchor');
+          $url = JRoute::_('index.php?view=detail&id='.$this->image->id).JHTML::_('joomgallery.anchor');
 
           // Ensure that the correct host and path is prepended
           $uri = JFactory::getUri($url);
           $uri->setScheme($current_scheme);
           $uri->setHost($current_host);
-          $params->set('bbcode_url', str_replace('&', '&amp;', $uri->toString()));
+          $this->params->set('bbcode_url', str_replace('&', '&amp;', $uri->toString()));
         }
       }
 
       if($this->_config->get('jg_showcomment'))
       {
-        $params->set('show_comments_block', 1);
+        $this->params->set('show_comments_block', 1);
 
         // Check whether user is allowed to comment
         if(      $this->_config->get('jg_anoncomment')
             || (!$this->_config->get('jg_anoncomment') && $this->_user->get('id'))
           )
         {
-          $params->set('commenting_allowed', 1);
+          $this->params->set('commenting_allowed', 1);
 
           $plugins          = $this->_mainframe->triggerEvent('onJoomGetCaptcha');
-          $event->captchas  = implode('', $plugins);
+          $this->event->captchas  = implode('', $plugins);
 
-          $this->_doc->addScriptDeclaration('    var jg_use_code = '.$params->get('use_easycaptcha', 0).';');
+          $this->_doc->addScriptDeclaration('    var jg_use_code = '.$this->params->get('use_easycaptcha', 0).';');
 
           if($this->_config->get('jg_bbcodesupport'))
           {
-            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
+            $this->params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
           }
           else
           {
-            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
+            $this->params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
           }
 
           if($this->_config->get('jg_smiliesupport'))
           {
-            $params->set('smiley_support', 1);
-            $smileys = JoomHelper::getSmileys();
-            $this->assignRef('smileys', $smileys);
+            $this->params->set('smiley_support', 1);
+            $this->smileys = JoomHelper::getSmileys();
           }
 
           JText::script('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_ALERT_ENTER_NAME_EMAIL');
@@ -1024,32 +1016,32 @@ class JoomGalleryViewDetail extends JoomGalleryView
            || (!$this->_user->get('username') && $this->_config->get('jg_showcommentsunreg') == 0)
           )
         {
-          $comments = $this->get('Comments');
+          $this->comments = $this->get('Comments');
 
-          if(!$comments)
+          if(!$this->comments)
           {
-            $params->set('no_comments_message', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_NOT_EXISTING'));
-            if($params->get('commenting_allowed'))
+            $this->params->set('no_comments_message', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_NOT_EXISTING'));
+            if($this->params->get('commenting_allowed'))
             {
-              $params->set('no_comments_message2', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_WRITE_FIRST'));
+              $this->params->set('no_comments_message2', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_WRITE_FIRST'));
             }
           }
           else
           {
-            $params->set('show_comments', 1);
+            $this->params->set('show_comments', 1);
 
             // Manager logged?
             if(    $this->_user->authorise('core.manage', _JOOM_OPTION))
             {
-              $params->set('manager_logged', 1);
+              $this->params->set('manager_logged', 1);
             }
 
-            foreach($comments as $key => $comment)
+            foreach($this->comments as $key => $comment)
             {
               // Display author name or notice that the author is a guest
               if($comment->userid)
               {
-                $comments[$key]->author = JHTML::_('joomgallery.displayname', $comment->userid, 'comment');
+                $this->comments[$key]->author = JHTML::_('joomgallery.displayname', $comment->userid, 'comment');
               }
               else
               {
@@ -1057,16 +1049,16 @@ class JoomGalleryViewDetail extends JoomGalleryView
                 {
                   if($comment->cmtname != JText::_('COM_JOOMGALLERY_COMMON_GUEST'))
                   {
-                    $comments[$key]->author = JText::sprintf('COM_JOOMGALLERY_DETAIL_COMMENTS_GUEST_NAME', $comment->cmtname);
+                    $this->comments[$key]->author = JText::sprintf('COM_JOOMGALLERY_DETAIL_COMMENTS_GUEST_NAME', $comment->cmtname);
                   }
                   else
                   {
-                    $comments[$key]->author = $comment->cmtname;
+                    $this->comments[$key]->author = $comment->cmtname;
                   }
                 }
                 else
                 {
-                  $comments[$key]->author = JText::_('COM_JOOMGALLERY_COMMON_GUEST');
+                  $this->comments[$key]->author = JText::_('COM_JOOMGALLERY_COMMON_GUEST');
                 }
               }
 
@@ -1085,57 +1077,38 @@ class JoomGalleryViewDetail extends JoomGalleryView
                   $text = str_replace($i, '<img src="'.$sm.'" border="0" alt="'.$i.'" title="'.$i.'" />', $text);
                 }
               }
-              $comments[$key]->text = $text;
+              $this->comments[$key]->text = $text;
             }
-
-            $this->assignRef('comments', $comments);
           }
         }
         else
         {
-          $params->set('no_comments_message', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_NOT_FOR_UNREG'));
+          $this->params->set('no_comments_message', JText::_('COM_JOOMGALLERY_DETAIL_COMMENTS_NOT_FOR_UNREG'));
         }
       }
 
       if($this->_config->get('jg_send2friend'))
       {
-        $params->set('show_send2friend_block', 1);
+        $this->params->set('show_send2friend_block', 1);
 
         if($this->_user->get('id'))
         {
-          $params->set('show_send2friend_form', 1);
+          $this->params->set('show_send2friend_form', 1);
         }
         else
         {
-          $params->set('send2friend_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
+          $this->params->set('send2friend_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
         }
       }
     }
 
-    $icons        = $this->_mainframe->triggerEvent('onJoomDisplayIcons', array('detail.image', $image));
-    $event->icons = implode('', $icons);
-    $afterDisplay = $this->_mainframe->triggerEvent('onJoomAfterDisplayDetailImage', array($image));
-    $event->afterDisplay = implode('', $afterDisplay);
+    $icons                     = $this->_mainframe->triggerEvent('onJoomDisplayIcons', array('detail.image', $this->image));
+    $this->event->icons        = implode('', $icons);
+    $afterDisplay              = $this->_mainframe->triggerEvent('onJoomAfterDisplayDetailImage', array($this->image));
+    $this->event->afterDisplay = implode('', $afterDisplay);
 
     // Set redirect url used in editor links to redirect back to favourites view after edit/delete
-    $redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
-
-    $this->assignRef('params',          $params);
-    $this->assignRef('pagination',      $pagination);
-    $this->assignRef('image',           $image);
-    $this->assignRef('images',          $images);
-    $this->assignRef('extra',           $extra);
-    $this->assignRef('slideshow',       $slideshow);
-    $this->assignRef('slider',          $slider);
-    $this->assignRef('toggler',         $toggler);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('event',           $event);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
-    $this->assignRef('redirect',        $redirect);
+    $this->redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
 
     $this->_doc->addScript($this->_ambit->getScript('detail.js'));
 

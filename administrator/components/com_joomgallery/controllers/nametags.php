@@ -60,7 +60,7 @@ class JoomGalleryControllerNametags extends JoomGalleryController
           ->where('(u.id IS NULL OR i.id IS NULL)');
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=nametags'), $this->_db->getErrorMsg(), 'error');
       return;

@@ -32,12 +32,12 @@ class JoomGalleryViewImage extends JoomGalleryView
   {
     jimport('joomla.filesystem.file');
 
-    $type     = JRequest::getWord('type', 'thumb');
-    $download = JRequest::getCmd('download');
+    $type     = $this->_mainframe->input->getWord('type', 'thumb');
+    $download = $this->_mainframe->input->getCmd('download');
 
     $crop_image = false;
-    $cropwidth  = JRequest::getInt('width');
-    $cropheight = JRequest::getInt('height');
+    $cropwidth  = $this->_mainframe->input->getInt('width');
+    $cropheight = $this->_mainframe->input->getInt('height');
     if($cropwidth && $cropheight)
     {
       $crop_image = true;
@@ -45,7 +45,7 @@ class JoomGalleryViewImage extends JoomGalleryView
 
     $model = $this->getModel();
 
-    if(!$image = $model->getImage(JRequest::getInt('id')))
+    if(!$image = $model->getImage($this->_mainframe->input->getInt('id')))
     {
       return $this->displayError($model->getError());
     }
@@ -205,9 +205,9 @@ class JoomGalleryViewImage extends JoomGalleryView
       $img_resource = null;
       if($crop_image)
       {
-        $croppos  = JRequest::getInt('pos');
-        $offsetx  = JRequest::getInt('x');
-        $offsety  = JRequest::getInt('y');
+        $croppos  = $this->_mainframe->input->getInt('pos');
+        $offsetx  = $this->_mainframe->input->getInt('x');
+        $offsety  = $this->_mainframe->input->getInt('y');
         $img_resource = $model->cropImage($img, $cropwidth, $cropheight, $croppos, $offsetx, $offsety);
       }
 
@@ -234,7 +234,7 @@ class JoomGalleryViewImage extends JoomGalleryView
             imagepng($img_resource);
             break;
           case 'image/jpeg':
-            $quali = JRequest::getInt('quali', 95);
+            $quali = $this->_mainframe->input->getInt('quali', 95);
             imagejpeg($img_resource, null, $quali);
             break;
           default:
@@ -261,9 +261,9 @@ class JoomGalleryViewImage extends JoomGalleryView
   {
     $this->_doc->setMimeEncoding('image/jpeg');
 
-    $type   = JRequest::getWord('type', 'thumb');
-    $width  = JRequest::getInt('width');
-    $height = JRequest::getInt('height');
+    $type   = $this->_mainframe->input->getWord('type', 'thumb');
+    $width  = $this->_mainframe->input->getInt('width');
+    $height = $this->_mainframe->input->getInt('height');
 
     if(!$width || !$height)
     {

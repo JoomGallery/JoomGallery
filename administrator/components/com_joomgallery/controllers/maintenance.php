@@ -13,6 +13,8 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * JoomGallery Maintenance Controller
  *
@@ -39,7 +41,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
     }
 
     // Set view
-    JRequest::setVar('view', 'maintenance');
+    $this->input->set('view', 'maintenance');
 
     $this->registerTask('parsefolders',             'check');
     $this->registerTask('checkimages',              'check');
@@ -120,7 +122,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
    */
   public function deleteCompletely()
   {
-    $mainframe  = JFactory::getApplication('administrator');
+    $mainframe  = JFactory::getApplication();
     $categories = $mainframe->getUserState('joom.maintenance.delete.categories');
     $images     = $mainframe->getUserState('joom.maintenance.delete.images');
 
@@ -156,7 +158,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
         // to delete as well as their sub-categories.
         if($row->load($image))
         {
-          JRequest::setVar('cid', array($image));
+          $this->input->post->set('cid', array($image));
           if($model->delete(false))
           {
             $img_count++;
@@ -184,7 +186,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
         // to delete as well as their sub-categories.
         if($row->load($category))
         {
-          JRequest::setVar('cid', array($category));
+          $this->input->post->set('cid', array($category));
           if($model->deletecategory(false, false))
           {
             $cat_count++;
@@ -335,7 +337,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
    */
   public function addOrphan()
   {
-    $tab    = JRequest::getCmd('tab');
+    $tab    = $this->input->getCmd('tab');
 
     if($tab == 'orphans')
     {
@@ -378,7 +380,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
    */
   public function addOrphans()
   {
-    $tab    = JRequest::getCmd('tab');
+    $tab    = $this->input->getCmd('tab');
 
     if($tab == 'orphans')
     {
@@ -389,7 +391,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
       $tab  = '';
     }
 
-    $model  = $this->getModel('maintenance');
+    $model = $this->getModel('maintenance');
     if(!$count = $model->addOrphans())
     {
       $type = 'error';
@@ -421,7 +423,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
    */
   public function addOrphanedFolder()
   {
-    $tab    = JRequest::getCmd('tab');
+    $tab    = $this->input->getCmd('tab');
 
     if($tab == 'folders')
     {
@@ -464,7 +466,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
    */
   public function addOrphanedFolders()
   {
-    $tab    = JRequest::getCmd('tab');
+    $tab    = $this->input->getCmd('tab');
 
     if($tab == 'folders')
     {
@@ -508,7 +510,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
   public function recreate()
   {
     // Load the necessary image IDs
-    $cids = JRequest::getVar('cid', array(), '', 'array');
+    $cids = $this->input->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -516,7 +518,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
       return;
     }
 
-    JArrayHelper::toInteger($cids);
+    ArrayHelper::toInteger($cids);
 
     $query = $this->_db->getQuery(true)
           ->select('refid')
@@ -530,7 +532,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
       return;
     }
 
-    JRequest::setVar('cid', $cids);
+    $this->input->set('cid', $cids);
 
     // Recreate the images
     $model  = $this->getModel('images');
@@ -591,9 +593,9 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
                 ->where('refid = '.$key)
                 ->where('type = 0');
           $this->_db->setQuery($query);
-          if(!$this->_db->query())
+          if(!$this->_db->execute())
           {
-            JError::raiseWarning(500, $this->_db->getErrorMsg());
+            JFactory::getApplication()->enqueueMessage($this->_db->getErrorMsg(), 'error');
           }
         }
       }
@@ -798,7 +800,7 @@ class JoomGalleryControllerMaintenance extends JoomGalleryController
   {
     $model = $this->getModel('maintenancecheck');
 
-    $task   = JRequest::getCmd('task');
+    $task   = $this->input->getCmd('task');
 
     require_once JPATH_COMPONENT.'/helpers/refresher.php';
 

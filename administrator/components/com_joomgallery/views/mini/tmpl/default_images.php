@@ -82,7 +82,7 @@
 <?php endif; ?>
   </script>
   <div class="center">
-    <form action="index.php?option=<?php echo _JOOM_OPTION; ?>&amp;view=mini&amp;tmpl=component&amp;e_name=<?php echo $this->e_name; ?>&amp;object=<?php echo JRequest::getVar('object'); ?>" name="adminForm" method="post" onsubmit="javascript:ajaxRequest('<?php echo 'index.php?option='._JOOM_OPTION.'&view=mini&format=json'; ?>', 1, 'search=' + this.search.value); return false;">
+    <form action="index.php?option=<?php echo _JOOM_OPTION; ?>&amp;view=mini&amp;tmpl=component&amp;e_name=<?php echo $this->e_name; ?>&amp;object=<?php echo $this->_mainframe->input->get('object'); ?>" name="adminForm" method="post" onsubmit="javascript:ajaxRequest('<?php echo 'index.php?option='._JOOM_OPTION.'&view=mini&format=json'; ?>', 1, 'search=' + this.search.value); return false;">
       <div id="jg_bu_pagelinks" class="pageslinks">
         <?php echo $this->loadTemplate('pagination'); ?>
       </div>

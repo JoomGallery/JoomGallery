@@ -13,6 +13,8 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Categories model
  *
@@ -228,7 +230,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
   protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
   {
     // Handle the optional arguments.
-    $options['control'] = JArrayHelper::getValue($options, 'control', false);
+    $options['control'] = ArrayHelper::getValue($options, 'control', false);
 
     // Get the form.
     JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
@@ -656,7 +658,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
   public function getOrderedCategories($categories, $ordering = 'lft', $direction = 'ASC')
   {
     // Sanitise variables
-    JArrayHelper::toInteger($categories);
+    ArrayHelper::toInteger($categories);
     if(!in_array($ordering, $this->filter_fields))
     {
       $ordering = 'lft';
@@ -687,7 +689,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
    */
   public function publish($cid, $publish = 1, $task = 'publish')
   {
-    JArrayHelper::toInteger($cid);
+    ArrayHelper::toInteger($cid);
     $publish = intval($publish);
     $count = count($cid);
 
@@ -909,7 +911,7 @@ class JoomGalleryModelCategories extends JoomGalleryModel
    * @param   string  $default    The default value for the variable if not found (optional)
    * @param   string  $type       Filter for the variable, for valid values see {@link JFilterInput::clean()} (optional)
    * @param   boolean $resetPage  If true, the limitstart in request is set to zero if the state has changed
-   * @return  The requested user state
+   * @return  mixed  The request user state
    * @since   2.0
    */
   public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
@@ -918,11 +920,11 @@ class JoomGalleryModelCategories extends JoomGalleryModel
 
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
-    $new_state = JRequest::getVar($request, null, 'default', $type);
+    $new_state = $this->_mainframe->input->get($request, null, $type);
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
-      JRequest::setVar('limitstart', 0);
+      $this->_mainframe->input->set('limitstart', 0);
     }
 
     // Save the new value only if it was set in this request.

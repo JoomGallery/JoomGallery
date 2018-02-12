@@ -13,6 +13,8 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Maintenance model
  *
@@ -255,7 +257,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
   {
     $total = 0;
 
-    switch(JRequest::getCmd('tab'))
+    switch($this->_mainframe->input->getCmd('tab'))
     {
       case 'categories':
         // Let's load the categories if they don't already exist
@@ -333,7 +335,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   protected function populateState($default_ordering = 'a.id', $default_direction = 'ASC')
   {
-    switch(JRequest::getCmd('tab'))
+    switch($this->_mainframe->input->getCmd('tab'))
     {
       case 'categories':
         $search     = $this->getUserStateFromRequest('joom.maintenance.categories.filter.search', 'filter_search');
@@ -465,9 +467,9 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
   {
     jimport('joomla.filesystem.file');
 
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(), 'array');
 
-    JArrayHelper::toInteger($cids);
+    ArrayHelper::toInteger($cids);
 
     if($refids)
     {
@@ -574,7 +576,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
             ->delete($this->_db->qn(_JOOM_TABLE_COMMENTS))
             ->where('cmtpic = '.$cid);
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_DELETE_COMMENTS', $cid), 'error');
       }
@@ -584,7 +586,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
             ->delete($this->_db->qn(_JOOM_TABLE_NAMESHIELDS))
             ->where('npicid = '.$cid);
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_DELETE_NAMETAGS', $cid), 'error');
       }
@@ -612,7 +614,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
             ->where('refid = '.$cid)
             ->where('type  = 0');
         $this->_db->setQuery($query);
-        if(!$this->_db->query())
+        if(!$this->_db->execute())
         {
           $this->_mainframe->enqueueMessage($this->_db->getErrorMsg(), 'error');
         }
@@ -636,9 +638,9 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
   {
     jimport('joomla.filesystem.file');
 
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(), 'array');
 
-    JArrayHelper::toInteger($cids);
+    ArrayHelper::toInteger($cids);
 
     if(!$recursion_level)
     {
@@ -759,7 +761,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
         $this->_mainframe->setUserState('joom.maintenance.delete.categories', $categories_to_delete);
 
         // Next level
-        JRequest::setVar('cid', $categories);
+        $this->_mainframe->input->post->set('cid', $categories);
         $this->deletecategory($recursion_level + 1, false);
       }
 
@@ -799,7 +801,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
               ->where('refid = '.$cid)
               ->where('type != 0');
         $this->_db->setQuery($query);
-        if(!$this->_db->query())
+        if(!$this->_db->execute())
         {
           $this->_mainframe->enqueueMessage($this->_db->getErrorMsg(), 'error');
         }
@@ -874,7 +876,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $img_count  = $this->_mainframe->getUserState('joom.setalias.imgcount');
     $cat_count  = $this->_mainframe->getUserState('joom.setalias.catcount');
 
-    $start      = (JRequest::getBool('images') || JRequest::getBool('categories'));
+    $start      = ($this->_mainframe->input->getBool('images') || $this->_mainframe->input->getBool('categories'));
 
     // Before first loop check for selected images and categories
     if(isset($images[0]) && strpos(',', $images[0]) !== false)
@@ -1008,8 +1010,8 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function setUser()
   {
-    $user = JRequest::getInt('newuser', 0);
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $user = $this->_mainframe->input->getInt('newuser', 0);
+    $cids = $this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1018,7 +1020,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       return false;
     }
 
-    JArrayHelper::toInteger($cids);
+    ArrayHelper::toInteger($cids);
     $cid_string = implode(',', $cids);
 
     // Get selected image IDs
@@ -1041,7 +1043,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           ->set('owner = '.$user)
           ->where('id IN ('.implode(',', $ids).')');
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 
@@ -1055,7 +1057,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           ->where('id IN ('.$cid_string.')')
           ->where('type = 0');
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 
@@ -1073,8 +1075,8 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function setCategoryUser()
   {
-    $user = JRequest::getInt('newuser', 0);
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $user = $this->_mainframe->input->getInt('newuser', 0);
+    $cids =$this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1083,7 +1085,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       return false;
     }
 
-    JArrayHelper::toInteger($cids);
+    ArrayHelper::toInteger($cids);
     $cid_string = implode(',', $cids);
 
     // Get selected category IDs
@@ -1106,7 +1108,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           ->set('owner = '.$user)
           ->where('cid IN ('.implode(',', $ids).')');
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 
@@ -1120,7 +1122,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           ->where('id IN ('.$cid_string.')')
           ->where('type != 0');
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 
@@ -1140,7 +1142,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
   {
     jimport('joomla.filesystem.file');
 
-    $orphans = JRequest::getVar('cid', array(), 'post', 'array');
+    $orphans = $this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($orphans))
     {
@@ -1162,7 +1164,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
 
       if(!JFile::delete($row->fullpath))
       {
-        JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_DELETE_FILE_VIA_FTP', $row->fullpath));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_DELETE_FILE_VIA_FTP', $row->fullpath), 'error');
       }
       else
       {
@@ -1174,7 +1176,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
                 ->where('refid = '.$row->refid)
                 ->where('type = 0');
           $this->_db->setQuery($query);
-          if(!$this->_db->query())
+          if(!$this->_db->execute())
           {
             $this->setError($this->_db->getErrorMsg());
 
@@ -1204,7 +1206,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function deleteOrphanedFolder()
   {
-    $folders = JRequest::getVar('cid', array(), 'post', 'array');
+    $folders = $this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($folders))
     {
@@ -1226,7 +1228,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
 
       if(!JFolder::delete($row->fullpath))
       {
-        JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_DELETE_FOLDER_VIA_FTP', $row->fullpath));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_DELETE_FOLDER_VIA_FTP', $row->fullpath), 'error');
       }
       else
       {
@@ -1238,7 +1240,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
                 ->where('refid = '.$row->refid)
                 ->where('type != 0');
           $this->_db->setQuery($query);
-          if(!$this->_db->query())
+          if(!$this->_db->execute())
           {
             $this->setError($this->_db->getErrorMsg());
 
@@ -1269,7 +1271,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function addOrphans()
   {
-    $cids = JRequest::getVar('cid', array(), '', 'array');
+    $cids = $this->_mainframe->input->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1286,7 +1288,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     {
       if(!$image->load($id))
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_IMAGE_WITH_ID_NOT_FOUND', $id));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_IMAGE_WITH_ID_NOT_FOUND', $id), 'notice');
         unset($cids[$key]);
         continue;
       }
@@ -1310,7 +1312,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       return false;
     }
 
-    JRequest::setVar('cid', $orphans);
+    $this->_mainframe->input->set('cid', $orphans);
 
     return $this->addOrphan();
   }
@@ -1323,7 +1325,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function addOrphan()
   {
-    $cids = JRequest::getVar('cid', array(), '', 'array');
+    $cids = $this->_mainframe->input->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1339,7 +1341,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     {
       if(!$orphan->load($id))
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ORPHAN_WITH_ID_NOT_FOUND', $id));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ORPHAN_WITH_ID_NOT_FOUND', $id), 'notice');
         continue;
       }
 
@@ -1358,7 +1360,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       $this->_db->setQuery($query);
       if(!$image = $this->_db->loadObject())
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_CORRUPT_IMAGE_WITH_ID_NOT_FOUND', $id, $orphan->refid));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_CORRUPT_IMAGE_WITH_ID_NOT_FOUND', $id, $orphan->refid), 'notice');
         continue;
       }
 
@@ -1380,7 +1382,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           }
           else
           {
-            JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_SUGGESTED_IMAGE_NOT_CORRUPT', $id, $orphan->refid));
+            $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_SUGGESTED_IMAGE_NOT_CORRUPT', $id, $orphan->refid), 'notice');
             continue;
           }
         }
@@ -1394,7 +1396,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
 
       if(!JFile::move($src, $dest))
       {
-        JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_MOVE_FILE', $src, $dest));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_NOT_MOVE_FILE', $src, $dest), 'error');
         continue;
       }
 
@@ -1407,7 +1409,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
             ->where('type = 0');
 
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->setError($this->_db->getErrorMsg());
 
@@ -1436,7 +1438,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function addOrphanedFolders()
   {
-    $cids = JRequest::getVar('cid', array(), '', 'array');
+    $cids = $this->_mainframe->input->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1452,7 +1454,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     {
       if(!$category->load($id))
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_CATEGORY_WITH_ID_NOT_FOUND', $id));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_CATEGORY_WITH_ID_NOT_FOUND', $id), 'notice');
         unset($cids[$key]);
         continue;
       }
@@ -1476,7 +1478,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       return false;
     }
 
-    JRequest::setVar('cid', $orphans);
+    $this->_mainframe->input->set('cid', $orphans);
 
     return $this->addOrphanedFolder();
   }
@@ -1489,7 +1491,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function addOrphanedFolder()
   {
-    $cids = JRequest::getVar('cid', array(), '', 'array');
+    $cids = $this->_mainframe->input->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1506,7 +1508,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     {
       if(!$orphan->load($id))
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_FOLDER_WITH_ID_NOT_FOUND', $id));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_FOLDER_WITH_ID_NOT_FOUND', $id), 'notice');
         continue;
       }
 
@@ -1525,7 +1527,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       $this->_db->setQuery($query);
       if(!$category = $this->_db->loadObject())
       {
-        JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_CORRUPT_CATEGORY_WITH_ID_NOT_FOUND', $id, $orphan->refid));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_CORRUPT_CATEGORY_WITH_ID_NOT_FOUND', $id, $orphan->refid), 'notice');
         continue;
       }
 
@@ -1547,7 +1549,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
           }
           else
           {
-            JError::raiseNotice(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_SUGGESTED_CATEGORY_NOT_CORRUPT', $id, $orphan->refid));
+            $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_SUGGESTED_CATEGORY_NOT_CORRUPT', $id, $orphan->refid), 'notice');
             continue;
           }
         }
@@ -1559,7 +1561,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
 
       if(JFolder::move(JPath::clean($src), JPath::clean($dest)) !== true)
       {
-        JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_COULD_NOT_MOVE_FOLDER', $src, $dest));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_OF_MSG_COULD_NOT_MOVE_FOLDER', $src, $dest), 'error');
         continue;
       }
 
@@ -1572,7 +1574,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
             ->where('type != 0');
 
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->setError($this->_db->getErrorMsg());
 
@@ -1601,7 +1603,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function applySuggestions()
   {
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1638,7 +1640,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $moved = 0;
     if(count($move))
     {
-      JRequest::setVar('cid', $move);
+      $this->_mainframe->input->set('cid', $move);
       $moved = $this->addOrphan();
       if($moved === false)
       {
@@ -1649,7 +1651,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $deleted = 0;
     if(count($delete))
     {
-      JRequest::setVar('cid', $delete);
+      $this->_mainframe->input->post->set('cid', $delete);
       $deleted = $this->deleteOrphan();
       if($deleted === false)
       {
@@ -1669,7 +1671,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function applyFolderSuggestions()
   {
-    $cids = JRequest::getVar('cid', array(), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(), 'array');
 
     if(!count($cids))
     {
@@ -1705,7 +1707,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $moved = 0;
     if(count($move))
     {
-      JRequest::setVar('cid', $move);
+      $this->_mainframe->input->set('cid', $move);
       $moved = $this->addOrphanedFolder();
       if($moved === false)
       {
@@ -1716,7 +1718,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $deleted = 0;
     if(count($delete))
     {
-      JRequest::setVar('cid', $delete);
+      $this->_mainframe->input->post->set('cid', $delete);
       $deleted = $this->deleteOrphanedFolder();
       if($deleted === false)
       {
@@ -1735,8 +1737,8 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    */
   public function create()
   {
-    $cids   = JRequest::getVar('cid', array(), '', 'array');
-    $types  = JRequest::getVar('type', array('thumb', 'img', 'orig'), '', 'array');
+    $cids   = $this->_mainframe->input->get('cid', array(), 'array');
+    $types  = $this->_mainframe->input->get('type', array('thumb', 'img', 'orig'), '', 'array');
 
     if(!count($cids))
     {
@@ -1782,7 +1784,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
               ->where('refid = '.$cid)
               ->where('type != 0');
         $this->_db->setQuery($query);
-        if(!$this->_db->query())
+        if(!$this->_db->execute())
         {
           $this->setError($this->_db->getErrorMsg());
 
@@ -1819,9 +1821,9 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
                 '._JOOM_TABLE_VOTES;
 
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
-      JError::raiseWarning(500, $this->_db->getErrorMsg());
+      $this->_mainframe->enqueueMessage($this->_db->getErrorMsg(), 'error');
 
       return false;
     }
@@ -2233,21 +2235,21 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     if(JFolder::exists($orig_path) && !JFolder::delete($orig_path))
     {
       $error = true;
-      JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $orig_path));
+      $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $orig_path), 'error');
     }
 
     // Delete the folder of the category for the detail images
     if(JFolder::exists($img_path) && !JFolder::delete($img_path))
     {
       $error = true;
-      JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $img_path));
+      $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $img_path), 'error');
     }
 
     // Delete the folder of the category for the thumbnails
     if(JFolder::exists($thumb_path) && !JFolder::delete($thumb_path))
     {
       $error = true;
-      JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $thumb_path));
+      $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_MAIMAN_MSG_ERROR_DELETING_DIRECTORY', $thumb_path), 'error');
     }
 
     if($error)
@@ -2268,7 +2270,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
    * @param   string  $default    The default value for the variable if not found (optional)
    * @param   string  $type       Filter for the variable, for valid values see {@link JFilterInput::clean()} (optional)
    * @param   boolean $resetPage  If true, the limitstart in request is set to zero if the state has changed
-   * @return  The requested user state
+   * @return  mixed The requested user state
    * @since   2.0
    */
   public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
@@ -2276,11 +2278,11 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
     $app = JFactory::getApplication();
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
-    $new_state = JRequest::getVar($request, null, 'default', $type);
+    $new_state = $this->_mainframe->input->get($request, null, $type);
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
-      JRequest::setVar('limitstart', 0);
+      $this->_mainframe->input->set('limitstart', 0);
     }
 
     // Save the new value only if it was set in this request.

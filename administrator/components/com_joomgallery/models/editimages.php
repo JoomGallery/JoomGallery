@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.form.form');
-
 /**
  * Edit multiple images model
  *
@@ -38,7 +36,7 @@ class JoomGalleryModelEditimages extends JoomGalleryModel
    */
   protected function _buildQuery()
   {
-    $cid = JRequest::getVar('cid', array(), '', 'array');
+    $cid = $this->_mainframe->input->get('cid', array(), 'array');
 
     $query = $this->_db->getQuery(true)
           ->select('a.*, c.cid AS category_id, c.name AS category_name, g.title AS groupname')
@@ -80,7 +78,8 @@ class JoomGalleryModelEditimages extends JoomGalleryModel
     JForm::addFieldPath(JPATH_COMPONENT.'/models/fields');
     JForm::addRulePath(JPATH_COMPONENT.'/models/rules');
 
-    $form = JForm::getInstance(_JOOM_OPTION.'.editimages', 'editimages');
+    $form = JForm::getInstance(_JOOM_OPTION.'.editimages', 'editimages', array('control' => 'jform'));
+
     if(empty($form))
     {
       return false;

@@ -56,23 +56,20 @@ class JoomGalleryViewControl extends JoomGalleryView
 
     if($this->_config->get('jg_checkupdate'))
     {
-      $available_extensions = JoomExtensions::getAvailableExtensions();
+      $this->available_extensions = JoomExtensions::getAvailableExtensions();
       $this->params->set('url_fopen_allowed', @ini_get('allow_url_fopen'));
       $this->params->set('curl_loaded', extension_loaded('curl'));
 
       // If there weren't any available extensions found
       // loading the RSS feed wasn't successful
-      if(count($available_extensions))
+      if(count($this->available_extensions))
       {
-        $installed_extensions = JoomExtensions::getInstalledExtensions();
-        $this->assignRef('available_extensions',  $available_extensions);
-        $this->assignRef('installed_extensions',  $installed_extensions);
+        $this->installed_extensions = JoomExtensions::getInstalledExtensions();
         $this->params->set('show_available_extensions', 1);
 
-        $dated_extensions = JoomExtensions::checkUpdate();
-        if(count($dated_extensions))
+        $this->dated_extensions = JoomExtensions::checkUpdate();
+        if(count($this->dated_extensions))
         {
-          $this->assignRef('dated_extensions', $dated_extensions);
           $this->params->set('dated_extensions', 1);
         }
         else

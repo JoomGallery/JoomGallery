@@ -33,11 +33,11 @@ class JoomGalleryControllerCategories extends JoomGalleryController
 
     $model = $this->getModel('categories');
 
-    $action     = JRequest::getCmd('action');
-    $filter     = JRequest::getInt('filter');
-    $search     = JRequest::getString('searchstring');
-    $limitstart = JRequest::getInt('more');
-    $current    = JRequest::getInt('current');
+    $action     = $this->input->getCmd('action');
+    $filter     = $this->input->getInt('filter');
+    $search     = $this->input->getString('searchstring');
+    $limitstart = $this->input->getInt('more');
+    $current    = $this->input->getInt('current');
 
     echo new JJsonResponse($model->getAllowedCategories($action, $filter, $search, $limitstart, $current));
   }
@@ -55,9 +55,9 @@ class JoomGalleryControllerCategories extends JoomGalleryController
     JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
 		// Get the arrays from the request
-		$pks	          = JRequest::getVar('cid',	null,	'post',	'array');
-		$order          = JRequest::getVar('order',	null, 'post', 'array');
-		$originalOrder  = explode(',', JRequest::getString('original_order_values'));
+    $pks	          = $this->input->post->get('cid',	null,	'array');
+    $order          = $this->input->post->get('order',	null, 'array');
+    $originalOrder  = explode(',', $this->input->getString('original_order_values'));
 
 		// Make sure something has changed
 		if($order !== $originalOrder)

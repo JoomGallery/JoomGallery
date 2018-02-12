@@ -231,10 +231,10 @@ label#rules-lbl {
   margin: 0 4px 4px 4px;
 }
 
-#editimages-form #imgtitlestartcounter,
-#editimages-form #txtclearvotes,
-#editimages-form #txtclearhits,
-#editimages-form #txtcleardownloads {
+#editimages-form #jform_imgtitlestartcounter,
+#editimages-form #jform_txtclearvotes,
+#editimages-form #jform_txtclearhits,
+#editimages-form #jform_txtcleardownloads {
   width: auto;  
 }
 

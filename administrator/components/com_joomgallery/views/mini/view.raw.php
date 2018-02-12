@@ -110,7 +110,7 @@ class JoomGalleryViewMini extends JoomGalleryView
       $this->total = number_format($this->total, 0, JText::_('COM_JOOMGALLERY_COMMON_DECIMAL_SEPARATOR'), JText::_('COM_JOOMGALLERY_COMMON_THOUSANDS_SEPARATOR'));
 
       // Get the current page
-      $this->page = JRequest::getInt('page', 0);
+      $this->page = $this->_mainframe->input->getInt('page', 0);
       if($this->page > $this->totalpages)
       {
         $this->page = $this->totalpages;
@@ -122,15 +122,15 @@ class JoomGalleryViewMini extends JoomGalleryView
 
       // Limitstart
       $limitstart = ($this->page - 1) * $limit;
-      JRequest::setVar('limitstart', $limitstart);
+      $this->_mainframe->input->set('limitstart', $limitstart);
 
       if($this->total <= $limit)
       {
         $limitstart = 0;
-        JRequest::setVar('limitstart', $limitstart);
+        $this->_mainframe->input->set('limitstart', $limitstart);
       }
 
-      JRequest::setVar('limit', $limit);
+      $this->_mainframe->input->set('limit', $limit);
 
       require_once JPATH_COMPONENT_ADMINISTRATOR.'/helpers/pagination.php';
       $onclick = 'javascript:ajaxRequest(\'index.php?option='._JOOM_OPTION.'&view=mini&format=json\', %u); return false;';

@@ -21,7 +21,7 @@ $this->_doc->addStyleSheet($this->_ambit->getStyleSheet('joomgallery.css')); ?>
       </div>
       <div>
         <?php echo implode('', $this->_mainframe->triggerEvent('onJoomGetCaptcha', array('report'))); ?>
-        <input type="hidden" name="id" value="<?php echo JRequest::getInt('id'); ?>" />
+        <input type="hidden" name="id" value="<?php echo $this->_mainframe->input->getInt('id'); ?>" />
         <input type="hidden" name="task" value="report.send" />
         <input type="hidden" name="tmpl" value="component" />
       </div>

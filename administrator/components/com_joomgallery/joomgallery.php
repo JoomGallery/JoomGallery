@@ -15,11 +15,13 @@ defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
 JHtml::_('behavior.tabstate');
 
-if(version_compare(JVERSION, '4.0', 'ge') || version_compare(JVERSION, '3.0', 'lt'))
+if(version_compare(JVERSION, '5.0', 'ge') || version_compare(JVERSION, '3.0', 'lt'))
 {
   JToolBarHelper::title('JoomGallery');
 
-  return JError::raiseWarning(500, 'JoomGallery 3.x is only compatible to Joomla! 3.x');
+  JFactory::getApplication()->enqueueMessage('JoomGallery 4.x is only compatible to Joomla! 4.x', 'error');
+
+  return;
 }
 
 // Require the base controller and the defines
@@ -29,17 +31,22 @@ require_once(JPATH_COMPONENT.'/includes/defines.php');
 // Access check
 if(!JFactory::getUser()->authorise('core.manage', _JOOM_OPTION))
 {
-  return JError::raiseWarning(404, JText::_('JERROR_ALERTNOAUTHOR'));
+  JFactory::getApplication()->enqueueMessage(JText::_('JERROR_ALERTNOAUTHOR'), 'error');
+
+  return;
 }
 
 // Enable JoomGallery plugins
 JPluginHelper::importPlugin('joomgallery');
 
+$input = JFactory::getApplication()->input;
+
 // Require specific controller if requested
-if($controller = JRequest::getCmd('controller', 'control'))
+if($controller = $input->getCmd('controller', 'control'))
 {
-  $format = JRequest::getCmd('format', 'html');
-  $path = JPATH_COMPONENT.'/controllers/'.$controller.(($format != 'html') ?  '.'.$format : '').'.php';
+  $format = $input->getCmd('format', 'html');
+  $path   = JPATH_COMPONENT.'/controllers/'.$controller.(($format != 'html') ?  '.'.$format : '').'.php';
+
   if(file_exists($path))
   {
     require_once $path;

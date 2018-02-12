@@ -37,12 +37,9 @@ class JoomGalleryViewMove extends JoomGalleryView
     JToolbarHelper::spacer();
 
     $catid = $this->_mainframe->getUserStateFromRequest('joom.move.catid', 'catid', 0, 'int');
-    $items = $this->get('Images');
-    $lists = array();
-    $lists['cats'] = JHTML::_('joomselect.categorylist', $catid, 'catid', 'class="inputbox" size="1" ', null, '- ', null, 'joom.upload');
-
-    $this->assignRef('items', $items);
-    $this->assignRef('lists', $lists);
+    $this->items = $this->get('Images');
+    $this->lists = array();
+    $this->lists['cats'] = JHTML::_('joomselect.categorylist', $catid, 'catid', 'class="inputbox" size="1" ', null, '- ', null, 'joom.upload');
 
     parent::display($tpl);
   }

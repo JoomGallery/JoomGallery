@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.application.component.controller');
-
 /**
  * JoomGallery Component Controller
  *
@@ -70,9 +68,6 @@ class JoomGalleryController extends JControllerLegacy
 
     $this->_ambit     = JoomAmbit::getInstance();
     $this->_config    = JoomConfig::getInstance();
-
-    /*$this->_mainframe = JFactory::getApplication('site');
-    $this->_user      = JFactory::getUser();*/
   }
 
   /**
@@ -86,15 +81,15 @@ class JoomGalleryController extends JControllerLegacy
   public function display($cachable = false, $urlparams = false)
   {
     // Set a default view if none exists
-    if(!$view = JRequest::getCmd('view'))
+    if(!$view = $this->input->getCmd('view'))
     {
-      JRequest::setVar('view', 'gallery');
+      $this->input->set('view', 'gallery');
     }
 
     // Increase hit counter in detail view if image view isn't used
     if($view == 'detail' && $this->_config->get('jg_use_real_paths'))
     {
-      $this->getModel('image')->hit(JRequest::getInt('id'));
+      $this->getModel('image')->hit($this->input->getInt('id'));
     }
 
     parent::display($cachable, $urlparams);
@@ -144,7 +139,7 @@ class JoomGalleryController extends JControllerLegacy
                   ->where('zipname = '.$this->_db->q($row->zipname));
             $this->_db->setQuery($query);
           }
-          $this->_db->query();
+          $this->_db->execute();
         }
       }
     }
@@ -171,6 +166,6 @@ class JoomGalleryController extends JControllerLegacy
 
     $type = $this->_config->get('jg_downloadfile') ? 'orig' : 'img';
 
-    $this->setRedirect(JRoute::_('index.php?view=image&format=raw&id='.JRequest::getInt('id').'&download=1&type='.$type, false));
+    $this->setRedirect(JRoute::_('index.php?view=image&format=raw&id='.$this->input->getInt('id').'&download=1&type='.$type, false));
   }
 }

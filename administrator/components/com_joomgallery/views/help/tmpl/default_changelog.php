@@ -1,5 +1,5 @@
 <?php defined('_JEXEC') or die('Direct Access to this location is not allowed.');
-JHtml::_('bootstrap.modal', 'jg-changelog-popup'); ?>
+JHtmlBootstrap::renderModal('jg-changelog-popup'); ?>
 <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="PopupChangelogModalLabel" aria-hidden="true" id="jg-changelog-popup">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -30,29 +30,29 @@ class JoomGalleryViewCategory extends JoomGalleryView
    */
   public function display($tpl = null)
   {
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Prepare params for header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
     // Check whether this is the active menu item. This is a
     // special case in addition to code in constructor of parent class
     // because here we have to check the category ID, too.
     $active = $this->_mainframe->getMenu()->getActive();
-    if(!$active || strpos($active->link, '&catid='.JRequest::getInt('catid')) === false)
+    if(!$active || strpos($active->link, '&catid='.$this->_mainframe->input->getInt('catid')) === false)
     {
       // Get the default layout from the configuration
       if($layout = $this->_config->get('jg_alternative_layout'))
@@ -62,16 +62,18 @@ class JoomGalleryViewCategory extends JoomGalleryView
     }
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Categories pagination
     if($this->_config->get('jg_hideemptycats') == 2)
     {
-      $totalcategories = $this->get('TotalCategoriesWithoutEmpty');
+      $this->totalcategories = $this->get('TotalCategoriesWithoutEmpty');
     }
     else
     {
-      $totalcategories = $this->get('TotalCategories');
+      $this->totalcategories = $this->get('TotalCategories');
     }
 
     // Calculation of the number of total pages
@@ -80,49 +82,49 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       $catperpage = 10;
     }
-    $cattotalpages = floor($totalcategories / $catperpage);
-    $offcut     = $totalcategories % $catperpage;
+    $this->cattotalpages = floor($this->totalcategories / $catperpage);
+    $offcut              = $this->totalcategories % $catperpage;
     if($offcut > 0)
     {
-      $cattotalpages++;
+      $this->cattotalpages++;
     }
 
-    $total = $totalcategories;
-    $totalcategories = number_format($totalcategories, 0, ',', '.');
+    $total                 = $this->totalcategories;
+    $this->totalcategories = number_format($this->totalcategories, 0, ',', '.');
     // Get the current page
-    $catpage = JRequest::getInt('catpage', 0);
-    if($catpage > $cattotalpages)
+    $this->catpage = $this->_mainframe->input->getInt('catpage', 0);
+    if($this->catpage > $this->cattotalpages)
     {
-      $catpage = $cattotalpages;
-      if($catpage <= 0)
+      $this->catpage = $this->cattotalpages;
+      if($this->catpage <= 0)
       {
-        $catpage = 1;
+        $this->catpage = 1;
       }
     }
     else
     {
-      if($catpage < 1)
+      if($this->catpage < 1)
       {
-        $catpage = 1;
+        $this->catpage = 1;
       }
     }
 
     // Limitstart
-    $limitstart = ($catpage - 1) * $catperpage;
-    JRequest::setVar('catlimitstart', $limitstart);
+    $limitstart = ($this->catpage - 1) * $catperpage;
+    $this->_mainframe->input->set('catlimitstart', $limitstart);
 
     require_once JPATH_COMPONENT_ADMINISTRATOR.'/helpers/pagination.php';
     $this->catpagination = new JoomPagination($total, $limitstart, $catperpage, 'cat', 'subcategory');
 
-    if($cattotalpages > 1 && $totalcategories != 0)
+    if($this->cattotalpages > 1 && $this->totalcategories != 0)
     {
       if($this->_config->get('jg_showpagenavsubs') <= 2)
       {
-        $params->set('show_pagination_cat_top', 1);
+        $this->params->set('show_pagination_cat_top', 1);
       }
       if($this->_config->get('jg_showpagenavsubs') >= 2)
       {
-        $params->set('show_pagination_cat_bottom', 1);
+        $this->params->set('show_pagination_cat_bottom', 1);
       }
     }
 
@@ -131,16 +133,16 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       if($this->_config->get('jg_showpagenavsubs') <= 2)
       {
-        $params->set('show_count_cat_top', 1);
+        $this->params->set('show_count_cat_top', 1);
       }
       if($this->_config->get('jg_showpagenavsubs') >= 2)
       {
-        $params->set('show_count_cat_bottom', 1);
+        $this->params->set('show_count_cat_bottom', 1);
       }
     }
 
     // Images pagination
-    $totalimages = $this->get('TotalImages');
+    $this->totalimages = $this->get('TotalImages');
 
     // Calculation of the number of total pages
     $perpage = $this->_config->get('jg_perpage');
@@ -148,35 +150,35 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       $perpage = 10;
     }
-    $totalpages = floor($totalimages / $perpage);
-    $offcut     = $totalimages % $perpage;
+    $this->totalpages = floor($this->totalimages / $perpage);
+    $offcut           = $this->totalimages % $perpage;
     if($offcut > 0)
     {
-      $totalpages++;
+      $this->totalpages++;
     }
 
-    $total = $totalimages;
-    $totalimages = number_format($totalimages, 0, ',', '.');
+    $total = $this->totalimages;
+    $this->totalimages = number_format($this->totalimages, 0, ',', '.');
     // Get the current page
-    $page = JRequest::getInt('page', 0);
-    if($page > $totalpages)
+    $this->page = $this->_mainframe->input->getInt('page', 0);
+    if($this->page > $this->totalpages)
     {
-      $page = $totalpages;
-      if($page <= 0)
+      $this->page = $this->totalpages;
+      if($this->page <= 0)
       {
-        $page = 1;
+        $this->page = 1;
       }
     }
     else
     {
-      if($page < 1)
+      if($this->page < 1)
       {
-        $page = 1;
+        $this->page = 1;
       }
     }
 
     // Limitstart
-    $limitstart = ($page - 1) * $perpage;
+    $limitstart = ($this->page - 1) * $perpage;
 
     $this->pagination = new JoomPagination($total, $limitstart, $perpage);
 
@@ -185,41 +187,39 @@ class JoomGalleryViewCategory extends JoomGalleryView
         &&  (!is_numeric($this->_config->get('jg_detailpic_open')) ||  $this->_config->get('jg_detailpic_open') > 4)
       )
     {
-      $params->set('show_all_in_popup', 1);
-      JRequest::setVar('limitstart', -1);
+      $this->params->set('show_all_in_popup', 1);
+      $this->_mainframe->input->set('limitstart', -1);
 
       // We need all images of this category
       $images = $this->get('Images');
 
-      $popup = array();
+      $this->popup = array();
 
-      $end    = ($page - 1) * $perpage;
-      $start  = $page * $perpage;
-      $popup['before']  = JHTML::_('joomgallery.popup', $images, 0, $end);
-      $popup['after']   = JHTML::_('joomgallery.popup', $images, $start);
-
-      $this->assignRef('popup', $popup);
+      $end    = ($this->page - 1) * $perpage;
+      $start  = $this->page * $perpage;
+      $this->popup['before']  = JHTML::_('joomgallery.popup', $images, 0, $end);
+      $this->popup['after']   = JHTML::_('joomgallery.popup', $images, $start);
 
       // Now we have to select the images according to the pagination
       $images = array_slice($images, $limitstart, $perpage);
     }
     else
     {
-      JRequest::setVar('limitstart',  $limitstart);
-      JRequest::setVar('limit',       $this->_config->get('jg_perpage'));
+      $this->_mainframe->input->set('limitstart',  $limitstart);
+      $this->_mainframe->input->set('limit',       $this->_config->get('jg_perpage'));
 
       $images = $this->get('Images');
     }
 
-    if($totalpages > 1 && $totalimages != 0)
+    if($this->totalpages > 1 && $this->totalimages != 0)
     {
       if($this->_config->get('jg_showpagenav') <= 2)
       {
-        $params->set('show_pagination_img_top', 1);
+        $this->params->set('show_pagination_img_top', 1);
       }
       if($this->_config->get('jg_showpagenav') >= 2)
       {
-        $params->set('show_pagination_img_bottom', 1);
+        $this->params->set('show_pagination_img_bottom', 1);
       }
     }
 
@@ -228,15 +228,15 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       if($this->_config->get('jg_showpagenav') <= 2)
       {
-        $params->set('show_count_img_top', 1);
+        $this->params->set('show_count_img_top', 1);
       }
       if($this->_config->get('jg_showpagenav') >= 2)
       {
-        $params->set('show_count_img_bottom', 1);
+        $this->params->set('show_count_img_bottom', 1);
       }
     }
 
-    $cat      = $this->get('Category');
+    $cat = $this->get('Category');
 
     if(isset($cat->protected))
     {
@@ -251,15 +251,16 @@ class JoomGalleryViewCategory extends JoomGalleryView
     if($cat->parent_id > 1)
     {
       // Sub-category -> parent category
-      $backlink[0] = JRoute::_('index.php?view=category&catid='.$cat->parent_id);
-      $backlink[1] = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
+      $this->backtarget = JRoute::_('index.php?view=category&catid='.$cat->parent_id);
+      $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_CATEGORY');
     }
     else
     {
       // Category view -> gallery view
-      $backlink[0] = JRoute::_('index.php?view=gallery');
-      $backlink[1] = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
+      $this->backtarget = JRoute::_('index.php?view=gallery');
+      $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
     }
+
     // Meta data
     if($cat->metadesc)
     {
@@ -323,9 +324,10 @@ class JoomGalleryViewCategory extends JoomGalleryView
           break;
       }
     }
+
     /*if($this->_config->get('jg_completebreadcrumbs'))
     {
-      $breadcrumbs  = &$this->_mainframe->getPathway();
+      $breadcrumbs = &$this->_mainframe->getPathway();
 
       foreach($parents as $parent)
       {
@@ -336,17 +338,17 @@ class JoomGalleryViewCategory extends JoomGalleryView
     }*/
 
     // JoomGallery Pathway
-    $pathway = '';
+    $this->pathway = '';
     if($this->_config->get('jg_showpathway'))
     {
-      $pathway = '<a href="'.JRoute::_('index.php?view=gallery').'" class="jg_pathitem">'.JText::_('COM_JOOMGALLERY_COMMON_HOME').'</a> &raquo; ';
+      $this->pathway = '<a href="'.JRoute::_('index.php?view=gallery').'" class="jg_pathitem">'.JText::_('COM_JOOMGALLERY_COMMON_HOME').'</a> &raquo; ';
 
       foreach($parents as $parent)
       {
-        $pathway  .= '<a href="'.JRoute::_('index.php?view=category&catid='.$parent->cid).'" class="jg_pathitem">'.$parent->name.'</a> &raquo; ';
+        $this->pathway .= '<a href="'.JRoute::_('index.php?view=category&catid='.$parent->cid).'" class="jg_pathitem">'.$parent->name.'</a> &raquo; ';
       }
 
-      $pathway .= $cat->name;
+      $this->pathway .= $cat->name;
     }
 
     // Page title
@@ -355,7 +357,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
       $pagetitle = JoomHelper::createPagetitle( $this->_config->get('jg_pagetitle_cat'),
                                                 $cat->name,
                                                 '',
-                                                $params->get('page_title') ? $params->get('page_title') : JText::_('COM_JOOMGALLERY_COMMON_GALLERY')
+                                                $this->params->get('page_title') ? $this->params->get('page_title') : JText::_('COM_JOOMGALLERY_COMMON_GALLERY')
                                               );
       $this->_doc->setTitle($pagetitle);
     }
@@ -371,8 +373,8 @@ class JoomGalleryViewCategory extends JoomGalleryView
 
       if($this->_config->get('jg_category_rss_icon'))
       {
-        $params->set('show_feed_icon', 1);
-        $params->set('feed_url', JRoute::_($link.'&type='.$this->_config->get('jg_category_rss_icon')));
+        $this->params->set('show_feed_icon', 1);
+        $this->params->set('feed_url', JRoute::_($link.'&type='.$this->_config->get('jg_category_rss_icon')));
       }
     }
 
@@ -387,11 +389,11 @@ class JoomGalleryViewCategory extends JoomGalleryView
            || ($this->_config->get('jg_usefavouritesforpubliczip') && !$this->_user->get('id'))
           )
         {
-          $params->set('show_headerfavourites_icon', 2);
+          $this->params->set('show_headerfavourites_icon', 2);
         }
         else
         {
-          $params->set('show_headerfavourites_icon', 1);
+          $this->params->set('show_headerfavourites_icon', 1);
         }
       }
       else
@@ -400,11 +402,11 @@ class JoomGalleryViewCategory extends JoomGalleryView
         {
           if($this->_config->get('jg_usefavouritesforzip'))
           {
-            $params->set('show_headerfavourites_icon', -2);
+            $this->params->set('show_headerfavourites_icon', -2);
           }
           else
           {
-            $params->set('show_headerfavourites_icon', -1);
+            $this->params->set('show_headerfavourites_icon', -1);
           }
         }
       }
@@ -417,7 +419,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
             )
       )
     {
-      $params->set('show_upload_icon', 1);
+      $this->params->set('show_upload_icon', 1);
       JHtml::_('behavior.modal');
     }
 
@@ -641,7 +643,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
 
             // If category view is skipped we display the favourites icon for adding all images at the thumbnail.
             // Calculations for that have already been done for the favourites icon in the header
-            $categories[$key]->show_favourites_icon = $params->get('show_headerfavourites_icon');
+            $categories[$key]->show_favourites_icon = $this->params->get('show_headerfavourites_icon');
           }
           else
           {
@@ -685,19 +687,19 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
       {
-        $params->set('show_download_icon', 1);
+        $this->params->set('show_download_icon', 1);
       }
       else
       {
         if($this->_config->get('jg_download_hint'))
         {
-          $params->set('show_download_icon', -1);
+          $this->params->set('show_download_icon', -1);
         }
       }
     }
 
     // Favourites icon
-    if(!$params->get('disable_global_info') && $this->_config->get('jg_favourites') && $this->_config->get('jg_showcategoryfavourite'))
+    if(!$this->params->get('disable_global_info') && $this->_config->get('jg_favourites') && $this->_config->get('jg_showcategoryfavourite'))
     {
       if(   $this->_user->get('id')
          || ($this->_config->get('jg_usefavouritesforpubliczip') == 1 && !$this->_user->get('id'))
@@ -707,11 +709,11 @@ class JoomGalleryViewCategory extends JoomGalleryView
            || ($this->_config->get('jg_usefavouritesforpubliczip') && !$this->_user->get('id'))
           )
         {
-          $params->set('show_favourites_icon', 2);
+          $this->params->set('show_favourites_icon', 2);
         }
         else
         {
-          $params->set('show_favourites_icon', 1);
+          $this->params->set('show_favourites_icon', 1);
         }
       }
       else
@@ -720,11 +722,11 @@ class JoomGalleryViewCategory extends JoomGalleryView
         {
           if($this->_config->get('jg_usefavouritesforzip'))
           {
-            $params->set('show_favourites_icon', -2);
+            $this->params->set('show_favourites_icon', -2);
           }
           else
           {
-            $params->set('show_favourites_icon', -1);
+            $this->params->set('show_favourites_icon', -1);
           }
         }
       }
@@ -735,7 +737,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
     {
       if($this->_user->get('id') || $this->_config->get('jg_report_unreg'))
       {
-        $params->set('show_report_icon', 1);
+        $this->params->set('show_report_icon', 1);
 
         JHTML::_('behavior.modal');
       }
@@ -743,7 +745,7 @@ class JoomGalleryViewCategory extends JoomGalleryView
       {
         if($this->_config->get('jg_report_hint'))
         {
-          $params->set('show_report_icon', -1);
+          $this->params->set('show_report_icon', -1);
         }
       }
     }
@@ -861,9 +863,9 @@ class JoomGalleryViewCategory extends JoomGalleryView
                     && !$images[$key]->imgtext
                   )
              )
-          && !$params->get('show_download_icon')
-          && !$params->get('show_favourites_icon')
-          && !$params->get('show_report_icon')
+          && !$this->params->get('show_download_icon')
+          && !$this->params->get('show_favourites_icon')
+          && !$this->params->get('show_report_icon')
           && (   !$this->_config->get('jg_showcategoryeditorlinks')
                || (    $this->_config->get('jg_showcategoryeditorlinks')
                     && !$images[$key]->show_delete_icon
@@ -884,44 +886,26 @@ class JoomGalleryViewCategory extends JoomGalleryView
 
     if($this->_config->get('jg_usercatorder') && count($images))
     {
-      $orderby   = $this->_mainframe->getUserStateFromRequest('joom.category.images.orderby', 'orderby');
-      $orderdir  = $this->_mainframe->getUserStateFromRequest('joom.category.images.orderdir', 'orderdir');
+      $this->order_by   = $this->_mainframe->getUserStateFromRequest('joom.category.images.orderby', 'orderby');
+      $this->order_dir  = $this->_mainframe->getUserStateFromRequest('joom.category.images.orderdir', 'orderdir');
 
       // If subcategory navigation active insert current subcategory startpage
-      if($catpage > 1)
+      if($this->catpage > 1)
       {
-        $sort_url = JRoute::_('index.php?view=category&catid='.$cat->cid.'&catpage='.$catpage).JHTML::_('joomgallery.anchor', 'category');
+        $this->sort_url = JRoute::_('index.php?view=category&catid='.$cat->cid.'&catpage='.$this->catpage).JHTML::_('joomgallery.anchor', 'category');
       }
       else
       {
-        $sort_url = JRoute::_('index.php?view=category&catid='.$cat->cid).JHTML::_('joomgallery.anchor', 'category');
+        $this->sort_url = JRoute::_('index.php?view=category&catid='.$cat->cid).JHTML::_('joomgallery.anchor', 'category');
       }
-
-      $this->assignRef('sort_url',  $sort_url);
-      $this->assignRef('order_by',  $orderby);
-      $this->assignRef('order_dir', $orderdir);
     }
 
     // Set redirect url used in editor links to redirect back to favourites view after edit/delete
-    $redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
+    $this->redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
 
-    $this->assignRef('params',            $params);
-    $this->assignRef('category',          $cat);
-    $this->assignRef('images',            $images);
-    $this->assignRef('categories',        $categories);
-    $this->assignRef('totalimages',       $totalimages);
-    $this->assignRef('totalpages',        $totalpages);
-    $this->assignRef('page',              $page);
-    $this->assignRef('totalcategories',   $totalcategories);
-    $this->assignRef('cattotalpages',     $cattotalpages);
-    $this->assignRef('catpage',           $catpage);
-    $this->assignRef('pathway',           $pathway);
-    $this->assignRef('modules',           $modules);
-    $this->assignRef('backtarget',        $backlink[0]);
-    $this->assignRef('backtext',          $backlink[1]);
-    $this->assignRef('numberofpics',      $numbers[0]);
-    $this->assignRef('numberofhits',      $numbers[1]);
-    $this->assignRef('redirect',          $redirect);
+    $this->category   = &$cat;
+    $this->images     = &$images;
+    $this->categories = &$categories;
 
     parent::display($tpl);
   }

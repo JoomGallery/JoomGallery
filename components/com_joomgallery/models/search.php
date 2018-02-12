@@ -65,7 +65,7 @@ class JoomGalleryModelSearch extends JoomGalleryModel
   {
     if(empty($this->_searchResults))
     {
-      $sstring        = JRequest::getString('sstring');
+      $sstring        = $this->_mainframe->input->getString('sstring');
       $searchstring   = $this->_db->escape(trim($sstring));
 
       $categories           = $this->_ambit->getCategoryStructure();

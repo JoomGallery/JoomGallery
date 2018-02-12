@@ -46,7 +46,13 @@ class JFormFieldCbcategory extends JFormFieldJoomCategory
     $cbname     = $this->element['cbname'] ? $this->element['cbname'] : 'change[]';
     $cbvalue    = $this->element['cbvalue'] ? $this->element['cbvalue'] : $this->name;
     $validate   = $this->element['validate'] ? (string) $this->element['validate'] : '';
-    $cbid       = str_replace(array('[', ']'), array('', ''), $cbname.$cbvalue);
+    $cbid       = str_replace(array('[', ']'), array('', ''), $cbname . '_' . $cbvalue);
+
+    if($this->formControl && strlen($cbname) > 2 && substr($cbname, -2) === '[]')
+    {
+      $cbname = $this->formControl . '[' . substr($cbname, 0, -2) . '][]';
+      $cbid   = $this->formControl . '_' . $cbid;
+    }
 
     $cbonclick = '';
     if(!empty($validate))

@@ -273,9 +273,9 @@ class JoomUpload extends JObject
     }
 
     $this->_debugoutput .= '<p></p>';
-    $images = JRequest::getVar('arrscreenshot', '', 'files');
+    $images = $this->_mainframe->input->files->get('arrscreenshot', NULL, 'raw');
 
-    for($i = 0; $i < count($images['error'])/*$this->_config->get('jg_maxuploadfields')*/; $i++)
+    for($i = 0; $i < count($images); $i++)
     {
       $this->_debugoutput .= '<hr />';
       $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_POSITION', $i + 1).'<br />';
@@ -283,16 +283,16 @@ class JoomUpload extends JObject
       // Any image entry at position?
       // (4=UPLOAD_ERR_NO_FILE constant since PHP 4.3.0)
       // If not continue with next entry without setting 'debug' to 'true'.
-      if($images['error'][$i] == 4)
+      if($images[$i]['error'] == 4)
       {
         $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_FILE_NOT_UPLOADED').'<br />';
         continue;
       }
 
       // Check all other error codes
-      if($images['error'][$i] > 0)
+      if($images[$i]['error'] > 0)
       {
-        $this->_debugoutput .= $this->checkError($images['error'][$i]).'<br />';
+        $this->_debugoutput .= $this->checkError($images[$i]['error']).'<br />';
         $this->debug        = true;
         continue;
       }
@@ -311,9 +311,9 @@ class JoomUpload extends JObject
         continue;
       }
 
-      $screenshot          = $images['tmp_name'][$i];
-      $origfilename        = $images['name'][$i];
-      $screenshot_filesize = $images['size'][$i];
+      $screenshot          = $images[$i]['tmp_name'];
+      $origfilename        = $images[$i]['name'];
+      $screenshot_filesize = $images[$i]['size'];
 
       // Get extension
       $tag = strtolower(JFile::getExt($origfilename));
@@ -462,7 +462,7 @@ class JoomUpload extends JObject
 
     echo $this->_debugoutput;
 
-    if(!$this->_site || JRequest::getBool('redirect'))
+    if(!$this->_site || $this->_mainframe->input->getBool('redirect'))
     {
       return !$this->debug;
     }
@@ -528,7 +528,7 @@ class JoomUpload extends JObject
     }
 
     // Check existence of uploaded zip
-    if($zippack = JRequest::getVar('zippack', '', 'files'))
+    if($zippack = $this->_mainframe->input->files->get('zippack', NULL, 'RAW'))
     {
       if(!JFile::exists($zippack['tmp_name']))
       {
@@ -844,7 +844,7 @@ class JoomUpload extends JObject
 
     echo $this->_debugoutput;
 
-    if(!$this->_site || JRequest::getBool('redirect'))
+    if(!$this->_site || $this->_mainframe->input->getBool('redirect'))
     {
       return !$this->debug;
     }
@@ -895,7 +895,7 @@ class JoomUpload extends JObject
     // No common title
     if(   (!$this->_site || !$this->_config->get('jg_useruseorigfilename'))
       &&  ($this->_site || !$this->_config->get('jg_useorigfilename'))
-      &&  !JRequest::getVar('imgtitle', '', 'post')
+      &&  !$this->_mainframe->input->post->get('imgtitle', '')
       )
     {
       jexit('JOOMGALLERYUPLOADERROR '.JText::_('COM_JOOMGALLERY_UPLOAD_JUPLOAD_IMAGE_MUST_HAVE_TITLE'));
@@ -1209,7 +1209,7 @@ class JoomUpload extends JObject
     $subdirectory = $this->_db->escape($this->_mainframe->getUserStateFromRequest('joom.upload.ftp.subdirectory', 'subdirectory', '/', 'post', 'string'));
     $ftpfiles     = $this->_mainframe->getUserStateFromRequest('joom.upload.ftp.files', 'ftpfiles', array(), 'array');
 
-    if(!$ftpfiles && JRequest::getBool('ftpfiles'))
+    if(!$ftpfiles && $this->_mainframe->input->getBool('ftpfiles'))
     {
       $this->setError(JText::_('COM_JOOMGALLERY_COMMON_MSG_NO_IMAGES_SELECTED'));
 
@@ -1218,7 +1218,7 @@ class JoomUpload extends JObject
 
     // Load the refresher
     require_once JPATH_COMPONENT.'/helpers/refresher.php';
-    $refresher = new JoomRefresher(array('remaining' => count($ftpfiles), 'start' => JRequest::getBool('ftpfiles')));
+    $refresher = new JoomRefresher(array('remaining' => count($ftpfiles), 'start' => $this->_mainframe->input->getBool('ftpfiles')));
 
     $this->_debugoutput .= '<p></p>';
 
@@ -1348,7 +1348,7 @@ class JoomUpload extends JObject
       $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_NEW_FILENAME', $newfilename).'<br /><br />';
 
       $this->_mainframe->triggerEvent('onJoomAfterUpload', array($row));
-	  
+
       unset($ftpfiles[$key]);
     }
 
@@ -1397,11 +1397,11 @@ class JoomUpload extends JObject
       return false;
     }
 
-    $image               = JRequest::getVar('qqfile', '', 'files');
-    $qqtotalfilesize     = JRequest::getInt('qqtotalfilesize', -1);
-    $totalParts          = JRequest::getInt('qqtotalparts', 1);
+    $image               = $this->_mainframe->input->files->get('qqfile', NULL, 'RAW');
+    $qqtotalfilesize     = $this->_mainframe->input->getInt('qqtotalfilesize', -1);
+    $totalParts          = $this->_mainframe->input->getInt('qqtotalparts', 1);
     $screenshot          = $image['tmp_name'];
-    $origfilename        = JRequest::getString('qqfilename', '');
+    $origfilename        = $this->_mainframe->input->getString('qqfilename', '');
     $screenshot_filesize = $image['size'];
     if(empty($origfilename))
     {
@@ -1437,8 +1437,8 @@ class JoomUpload extends JObject
     // Save a chunk
     if($totalParts > 1)
     {
-      $partIndex    = JRequest::getInt('qqpartindex');
-      $uuid         = JRequest::getVar('qquuid');
+      $partIndex    = $this->_mainframe->input->getInt('qqpartindex');
+      $uuid         = $this->_mainframe->input->get('qquuid');
 
       if(!is_writable($this->chunksFolder))
       {
@@ -1743,7 +1743,7 @@ class JoomUpload extends JObject
     }
 
     // Start value set in backend
-    $filecounter = $this->_mainframe->getUserStateFromRequest('joom.upload.filecounter', 'filecounter', 0, 'post', 'int');
+    $filecounter = $this->_mainframe->getUserStateFromRequest('joom.upload.filecounter', 'filecounter', 0, 'int');
 
     // If there is no starting value set, disable numbering
     if(!$filecounter)
@@ -2153,7 +2153,7 @@ class JoomUpload extends JObject
     // Get the specified image information (either from session or from post)
     $old_info = $this->_mainframe->getUserState('joom.upload.post');
     $cur_info = (!is_null($old_info)) ? $old_info : array();
-    $new_info = JRequest::get('post');
+    $new_info = $this->_mainframe->input->post->getArray();
 
     // Prevent setting access level in frontend
     if(isset($new_info['access']) && $this->_site)

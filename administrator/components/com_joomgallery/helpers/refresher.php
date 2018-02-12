@@ -103,7 +103,7 @@ class JoomRefresher extends JObject
    */
   public function __construct($params = array())
   {
-    $this->_mainframe = JFactory::getApplication('administrator');
+    $this->_mainframe = JFactory::getApplication();
 
     if(isset($params['controller']))
     {
@@ -111,7 +111,7 @@ class JoomRefresher extends JObject
     }
     else
     {
-      $this->_controller    = JRequest::getCmd('controller');
+      $this->_controller    = $this->_mainframe->input->getCmd('controller');
     }
 
     if(isset($params['task']))
@@ -120,7 +120,7 @@ class JoomRefresher extends JObject
     }
     else
     {
-      $this->_task          = JRequest::getCmd('task');
+      $this->_task          = $this->_mainframe->input->getCmd('task');
     }
 
     if(isset($params['msg']))

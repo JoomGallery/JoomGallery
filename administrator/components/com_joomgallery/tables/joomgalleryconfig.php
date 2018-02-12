@@ -574,7 +574,7 @@ class TableJoomgalleryConfig extends JTable
 
     if($corrected)
     {
-      JError::raiseNotice(500, JText::_('COM_JOOMGALLERY_CONFIG_MSG_SETTINGS_FOR_SPECIALCHARS_CORRECTED'));
+      JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMGALLERY_CONFIG_MSG_SETTINGS_FOR_SPECIALCHARS_CORRECTED'), 'notice');
     }
 
     return true;

@@ -13,9 +13,11 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-if(version_compare(JVERSION, '4.0', 'ge') || version_compare(JVERSION, '3.0', 'lt'))
+if(version_compare(JVERSION, '5.0', 'ge') || version_compare(JVERSION, '3.0', 'lt'))
 {
-  return JError::raiseWarning(500, 'JoomGallery 3.x is only compatible to Joomla! 3.x');
+  JFactory::getApplication()->enqueueMessage('JoomGallery 4.x is only compatible to Joomla! 4.x', 'warning');
+
+  return;
 }
 
 // Require the defines

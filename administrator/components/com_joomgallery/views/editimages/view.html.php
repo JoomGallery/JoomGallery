@@ -31,30 +31,27 @@ class JoomGalleryViewEditimages extends JoomGalleryView
    */
   function display($tpl = null)
   {
-    $items = $this->get('Images');
+    $this->items = $this->get('Images');
 
-    $cids = JRequest::getVar('cid', array(), '', 'array');
-    $cids = implode(',', $cids);
+    $this->cids = $this->_mainframe->input->get('cid', array(), 'array');
+    $this->cids = implode(',', $this->cids);
 
     // Get the form and fill the fields
-    $form = $this->get('Form');
+    $this->form = $this->get('Form');
 
     // Set maximum allowed user count to switch from listbox to modal popup selection
-    $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
+    $this->form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
 
     // Bind the data to the form
-    $form->bind($items[0]);
+    $this->form->bind($this->items[0]);
 
     // Set some form fields manually
-    $form->setValue('txtclearhits', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_HITS_FOR_ALL_IMAGES'));
-    $form->setValue('txtclearvotes', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_VOTES_FOR_ALL_IMAGES'));
-    $form->setValue('txtcleardownloads', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_DOWNLOADS_FOR_ALL_IMAGES'));
-
-    $this->assignRef('items', $items);
-    $this->assignRef('cids',  $cids);
-    $this->assignRef('form',  $form);
+    $this->form->setValue('txtclearhits', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_HITS_FOR_ALL_IMAGES'));
+    $this->form->setValue('txtclearvotes', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_VOTES_FOR_ALL_IMAGES'));
+    $this->form->setValue('txtcleardownloads', null, JText::_('COM_JOOMGALLERY_IMGMAN_CLEAR_DOWNLOADS_FOR_ALL_IMAGES'));
 
     $this->addToolbar();
+
     parent::display($tpl);
   }
 

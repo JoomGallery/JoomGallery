@@ -324,7 +324,7 @@ class JoomMessenger extends JObject
         ||  !$message['body']
       )
     {
-      JError::raiseNotice(500, 'Unsufficient Information to send message');
+      JFactory::getApplication()->enqueueMessage('Unsufficient Information to send message', 'notice');
       return false;
     }
 
@@ -361,7 +361,7 @@ class JoomMessenger extends JObject
 
     if(!array_key_exists($this->_mode, $this->_modes))
     {
-      JError::raiseError(500, 'Unknown JoomGallery send message mode');
+      throw new UnexpectedValueException('Unknown JoomGallery send message mode');
     }
 
     if(isset($this->_message['type']) && $this->_message['type'])
@@ -405,7 +405,7 @@ class JoomMessenger extends JObject
     }
     if(!$from)
     {
-      $mainframe  = JFactory::getApplication('site');
+      $mainframe  = JFactory::getApplication();
       $from       = $mainframe->getCfg('mailfrom');
     }
 
@@ -413,7 +413,7 @@ class JoomMessenger extends JObject
     {
       if(!isset($user) || !is_object($user))
       {
-        $mainframe  = JFactory::getApplication('site');
+        $mainframe  = JFactory::getApplication();
         $fromname   = $mainframe->getCfg('fromname');
       }
       else
@@ -563,7 +563,8 @@ class JoomMessenger extends JObject
 
     if(in_array(false, $result_array))
     {
-      JError::raiseNotice(500, $msg->getError());
+      JFactory::getApplication()->enqueueMessage($msg->getError(), 'notice');
+
       return false;
     }
 

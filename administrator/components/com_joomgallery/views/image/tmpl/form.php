@@ -6,10 +6,10 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 ?>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 Joomla.submitbutton = function(task)
 {
-  var form = document.id('item-form');
+  var form = document.getElementById('item-form');
   if(task == 'cancel' || task == 'resethits' || task == 'resetdownloads' || task == 'resetvotes' || document.formvalidator.isValid(form)) {
     <?php echo $this->form->getField('imgtext')->save(); ?>
     Joomla.submitform(task, form);
@@ -17,16 +17,16 @@ Joomla.submitbutton = function(task)
   else {
     var msg = new Array();
     msg.push('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true); ?>');
-    if(form.imgtitle.hasClass('invalid')) {
+    if(form.getElementById('jform_title').hasClass('invalid')) {
         msg.push('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE', true); ?>');
     }
-    if(form.catid.hasClass('invalid')) {
+    if(form.getElementById('jform_catid').hasClass('invalid')) {
       msg.push('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_YOU_MUST_SELECT_CATEGORY', true); ?>');
     }
-    if(form.imgfilename && form.imgfilename.hasClass('invalid')) {
+    if(form.getElementById('jform_imgfilename') && form.getElementById('jform_imgfilename').hasClass('invalid')) {
       msg.push('<?php echo JText::_('COM_JOOMGALLERY_IMGMAN_ALERT_SELECT_IMAGE_FILENAME', true); ?>');
     }
-    if(form.imgthumbname && form.imgthumbname.hasClass('invalid')) {
+    if(form.getElementById('jform_imgthumbname') && form.getElementById('jform_imgthumbname').hasClass('invalid')) {
       msg.push('<?php echo JText::_('COM_JOOMGALLERY_IMGMAN_ALERT_SELECT_THUMBNAIL_FILENAME', true); ?>');
     }
     alert(msg.join('\n'));

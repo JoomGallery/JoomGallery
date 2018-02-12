@@ -33,16 +33,16 @@ class JoomGalleryControllerCategory extends JControllerLegacy
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->getInt('limitstart', 0);
     }
 
     // Set default redirect URL
     $redirect = 'index.php?view=usercategories'.$slimitstart;
 
     // Check whether a redirect is requested
-    if($url = JRequest::getVar('redirect', '', '', 'base64'))
+    if($url = $this->input->getBase64('redirect', ''))
     {
       $url = base64_decode($url);
       if(JURI::isInternal($url))
@@ -75,9 +75,9 @@ class JoomGalleryControllerCategory extends JControllerLegacy
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->getInt('limitstart', 0);
     }
 
     try
@@ -105,9 +105,9 @@ class JoomGalleryControllerCategory extends JControllerLegacy
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->getInt('limitstart', 0);
     }
 
     if($model->publish())
@@ -130,10 +130,9 @@ class JoomGalleryControllerCategory extends JControllerLegacy
    */
   public function unlock()
   {
-    $input = JFactory::getApplication()->input;
     $model = $this->getModel('category');
 
-    $catid = $input->getInt('catid');
+    $catid = $this->input->getInt('catid');
 
     try
     {

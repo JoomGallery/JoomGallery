@@ -33,9 +33,9 @@ class JoomGalleryControllerControl extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    if(JRequest::getCmd('view') != 'mini')
+    if($this->input->getCmd('view') != 'mini')
     {
-      JRequest::setVar('view', 'control');
+      $this->input->set('view', 'control');
     }
   }
 
@@ -50,7 +50,7 @@ class JoomGalleryControllerControl extends JoomGalleryController
    */
   function update()
   {
-    $extension  = JRequest::getCmd('extension', 0, 'get');
+    $extension  = $this->input->get->getCmd('extension', 0);
     $extensions = JoomExtensions::checkUpdate();
 
     if(!isset($extensions[$extension]['updatelink']) || !extension_loaded('curl'))
@@ -78,7 +78,7 @@ class JoomGalleryControllerControl extends JoomGalleryController
    */
   function install()
   {
-    $extension  = JRequest::getCmd('extension', 0, 'get');
+    $extension  = $this->input->get->getCmd('extension', 0);
     $extensions = JoomExtensions::getAvailableExtensions();
 
     if(!isset($extensions[$extension]['updatelink']) || !extension_loaded('curl'))

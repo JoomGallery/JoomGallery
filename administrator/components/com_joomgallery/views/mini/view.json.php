@@ -31,64 +31,63 @@ class JoomGalleryViewMini extends JoomGalleryView
    */
   function display($tpl = null)
   {
-    $e_name = $this->_mainframe->getUserStateFromRequest('joom.mini.e_name', 'e_name', 'text', 'string');
+    $this->e_name = $this->_mainframe->getUserStateFromRequest('joom.mini.e_name', 'e_name', 'text', 'string');
 
-    $catid = $this->_mainframe->getUserStateFromRequest('joom.mini.catid', 'catid', 0, 'int');
-    $this->assignRef('catid', $catid);
+    $this->catid  = $this->_mainframe->getUserStateFromRequest('joom.mini.catid', 'catid', 0, 'int');
     $this->prefix = $this->_mainframe->getUserStateFromRequest('joom.mini.prefix', 'prefix', 'joom', 'cmd');
 
     // Pagination
-    $total    = $this->get('TotalImages');
+    $this->total = $this->get('TotalImages');
 
     // Calculation of the number of total pages
-    $limit    = $this->_mainframe->getUserStateFromRequest('joom.mini.limit', 'limit', 30, 'int');
+    $limit = $this->_mainframe->getUserStateFromRequest('joom.mini.limit', 'limit', 30, 'int');
     if(!$limit)
     {
-      $totalpages = 1;
+      $this->totalpages = 1;
     }
     else
     {
-      $totalpages = floor($total / $limit);
-      $offcut     = $total % $limit;
+      $this->totalpages = floor($this->total / $limit);
+      $offcut     = $this->total % $limit;
       if($offcut > 0)
       {
-        $totalpages++;
+        $this->totalpages++;
       }
     }
 
-    $totalimages = $total;
-    $total = number_format($total, 0, ',', '.');
+    $totalimages = $this->total;
+    $this->total = number_format($this->total, 0, ',', '.');
 
     // Get the current page
-    $page = JRequest::getInt('page', 0);
-    if($page > $totalpages)
+    $this->page = $this->_mainframe->input->getInt('page', 0);
+    if($this->page > $this->totalpages)
     {
-      $page = $totalpages;
+      $this->page = $this->totalpages;
     }
-    if($page < 1)
+    if($this->page < 1)
     {
-      $page = 1;
+      $this->page = 1;
     }
 
     // Limitstart
-    $limitstart = ($page - 1) * $limit;
-    JRequest::setVar('limitstart', $limitstart);
+    $limitstart = ($this->page - 1) * $limit;
+    $this->_mainframe->input->set('limitstart', $limitstart);
 
-    if($total <= $limit)
+    if($this->total <= $limit)
     {
       $limitstart = 0;
-      JRequest::setVar('limitstart', $limitstart);
+      $this->_mainframe->input->set('limitstart', $limitstart);
     }
 
-    JRequest::setVar('limit', $limit);
+    $this->_mainframe->input->set('limit', $limit);
 
     require_once JPATH_COMPONENT_ADMINISTRATOR.'/helpers/pagination.php';
     $onclick = 'javascript:ajaxRequest(\'index.php?option='._JOOM_OPTION.'&view=mini&format=json\', %u); return false;';
     $this->pagination = new JoomPagination($totalimages, $limitstart, $limit, '', null, $onclick);
 
-    $images = $this->get('Images');
+    $this->images = $this->get('Images');
 
-    foreach($images as $key => $image)
+    foreach($this->images as $key => $image)
     {
       $image->thumb_src = null;
       $thumb = $this->_ambit->getImg('thumb_path', $image);
@@ -103,17 +102,10 @@ class JoomGalleryViewMini extends JoomGalleryView
         $image->overlib       = str_replace(array("\r\n", "\r", "\n"), '', htmlspecialchars($overlib, ENT_QUOTES, 'UTF-8'));
       }
 
-      $images[$key]           = $image;
+      $this->images[$key]           = $image;
     }
 
-    $object = $this->_mainframe->getUserStateFromRequest('joom.mini.object', 'object', '', 'cmd');
-
-    $this->assignRef('images',      $images);
-    $this->assignRef('total',       $total);
-    $this->assignRef('totalpages',  $totalpages);
-    $this->assignRef('page',        $page);
-    $this->assignRef('object',      $object);
-    $this->assignRef('e_name',      $e_name);
+    $this->object = $this->_mainframe->getUserStateFromRequest('joom.mini.object', 'object', '', 'cmd');
 
     $output = array();
     $output['minis']      = $this->loadTemplate('minis');

@@ -213,7 +213,7 @@ class JoomHelper
       $maxdate = $db->loadResult();
       if($db->getErrorNum())
       {
-        JError::raiseWarning(500, $db->getErrorMsg());
+        JFactory::getApplication()->enqueueMessage($db->getErrorMsg(), 'error');
       }
 
       // If maxdate = NULL no image found
@@ -274,7 +274,7 @@ class JoomHelper
    */
   public static function addSitenameToPagetitle($pagetitle)
   {
-    $app = JFactory::getApplication('site');
+    $app = JFactory::getApplication();
 
     if($app->getCfg('sitename_pagetitles'))
     {
@@ -493,7 +493,7 @@ class JoomHelper
    */
   public static function getModules($pos)
   {
-    $view     = JRequest::getCmd('view');
+    $view     = JFactory::getApplication()->input->getCmd('view');
 
     $position = 'jg_'.$pos;
     $modules  = & JModuleHelper::getModules($position);
@@ -565,8 +565,8 @@ class JoomHelper
   {
     $config = JoomConfig::getInstance();
     $user   = JFactory::getUser();
-    $view   = JRequest::getCmd('view');
-    $app    = JFactory::getApplication('site');
+    $app    = JFactory::getApplication();
+    $view   = $app->input->getCmd('view');
 
     // Page heading
     $menus  = $app->getMenu();

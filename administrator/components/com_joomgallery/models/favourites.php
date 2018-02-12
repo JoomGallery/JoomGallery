@@ -34,7 +34,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
           ->delete(_JOOM_TABLE_USERS);
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 
@@ -69,7 +69,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
           ->where('NOT EXISTS ('.$subquery.')');
     $this->_db->setQuery($query);
 
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 

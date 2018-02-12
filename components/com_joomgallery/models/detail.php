@@ -87,8 +87,8 @@ class JoomGalleryModelDetail extends JoomGalleryModel
   {
     parent::__construct();
 
-    $id = JRequest::getVar('id', 0, '', 'int');
-    $this->setId((int)$id);
+    $id = $this->_mainframe->input->getInt('id', 0);
+    $this->setId($id);
   }
 
   /**
@@ -138,7 +138,7 @@ class JoomGalleryModelDetail extends JoomGalleryModel
       }
       else
       {
-        JError::raiseError(500, JText::_('Unable to load images'));
+        throw new RuntimeException(JText::_('Unable to load images'));
       }
 
       #$image  = $images[$this->_id]; see _loadImages()
@@ -162,7 +162,7 @@ class JoomGalleryModelDetail extends JoomGalleryModel
       $categories = $this->_ambit->getCategoryStructure();
       if(!isset($categories[$image->catid]))
       {
-        JError::raiseError(500, JText::sprintf('Unable to load image with ID %d', $this->_id), 'error');
+        throw new RuntimeException(JText::sprintf('Unable to load image with ID %d', $this->_id));
       }
 
       // Source url
@@ -423,7 +423,8 @@ class JoomGalleryModelDetail extends JoomGalleryModel
       }
       else
       {
-        JError::raiseWarning( 0, 'Unable to Load Data');
+        $this->_mainframe->enqueueMessage('Unable to Load Data', 'error');
+
         return false;
       }
     }

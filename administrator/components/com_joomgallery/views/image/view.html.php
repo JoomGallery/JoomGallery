@@ -30,62 +30,62 @@ class JoomGalleryViewImage extends JoomGalleryView
    */
   public function display($tpl = null)
   {
-    $item   = $this->get('Data');
-    $isNew  = ($item->id < 1);
+    $this->item   = $this->get('Data');
+    $this->isNew  = ($this->item->id < 1);
     $rating = 0.0;
 
     // Get the form and fill the fields
-    $form = $this->get('Form');
+    $this->form = $this->get('Form');
 
-    if($isNew)
+    if($this->isNew)
     {
       // Set some field attributes for javascript validation
-      $form->setFieldAttribute('detail_catid', 'required', true);
-      $form->setFieldAttribute('detail_catid', 'validate', 'joompositivenumeric');
-      $form->setFieldAttribute('thumb_catid',  'required', true);
-      $form->setFieldAttribute('thumb_catid',  'validate', 'joompositivenumeric');
-      $form->setFieldAttribute('imgfilename',  'required', true);
-      $form->setFieldAttribute('imgthumbname', 'required', true);
+      $this->form->setFieldAttribute('detail_catid', 'required', true);
+      $this->form->setFieldAttribute('detail_catid', 'validate', 'joompositivenumeric');
+      $this->form->setFieldAttribute('thumb_catid',  'required', true);
+      $this->form->setFieldAttribute('thumb_catid',  'validate', 'joompositivenumeric');
+      $this->form->setFieldAttribute('imgfilename',  'required', true);
+      $this->form->setFieldAttribute('imgthumbname', 'required', true);
 
       // Detail images
-      $detail_catpath     = JoomHelper::getCatPath($item->detail_catid);
+      $detail_catpath     = JoomHelper::getCatPath($this->item->detail_catid);
       $detail_path        = $this->_ambit->get('img_path').$detail_catpath;
-      $form->setFieldAttribute('imgfilename', 'directory', $detail_path);
-      $imgfilename_field  = $this->_findFieldByFieldName($form, 'imgfilename');
-      $imagelib_field     = $this->_findFieldByFieldName($form, 'imagelib2');
+      $this->form->setFieldAttribute('imgfilename', 'directory', $detail_path);
+      $imgfilename_field  = $this->_findFieldByFieldName($this->form, 'imgfilename');
+      $imagelib_field     = $this->_findFieldByFieldName($this->form, 'imagelib2');
 
       // Thumbnail images
-      $thumb_catpath       = JoomHelper::getCatPath($item->thumb_catid);
+      $thumb_catpath       = JoomHelper::getCatPath($this->item->thumb_catid);
       $thumb_path          = $this->_ambit->get('thumb_path').$thumb_catpath;
-      $form->setFieldAttribute('imgthumbname', 'directory', $thumb_path);
-      $imgthumbname_field  = $this->_findFieldByFieldName($form, 'imgthumbname');
-      $imagelib_field      = $this->_findFieldByFieldName($form, 'imagelib');
+      $this->form->setFieldAttribute('imgthumbname', 'directory', $thumb_path);
+      $imgthumbname_field  = $this->_findFieldByFieldName($this->form, 'imgthumbname');
+      $imagelib_field      = $this->_findFieldByFieldName($this->form, 'imagelib');
     }
     else
     {
-      if($item->imgvotes > 0)
+      if($this->item->imgvotes > 0)
       {
-        $rating = JoomHelper::getRating($item->id);
+        $rating = JoomHelper::getRating($this->item->id);
       }
     }
 
     // Set maximum allowed user count to switch from listbox to modal popup selection
-    $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
+    $this->form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
 
     // Bind the data to the form
-    $form->bind($item);
+    $this->form->bind($this->item);
 
     // Set some form fields manually
-    if($isNew)
+    if($this->isNew)
     {
       // Does the original image file exist
-      if($form->getValue('imgfilename', null) == '')
+      if($this->form->getValue('imgfilename', null) == '')
       {
-        $form->setValue('original_exists', null, JText::_('COM_JOOMGALLERY_IMGMAN_NO_IMAGE_SELECTED'));
+        $this->form->setValue('original_exists', null, JText::_('COM_JOOMGALLERY_IMGMAN_NO_IMAGE_SELECTED'));
       }
       else
       {
-        if(JFile::exists($this->_ambit->getImg('orig_path', $item->imgfilename, null, $item->detail_catid)))
+        if(JFile::exists($this->_ambit->getImg('orig_path', $this->item->imgfilename, null, $this->item->detail_catid)))
         {
           $orig_msg = JText::_('COM_JOOMGALLERY_IMGMAN_ORIGINAL_EXIST');
           $color = 'green';
@@ -95,8 +95,8 @@ class JoomGalleryViewImage extends JoomGalleryView
           $orig_msg = JText::_('COM_JOOMGALLERY_IMGMAN_ORIGINAL_NOT_EXIST');
           $color = 'red';
         }
-        $form->setValue('original_exists', null, $orig_msg);
-        $original_exists_field = $this->_findFieldByFieldName($form, 'original_exists');
+        $this->form->setValue('original_exists', null, $orig_msg);
+        $original_exists_field = $this->_findFieldByFieldName($this->form, 'original_exists');
         $js = "
         window.addEvent('domready', function() {
           $('".$original_exists_field->id."').setStyle('color', '".$color."');
@@ -107,67 +107,64 @@ class JoomGalleryViewImage extends JoomGalleryView
     else
     {
       // Plublished and hidden state
-      if($item->published)
+      if($this->item->published)
       {
-        $form->setValue('publishhiddenstate', null, $item->hidden ? JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN') : JText::_('COM_JOOMGALLERY_COMMON_STATE_PUBLISHED') );
+        $this->form->setValue('publishhiddenstate', null, $this->item->hidden ? JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN') : JText::_('COM_JOOMGALLERY_COMMON_STATE_PUBLISHED') );
       }
       else
       {
-        $form->setValue('publishhiddenstate', null, JText::_('COM_JOOMGALLERY_COMMON_STATE_UNPUBLISHED'));
+        $this->form->setValue('publishhiddenstate', null, JText::_('COM_JOOMGALLERY_COMMON_STATE_UNPUBLISHED'));
       }
       // Rating
-      $form->setValue('rating', null, JText::sprintf('COM_JOOMGALLERY_IMGMAN_IMAGE_VOTES', $rating, $item->imgvotes));
+      $this->form->setValue('rating', null, JText::sprintf('COM_JOOMGALLERY_IMGMAN_IMAGE_VOTES', $rating, $this->item->imgvotes));
       // Date
-      $form->setValue('date', null, JHTML::_('date',  $item->imgdate,  JText::_('DATE_FORMAT_LC2')));
+      $this->form->setValue('date', null, JHTML::_('date',  $this->item->imgdate,  JText::_('DATE_FORMAT_LC2')));
     }
 
     // Set image source for detail image preview
-    if($item->imgfilename)
+    if($this->item->imgfilename)
     {
-      if($isNew)
+      if($this->isNew)
       {
         // We have to look for the image ID fist because the image may have to be output through the script
-        $id = $this->getModel()->getIdByFilename($item->imgfilename, $item->detail_catid);
+        $id = $this->getModel()->getIdByFilename($this->item->imgfilename, $this->item->detail_catid);
         $imgsource = $this->_ambit->getImg('img_url', $id);
       }
       else
       {
-        $imgsource = $this->_ambit->getImg('img_url', $item);
+        $imgsource = $this->_ambit->getImg('img_url', $this->item);
       }
     }
     else
     {
       $imgsource = '../media/system/images/blank.png';
     }
-    $form->setValue('imagelib2', null, $imgsource);
+    $this->form->setValue('imagelib2', null, $imgsource);
 
     // Set image source for thumbnail preview
-    if($item->imgthumbname)
+    if($this->item->imgthumbname)
     {
-      if($isNew)
+      if($this->isNew)
       {
         // We have to look for the image ID fist because the image may have to be output through the script
-        $id = $this->getModel()->getIdByFilename($item->imgthumbname, $item->thumb_catid, true);
+        $id = $this->getModel()->getIdByFilename($this->item->imgthumbname, $this->item->thumb_catid, true);
         $thumbsource = $this->_ambit->getImg('thumb_url', $id);
       }
       else
       {
-        $thumbsource = $this->_ambit->getImg('thumb_url', $item);
+        $thumbsource = $this->_ambit->getImg('thumb_url', $this->item);
       }
     }
     else
     {
       $thumbsource = '../media/system/images/blank.png';
     }
-    $form->setValue('imagelib', null, $thumbsource);
+    $this->form->setValue('imagelib', null, $thumbsource);
 
     JHtml::_('jquery.framework');
 
-    $this->assignRef('item',              $item);
-    $this->assignRef('isNew',             $isNew);
-    $this->assignRef('form',              $form);
-
     $this->addToolbar();
+
     parent::display($tpl);
   }
 

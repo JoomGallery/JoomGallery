@@ -43,7 +43,7 @@ class JoomGalleryViewEditcategory extends JoomGalleryView
       $this->_mainframe->redirect(JRoute::_('index.php?view=gallery', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_YOU_ARE_NOT_LOGGED'), 'notice');
     }
 
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Breadcrumbs
     if($this->_config->get('jg_completebreadcrumbs'))
@@ -51,7 +51,7 @@ class JoomGalleryViewEditcategory extends JoomGalleryView
       $breadcrumbs = $this->_mainframe->getPathway();
       $breadcrumbs->addItem(JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL'), 'index.php?view=userpanel');
       $breadcrumbs->addItem(JText::_('COM_JOOMGALLERY_COMMON_CATEGORIES'), 'index.php?view=usercategories');
-      if(JRequest::getInt('catid'))
+      if($this->_mainframe->input->getInt('catid'))
       {
         $breadcrumbs->addItem(JText::_('COM_JOOMGALLERY_EDITCATEGORY_MODIFY_CATEGORY'));
       }
@@ -62,54 +62,56 @@ class JoomGalleryViewEditcategory extends JoomGalleryView
     }
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $pathway = null;
+    $this->pathway = null;
     if($this->_config->get('jg_showpathway'))
     {
-      $pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
-      $pathway .= ' &raquo; <a href="'.JRoute::_('index.php?view=usercategories').'">'.JText::_('COM_JOOMGALLERY_COMMON_CATEGORIES').'</a>';
-      if(JRequest::getInt('catid'))
+      $this->pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
+      $this->pathway .= ' &raquo; <a href="'.JRoute::_('index.php?view=usercategories').'">'.JText::_('COM_JOOMGALLERY_COMMON_CATEGORIES').'</a>';
+      if($this->_mainframe->input->getInt('catid'))
       {
-        $pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_EDITCATEGORY_MODIFY_CATEGORY');
+        $this->pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_EDITCATEGORY_MODIFY_CATEGORY');
       }
       else
       {
-        $pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_COMMON_NEW_CATEGORY');
+        $this->pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_COMMON_NEW_CATEGORY');
       }
     }
 
-    $backtarget = JRoute::_('index.php?view=userpanel');
-    $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_USER_PANEL');
+    $this->backtarget = JRoute::_('index.php?view=userpanel');
+    $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_USER_PANEL');
 
     // Get number of images and hits in gallery
-    $numbers = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
     // Load the category data
-    $category = $this->get('Category');
+    $this->category = $this->get('Category');
 
     // Get the form and fill the fields
-    $form = $this->get('Form');
+    $this->form = $this->get('Form');
 
     // Set some additional field attributes
     // Category slect box
-    if($category->cid)
+    if($this->category->cid)
     {
       // Exclude current category id from select box
-      $form->setFieldAttribute('parent_id', 'exclude', $category->cid);
+      $this->form->setFieldAttribute('parent_id', 'exclude', $this->category->cid);
     }
     else
     {
@@ -123,7 +125,7 @@ class JoomGalleryViewEditcategory extends JoomGalleryView
         $parent_cats = JoomHelper::getAuthorisedCategories('core.create');
         if(isset($parent_cats[0]))
         {
-          $category->parent_id = $parent_cats[0]->cid;
+          $this->category->parent_id = $parent_cats[0]->cid;
         }
         else
         {
@@ -137,45 +139,34 @@ class JoomGalleryViewEditcategory extends JoomGalleryView
     if(!$this->_config->get('jg_disableunrequiredchecks'))
     {
       // Set some additional attributes for the ordering select box
-      $form->setFieldAttribute('ordering', 'originalOrder', $category->cid);
-      $form->setFieldAttribute('ordering', 'originalParent', $category->parent_id == 1 ? 0 : $category->parent_id);
-      $form->setFieldAttribute('ordering', 'orderings', base64_encode(serialize($this->getModel()->getOrderings($category->cid ? $category->parent_id : null))));
+      $this->form->setFieldAttribute('ordering', 'originalOrder', $this->category->cid);
+      $this->form->setFieldAttribute('ordering', 'originalParent', $this->category->parent_id == 1 ? 0 : $this->category->parent_id);
+      $this->form->setFieldAttribute('ordering', 'orderings', base64_encode(serialize($this->getModel()->getOrderings($this->category->cid ? $this->category->parent_id : null))));
       // Perhaps there is a better way to set the field attribute
-      $parent_field = $this->_findFieldByFieldName($form, 'parent_id');
+      $parent_field = $this->_findFieldByFieldName($this->form, 'parent_id');
       if($parent_field !== false)
       {
-        $form->setFieldAttribute('ordering', 'parent_id', $parent_field->id);
+        $this->form->setFieldAttribute('ordering', 'parent_id', $parent_field->id);
       }
     }
     // Thumbnail preview
-    $imagelib_field = $this->_findFieldByFieldName($form, 'imagelib');
+    $imagelib_field = $this->_findFieldByFieldName($this->form, 'imagelib');
     // Set additional attribute for the thumbnail select box
     if($imagelib_field !== false)
     {
-      $form->setFieldAttribute('thumbnail', 'imagelib_id', $imagelib_field->id);
+      $this->form->setFieldAttribute('thumbnail', 'imagelib_id', $imagelib_field->id);
     }
 
     // Bind the data to the form
-    $form->bind($category);
+    $this->form->bind($this->category);
 
     // Set some form fields manually
-    $form->setValue('imagelib', null, $category->catimage_src);
+    $this->form->setValue('imagelib', null, $this->category->catimage_src);
 
     // Get limitstart from request to set the correct limitstart (page) in usercategories when
     // leaving edit/new mode with save or cancel
-    $limitstart = JRequest::getVar('limitstart', null);
-    $slimitstart = ($limitstart != null ? '&limitstart='.(int)$limitstart : '');
-
-    $this->assignRef('params',          $params);
-    $this->assignRef('form',            $form);
-    $this->assignRef('category',        $category);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
-    $this->assignRef('slimitstart',     $slimitstart);
+    $limitstart        = $this->_mainframe->input->get('limitstart', null);
+    $this->slimitstart = ($limitstart != null ? '&limitstart='.(int)$limitstart : '');
 
     parent::display($tpl);
   }

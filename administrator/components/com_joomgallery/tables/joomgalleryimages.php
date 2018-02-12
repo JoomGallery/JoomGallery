@@ -122,11 +122,11 @@ class TableJoomgalleryImages extends JTable
           $this->published = 0;
           if($this->id)
           {
-            JError::raiseNotice('100', JText::sprintf('COM_JOOMGALLERY_COMMON_NOT_ALLOWED_TO_PUBLISH_IMAGE', $this->id));
+            JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COMMON_NOT_ALLOWED_TO_PUBLISH_IMAGE', $this->id),'notice');
           }
           else
           {
-            JError::raiseNotice('100', JText::_('COM_JOOMGALLERY_COMMON_NOT_ALLOWED_TO_PUBLISH_NEW_IMAGE'));
+            JFactory::getApplication()->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_NOT_ALLOWED_TO_PUBLISH_NEW_IMAGE'),'notice');
           }
         }
       }
@@ -230,7 +230,7 @@ class TableJoomgalleryImages extends JTable
           ->set('thumbnail = 0')
           ->where('thumbnail = '.$pk);
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError($this->_db->getErrorMsg());
 

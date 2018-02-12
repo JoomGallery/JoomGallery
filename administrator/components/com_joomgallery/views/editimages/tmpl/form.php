@@ -6,10 +6,10 @@ JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
 ?>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 Joomla.submitbutton = function(task)
 {
-  var form = document.id('editimages-form');
+  var form = document.getElementById('editimages-form');
   if(task == 'cancel' || document.formvalidator.isValid(form)) {
     <?php echo $this->form->getField('imgtext')->save(); ?>
     Joomla.submitform(task, form);
@@ -17,10 +17,10 @@ Joomla.submitbutton = function(task)
   else {
     var msg = new Array();
     msg.push('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
-    if(form.imgtitle.hasClass('invalid')) {
+    if(form.getElementById('jform_imgtitle').hasClass('invalid')) {
         msg.push('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_IMAGE_MUST_HAVE_TITLE', true); ?>');
     }
-    if(form.catid.hasClass('invalid')) {
+    if(form.getElementById('jform_catid').hasClass('invalid')) {
       msg.push('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_YOU_MUST_SELECT_CATEGORY', true);?>');
     }
     alert(msg.join('\n'));

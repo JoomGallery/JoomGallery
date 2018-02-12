@@ -49,8 +49,8 @@ class JoomGalleryModelMini extends JoomGalleryModel
     // Let's load the data if it doesn't already exist
     if(empty($this->_images))
     {
-      $limitstart = JRequest::getInt('limitstart');
-      $limit      = JRequest::getInt('limit');
+      $limitstart = $this->_mainframe->input->getInt('limitstart');
+      $limit      = $this->_mainframe->input->getInt('limit');
 
       $query = $this->_buildQuery();
 
@@ -116,7 +116,7 @@ class JoomGalleryModelMini extends JoomGalleryModel
 
     // Filter by category
     $catid  = $this->_mainframe->getUserStateFromRequest('joom.mini.catid', 'catid', 0, 'int');
-    if($catid || JRequest::getCmd('type') == 'category')
+    if($catid || $this->_mainframe->input->getCmd('type') == 'category')
     {
       $query->where('jg.catid = '.$catid);
     }

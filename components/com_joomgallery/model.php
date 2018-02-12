@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.application.component.model');
-
 /**
  * JoomGallery Parent Model
  *
@@ -64,7 +62,7 @@ class JoomGalleryModel extends JModelLegacy
     $this->_ambit     = JoomAmbit::getInstance();
     $this->_config    = JoomConfig::getInstance();
 
-    $this->_mainframe = JFactory::getApplication('site');
+    $this->_mainframe = JFactory::getApplication();
     $this->_user      = JFactory::getUser();
   }
 }

@@ -38,36 +38,39 @@ class JoomGalleryViewFavourites extends JoomGalleryView
       $breadcrumbs->addItem($this->output('MY'));
     }
 
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $pathway = $this->output('MY');
+    $this->pathway = $this->output('MY');
 
-    $backtarget = JRoute::_('index.php?view=gallery'); //see above
-    $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
+    $this->backtarget = JRoute::_('index.php?view=gallery'); //see above
+    $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
 
     // Get number of images and hits in gallery
     $numbers = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
+
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
-    $state = $this->get('State');
-    $rows = $this->get('Favourites');
+    $this->state = $this->get('State');
+    $this->rows = $this->get('Favourites');
 
-    foreach($rows as $key => $row)
+    foreach($this->rows as $key => $row)
     {
       $row->link = JHTML::_('joomgallery.openimage', $this->_config->get('jg_detailpic_open'), $row);
 
@@ -86,12 +89,12 @@ class JoomGalleryViewFavourites extends JoomGalleryView
       // if a box is activated
       if(!is_numeric($this->_config->get('jg_detailpic_open')) || $this->_config->get('jg_detailpic_open') > 1)
       {
-        $rows[$key]->atagtitle = JHTML::_('joomgallery.getTitleforATag', $row);
+        $this->rows[$key]->atagtitle = JHTML::_('joomgallery.getTitleforATag', $row);
       }
       else
       {
         // Set the imgtitle by default
-        $rows[$key]->atagtitle = 'title="'.$row->imgtitle.'"';
+        $this->rows[$key]->atagtitle = 'title="'.$row->imgtitle.'"';
       }
 
       if($this->_config->get('jg_showauthor'))
@@ -143,32 +146,21 @@ class JoomGalleryViewFavourites extends JoomGalleryView
     {
       if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
       {
-        $params->set('show_download_icon', 1);
+        $this->params->set('show_download_icon', 1);
       }
       else
       {
         if($this->_config->get('jg_download_hint'))
         {
-          $params->set('show_download_icon', -1);
+          $this->params->set('show_download_icon', -1);
         }
       }
     }
 
     // Set redirect url used in editor links to redirect back to favourites view after edit/delete
-    $redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
+    $this->redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
 
-    $this->assignRef('params',          $params);
-    $this->assignRef('rows',            $rows);
-    $this->assignRef('state',           $state);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
-    $this->assignRef('redirect',        $redirect);
-
-    $layout = JRequest::getCmd('layout');
+    $layout = $this->_mainframe->input->getCmd('layout');
     if(!$layout && $this->get('Layout'))
     {
       $this->setLayout('list');

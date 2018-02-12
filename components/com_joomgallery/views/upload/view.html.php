@@ -48,7 +48,7 @@ class JoomGalleryViewUpload extends JoomGalleryView
       $this->_mainframe->redirect(JRoute::_('index.php?view=userpanel', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_YOU_ARE_NOT_ALLOWED_TO_UPLOAD'), 'notice');
     }
 
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Breadcrumbs
     if($this->_config->get('jg_completebreadcrumbs'))
@@ -59,62 +59,53 @@ class JoomGalleryViewUpload extends JoomGalleryView
     }
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $pathway = null;
+    $this->pathway = null;
     if($this->_config->get('jg_showpathway'))
     {
-      $pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
-      $pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_COMMON_UPLOAD_NEW_IMAGE');
+      $this->pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
+      $this->pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_COMMON_UPLOAD_NEW_IMAGE');
     }
 
-    $backtarget = JRoute::_('index.php?view=gallery');
-    $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
+    $this->backtarget = JRoute::_('index.php?view=gallery');
+    $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
-    $count = $this->get('ImageNumber');
+    $this->count = $this->get('ImageNumber');
 
-    if($count >= $this->_config->get('jg_maxuserimage'))
+    if($this->count >= $this->_config->get('jg_maxuserimage'))
     {
       $timespan = $this->_config->get('jg_maxuserimage_timespan');
       $msg = JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_MAY_ADD_MAX_OF', $this->_config->get('jg_maxuserimage'), $timespan > 0 ? JText::plural('COM_JOOMGALLERY_UPLOAD_NEW_IMAGE_MAXCOUNT_TIMESPAN', $timespan) : '');
       $this->_mainframe->redirect(JRoute::_('index.php?view=userpanel', false), $msg, 'notice');
     }
 
-    $inputcounter   = $this->_config->get('jg_maxuserimage') - $count;
-    $remainder      = $inputcounter;
-    if($inputcounter > $this->_config->get('jg_maxuploadfields'))
+    $this->inputcounter   = $this->_config->get('jg_maxuserimage') - $this->count;
+    $this->remainder      = $this->inputcounter;
+    if($this->inputcounter > $this->_config->get('jg_maxuploadfields'))
     {
-      $inputcounter = $this->_config->get('jg_maxuploadfields');
+      $this->inputcounter = $this->_config->get('jg_maxuploadfields');
     }
 
-    $this->assignRef('count',         $count);
-    $this->assignRef('remainder',     $remainder);
-    $this->assignRef('inputcounter',  $inputcounter);
-    $this->_doc->addScriptDeclaration('    var jg_inputcounter = '.$inputcounter.';');
-
-    $this->assignRef('params',          $params);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
+    $this->_doc->addScriptDeclaration('    var jg_inputcounter = '.$this->inputcounter.';');
 
     JHtml::_('behavior.formvalidation');
     JHtml::_('behavior.tooltip');
@@ -151,7 +142,7 @@ class JoomGalleryViewUpload extends JoomGalleryView
     $this->ajax_form    = JForm::getInstance(_JOOM_OPTION.'.ajaxupload', 'ajaxupload');
     $this->batch_form   = JForm::getInstance(_JOOM_OPTION.'.batchupload', 'batchupload');
     $this->applet_form  = JForm::getInstance(_JOOM_OPTION.'.jupload', 'jupload');
-    $this->single_form->setFieldAttribute('arrscreenshot', 'quantity', $inputcounter);
+    $this->single_form->setFieldAttribute('arrscreenshot', 'quantity', $this->inputcounter);
 
     $this->_doc->addScriptDeclaration('    var jg_filenamewithjs = '.($this->_config->get('jg_filenamewithjs') ? 'true' : 'false').';');
     $this->_doc->addScript($this->_ambit->getScript('upload.js'));
