@@ -964,9 +964,9 @@ echo JHtml::_('tabs.end');
     <input type="hidden" name="task" value="" />
     <input type="hidden" name="boxchecked" value="0" />
 <?php if($this->_config->isExtended()): ?>
-    <input type="hidden" name="id" value="<?php echo !JRequest::getInt('group_id') ? JRequest::getInt('id') : 0; ?>" />
-    <input type="hidden" name="based_on" value="<?php echo JRequest::getInt('id'); ?>" />
-    <input type="hidden" name="group_id" value="<?php echo JRequest::getInt('group_id'); ?>" />
+    <input type="hidden" name="id" value="<?php echo !$this->_mainframe->input->getInt('group_id') ? $this->_mainframe->input->getInt('id') : 0; ?>" />
+    <input type="hidden" name="based_on" value="<?php echo $this->_mainframe->input->getInt('id'); ?>" />
+    <input type="hidden" name="group_id" value="<?php echo $this->_mainframe->input->getInt('group_id'); ?>" />
 <?php endif; ?>
     <?php JHtml::_('joomgallery.credits'); ?>
   </div>

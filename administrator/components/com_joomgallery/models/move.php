@@ -43,7 +43,7 @@ class JoomGalleryModelMove extends JoomGalleryModel
    */
   protected function _buildQuery()
   {
-    $cids = JRequest::getVar('cid', array(0), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(0), 'array');
 
     $query = $this->_db->getQuery(true)
           ->select('*')

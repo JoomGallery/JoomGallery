@@ -33,7 +33,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    JRequest::setVar('view', 'categories');
+    $this->input->set('view', 'categories');
 
     // Register tasks
     $this->registerTask('new',              'edit');
@@ -41,7 +41,6 @@ class JoomGalleryControllerCategories extends JoomGalleryController
     $this->registerTask('save2new',         'save');
     $this->registerTask('save2copy',        'save');
     $this->registerTask('unpublish',        'publish');
-    #$this->registerTask('reject',          'approve');
     $this->registerTask('accesspublic',     'access');
     $this->registerTask('accessregistered', 'access');
     $this->registerTask('accessspecial',    'access');
@@ -59,8 +58,8 @@ class JoomGalleryControllerCategories extends JoomGalleryController
   function publish()
   {
     // Initialize variables
-    $cid      = JRequest::getVar('cid', array(), 'post', 'array');
-    $task     = JRequest::getCmd('task');
+    $cid      = $this->input->post->get('cid', array(), 'array');
+    $task     = $this->input->getCmd('task');
     $publish  = (int)($task == 'publish');
 
     if(empty($cid))
@@ -82,7 +81,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
 
     if($unchanged_categories)
     {
-      JError::raiseNotice(403, JText::plural('COM_JOOMGALLERY_CATMAN_ERROR_EDITSTATE_NOT_PERMITTED', $unchanged_categories));
+      JFactory::getApplication()->enqueueMessage(JText::plural('COM_JOOMGALLERY_CATMAN_ERROR_EDITSTATE_NOT_PERMITTED', $unchanged_categories), 'notice');
     }
 
     $model = $this->getModel('categories');
@@ -115,8 +114,8 @@ class JoomGalleryControllerCategories extends JoomGalleryController
   function approve()
   {
     // Initialize variables
-    $cid      = JRequest::getVar('cid', array(), 'post', 'array');
-    $task     = JRequest::getCmd('task');
+    $cid      = $this->input->post->get('cid', array(), 'array');
+    $task     = $this->input->getCmd('task');
     $publish  = ($task == 'approve');
 
     if(empty($cid))
@@ -138,7 +137,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
 
     if($unchanged_categories)
     {
-      JError::raiseNotice(403, JText::plural('COM_JOOMGALLERY_CATMAN_ERROR_EDITSTATE_NOT_PERMITTED', $unchanged_categories));
+      JFactory::getApplication()->enqueueMessage(JText::plural('COM_JOOMGALLERY_CATMAN_ERROR_EDITSTATE_NOT_PERMITTED', $unchanged_categories), 'notice');
     }
 
     $model = $this->getModel('categories');
@@ -170,7 +169,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
    */
   function remove()
   {
-    $ids = JRequest::getVar('cid', array(), '', 'array');
+    $ids = $this->input->get('cid', array(), 'array');
 
     $model = $this->getModel('categories');
     try
@@ -205,7 +204,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
    */
   function deletecompletely()
   {
-    $mainframe  = JFactory::getApplication('administrator');
+    $mainframe  = JFactory::getApplication();
     $categories = $mainframe->getUserState('joom.categories.delete.categories');
     $images     = $mainframe->getUserState('joom.categories.delete.images');
 
@@ -346,9 +345,9 @@ class JoomGalleryControllerCategories extends JoomGalleryController
    */
   function edit()
   {
-    JRequest::setVar('view',    'category');
-    JRequest::setVar('layout',  'form');
-    JRequest::setVar('hidemainmenu', 1);
+    $this->input->set('view', 'category');
+    $this->input->set('layout', 'form');
+    $this->input->set('hidemainmenu', 1);
 
     parent::display();
   }
@@ -366,7 +365,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
 
     // Check whether a redirect is requested
     $redirect = false;
-    if($url = JRequest::getVar('redirect', '', '', 'base64'));
+    if($url = $this->input->getBase64('redirect', ''))
     {
       $url = base64_decode($url);
       if(JURI::isInternal($url))
@@ -375,25 +374,27 @@ class JoomGalleryControllerCategories extends JoomGalleryController
       }
     }
 
-    if(JRequest::getCmd('task') == 'save2copy')
+    if($this->input->getCmd('task') == 'save2copy')
     {
       // Reset the ID and then treat the request as for apply.
       // This way a new category will be created and after that
       // it will be displayed right away
-      JRequest::setVar('cid', 0);
-      JRequest::setVar('task', 'apply');
+      $data = $this->input->post->get('jform', array(), 'array');
+      $data['cid'] = 0;
+      $this->input->post->set('jform', $data);
+      $this->input->set('task', 'apply');
     }
 
     if($cid = $model->store())
     {
       if(!$redirect)
       {
-        if(JRequest::getCmd('task') == 'save2new')
+        if($this->input->getCmd('task') == 'save2new')
         {
           // Reset the ID after storing so that we
           // will be redirected to an empty form
           $cid = 0;
-          JRequest::setVar('task', 'apply');
+          $this->input->set('task', 'apply');
         }
         $redirect = $this->_ambit->getRedirectUrl(null, $cid);
       }
@@ -422,11 +423,11 @@ class JoomGalleryControllerCategories extends JoomGalleryController
    */
   function order()
   {
-    $cid = JRequest::getVar('cid', array(), 'post', 'array');
+    $cid = $this->input->post->get('cid', array(), 'array');
 
     // Direction
     $dir  = 1;
-    $task = JRequest::getCmd('task');
+    $task = $this->input->getCmd('task');
     if($task == 'orderup')
     {
       $dir = -1;
@@ -459,12 +460,12 @@ class JoomGalleryControllerCategories extends JoomGalleryController
    */
   function saveOrder()
   {
-    JRequest::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
+    JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
 
     // Get the arrays from the request
-    $pks            = JRequest::getVar('cid',  null,  'post',  'array');
-    $order          = JRequest::getVar('order',  null, 'post', 'array');
-    $originalOrder  = explode(',', JRequest::getString('original_order_values'));
+    $pks            = $this->input->post->get('cid', null, 'array');
+    $order          = $this->input->post->get('order',  null, 'array');
+    $originalOrder  = explode(',', $this->input->getString('original_order_values'));
 
     // Make sure something has changed
     if($order !== $originalOrder)
@@ -498,7 +499,7 @@ class JoomGalleryControllerCategories extends JoomGalleryController
   public function batch()
   {
     JSession::checkToken() or jexit(JText::_('JINVALID_TOKEN'));
-  
+
     $vars = $this->input->post->get('batch', array(), 'array');
     $cid  = $this->input->post->get('cid', array(), 'array');
 

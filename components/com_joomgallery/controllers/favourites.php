@@ -32,12 +32,12 @@ class JoomGalleryControllerFavourites extends JControllerLegacy
     $model = $this->getModel('favourites');
 
     // Determine correct redirect URL
-    if($catid = JRequest::getInt('catid'))
+    if($catid = $this->input->getInt('catid'))
     {
       // Request was initiated from category view
       $url = JRoute::_('index.php?view=category&catid='.$catid, false);
     }
-    elseif(($toplist = JRequest::getVar('toplist')) !== null)
+    elseif(($toplist = $this->input->get('toplist')) !== null)
     {
       // Request was initiated from toplist view
       if(empty($toplist))
@@ -51,7 +51,7 @@ class JoomGalleryControllerFavourites extends JControllerLegacy
         $url = JRoute::_('index.php?view=toplist&type='.$toplist, false);
       }
     }
-    elseif(($sstring = JRequest::getVar('sstring')) !== null)
+    elseif(($sstring = $this->input->get('sstring')) !== null)
     {
      // Request was initiated from search view
       $url = JRoute::_('index.php?view=search&sstring='.$sstring, false);
@@ -82,18 +82,18 @@ class JoomGalleryControllerFavourites extends JControllerLegacy
    */
   public function addImages()
   {
-    $catid  = JRequest::getInt('catid');
+    $catid  = $this->input->getInt('catid');
     $model  = $this->getModel('favourites');
 
     // Determine correct redirect URL
-    if(JRequest::getCmd('return') == 'gallery')
+    if($this->input->getCmd('return') == 'gallery')
     {
       // Request was initiated from gallery view
       $url = JRoute::_('index.php?view=gallery', false);
     }
     else
     {
-      if($return = JRequest::getInt('return'))
+      if($return = $this->input->getInt('return'))
       {
         // Request was initiated from parent category view
         $url = JRoute::_('index.php?view=category&catid='.(int) $return, false);

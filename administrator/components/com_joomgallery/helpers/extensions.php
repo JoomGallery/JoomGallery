@@ -226,7 +226,7 @@ class JoomExtensions
       {
         $version_from_xml = false;
 
-        $mainframe = JFactory::getApplication('administrator');
+        $mainframe = JFactory::getApplication();
         if(!$version = $mainframe->getUserState('joom.version.string'))
         {
           $extensions = JoomExtensions::getInstalledExtensions();

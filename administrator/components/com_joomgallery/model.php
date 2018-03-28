@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport( 'joomla.application.component.model');
-
 /**
  * JoomGallery Parent Model
  *
@@ -29,7 +27,7 @@ class JoomGalleryModel extends JModelLegacy
    * @access  protected
    * @var     object
    */
-  var $_mainframe;
+  protected $_mainframe;
 
   /**
    * JoomConfig object
@@ -37,7 +35,7 @@ class JoomGalleryModel extends JModelLegacy
    * @access  protected
    * @var     object
    */
-  var $_config;
+  protected $_config;
 
   /**
    * JoomAmbit object
@@ -45,7 +43,7 @@ class JoomGalleryModel extends JModelLegacy
    * @access  protected
    * @var     object
    */
-  var $_ambit;
+  protected $_ambit;
 
   /**
    * JUser object, holds the current user data
@@ -53,7 +51,7 @@ class JoomGalleryModel extends JModelLegacy
    * @access  protected
    * @var     object
    */
-  var $_user;
+  protected $_user;
 
   /**
    * Constructor
@@ -68,8 +66,7 @@ class JoomGalleryModel extends JModelLegacy
 
     $this->_ambit     = JoomAmbit::getInstance();
     $this->_config    = JoomConfig::getInstance();
-
-    $this->_mainframe = JFactory::getApplication('administrator');
+    $this->_mainframe = JFactory::getApplication();
     $this->_user      = JFactory::getUser();
   }
 }

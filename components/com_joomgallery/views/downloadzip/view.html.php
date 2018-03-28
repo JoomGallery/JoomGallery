@@ -31,7 +31,7 @@ class JoomGalleryViewDownloadzip extends JoomGalleryView
    */
   function display($tpl = null)
   {
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Breadcrumbs
     if($this->_config->get('jg_completebreadcrumbs'))
@@ -41,38 +41,40 @@ class JoomGalleryViewDownloadzip extends JoomGalleryView
     }
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $pathway  = JText::_('COM_JOOMGALLERY_DOWNLOADZIP_DOWNLOAD');
+    $this->pathway = JText::_('COM_JOOMGALLERY_DOWNLOADZIP_DOWNLOAD');
 
-    $backtarget = JRoute::_('index.php?view=favourites'); //see above
-    $backtext   = JText::_('COM_JOOMGALLERY_DOWNLOADZIP_BACK_TO_FAVOURITES');
+    $this->backtarget = JRoute::_('index.php?view=favourites'); //see above
+    $this->backtext   = JText::_('COM_JOOMGALLERY_DOWNLOADZIP_BACK_TO_FAVOURITES');
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
 
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
-    $zipname = $this->_mainframe->getUserState('joom.favourites.zipname');
+    $this->zipname = $this->_mainframe->getUserState('joom.favourites.zipname');
 
-    if(!$zipname || !file_exists(JPath::clean(JPATH_ROOT.'/'.$zipname)))
+    if(!$this->zipname || !file_exists(JPath::clean(JPATH_ROOT.'/'.$this->zipname)))
     {
       $this->_mainframe->redirect(JRoute::_('index.php?view=favourites', false), JText::_('COM_JOOMGALLERY_DOWNLOADZIP_ZIPFILE_NOT_FOUND'), 'error');
     }
 
-    $zipsize = filesize($zipname);
+    $zipsize = filesize($this->zipname);
     if($zipsize < 1000000)
     {
       $zipsize        = round($zipsize, -3) / 1000;
@@ -88,15 +90,7 @@ class JoomGalleryViewDownloadzip extends JoomGalleryView
                                       );
     }
 
-    $this->assignRef('params',          $params);
-    $this->assignRef('zipname',         $zipname);
-    $this->assignRef('zipsize',         $zipsize_string);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
+    $this->zipsize = &$zipsize_string;
 
     parent::display($tpl);
   }

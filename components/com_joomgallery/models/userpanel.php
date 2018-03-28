@@ -192,11 +192,11 @@ class JoomGalleryModelUserpanel extends JoomGalleryModel
   {
     $old_state = $this->_mainframe->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
-    $new_state = JRequest::getVar($request, null, 'default', $type);
+    $new_state = $this->_mainframe->input->get($request, null, $type);
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
-      JRequest::setVar('limitstart', 0);
+      $this->_mainframe->input->set('limitstart', 0);
     }
 
     // Save the new value only if it was set in this request.

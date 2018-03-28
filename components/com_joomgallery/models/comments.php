@@ -40,7 +40,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
   {
     parent::__construct();
 
-    $id = JRequest::getInt('id');
+    $id = $this->_mainframe->input->getInt('id');
     $this->setId($id);
   }
 
@@ -55,7 +55,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
     // Set new image ID if valid
     if(!$id)
     {
-      JError::raiseError(500, JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
+      throw new RuntimeException(JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
     }
     $this->_id  = $id;
   }
@@ -109,8 +109,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
     }
 
     // Comment text
-    $filter = JFilterInput::getInstance();
-    $text = trim($filter->clean(JRequest::getVar('cmttext', '', 'post')));
+    $text = trim($this->_mainframe->input->post->getString('cmttext', ''));
     if(!$text)
     {
       $this->_mainframe->redirect(JRoute::_('index.php?view=detail&id='.$this->_id.'#joomcommentform', false),
@@ -126,7 +125,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
     {
       if($this->_config->get('jg_namedanoncomment'))
       {
-        $name   = trim($filter->clean(JRequest::getVar('cmtname', '', 'post')));
+        $name = trim($this->_mainframe->input->post->getString('cmtname', ''));
         if(!$name)
         {
           $name = JText::_('COM_JOOMGALLERY_COMMON_GUEST');
@@ -283,17 +282,17 @@ class JoomGalleryModelComments extends JoomGalleryModel
   {
     if(!$this->_user->authorise('core.manage', _JOOM_OPTION))
     {
-      JError::raiseError(500, JText::_('COM_JOOMGALLERY_COMMON_PERMISSION_DENIED'));
+      throw new JAccessExceptionNotallowed(JText::_('COM_JOOMGALLERY_COMMON_PERMISSION_DENIED'));
     }
 
-    $cmtid = JRequest::getInt('cmtid');
+    $cmtid = $this->_mainframe->input->getInt('cmtid');
 
     $query = $this->_db->getQuery(true)
           ->delete(_JOOM_TABLE_COMMENTS)
           ->where('cmtid = '.$cmtid)
           ->where('cmtpic  = '.$this->_id);
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       $this->setError(JText::_('COM_JOOMGALLERY_ERROR_DELETING_COMMENT'));
 

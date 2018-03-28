@@ -48,7 +48,7 @@ class JoomGalleryControllerCssedit extends JoomGalleryController
     }
 
     // Set view
-    JRequest::setVar('view', 'cssedit');
+    $this->input->set('view', 'cssedit');
 
     $this->file = JPATH_ROOT.'/media/joomgallery/css/joom_local.css';
 
@@ -67,18 +67,19 @@ class JoomGalleryControllerCssedit extends JoomGalleryController
   {
     jimport('joomla.filesystem.file');
 
-    $content  = stripcslashes(JRequest::getVar('csscontent'));
+    $content  = stripcslashes($this->input->getString('csscontent'));
 
     if(!$content)
     {
       $this->setRedirect($this->_ambit->getRedirectUrl(), JText::_('COM_JOOMGALLERY_CSSMAN_MSG_EMPTY'), 'notice');
+
       return;
     }
 
     if(JFile::write($this->file, $content))
     {
       $controller = '';
-      if(JRequest::getCmd('task') == 'apply')
+      if($this->input->getCmd('task') == 'apply')
       {
         $controller = 'cssedit';
       }

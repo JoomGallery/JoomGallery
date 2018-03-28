@@ -32,7 +32,7 @@ class JoomGalleryViewImage extends JoomGalleryView
   {
     jimport('joomla.filesystem.file');
 
-    $type     = JRequest::getWord('type', 'thumb');
+    $type     = $this->_mainframe->input->getWord('type', 'thumb');
     $image    = $this->get('Data');
     $img      = $this->_ambit->getImg($type.'_path', $image);
 
@@ -54,7 +54,7 @@ class JoomGalleryViewImage extends JoomGalleryView
         $mime = 'image/png';
         break;
       default:
-        JError::raiseError(404, JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $info[2]));
+        throw new Exception(JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $info[2]));
         break;
     }
 
@@ -63,8 +63,8 @@ class JoomGalleryViewImage extends JoomGalleryView
 
     // Set header to specify the file name
     $disposition = 'inline';
-    JResponse::setHeader('Content-disposition', $disposition.'; filename='.basename($img));
+    $this->_mainframe->setHeader('Content-disposition', $disposition.'; filename='.basename($img));
 
-    echo JFile::read($img);
+    echo file_get_contents($img);
   }
 }

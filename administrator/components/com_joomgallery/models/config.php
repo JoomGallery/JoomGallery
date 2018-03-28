@@ -122,7 +122,7 @@ class JoomGalleryModelConfig extends JoomGalleryModel
           ->from(_JOOM_TABLE_CONFIG.' AS c')
           ->from('#__usergroups AS g')
           ->where('c.group_id = g.id')
-          ->where('c.id = '.JRequest::getInt('id'));
+          ->where('c.id = '.$this->_mainframe->input->getInt('id'));
     $this->_db->setQuery($query);
 
     return $this->_db->loadResult();

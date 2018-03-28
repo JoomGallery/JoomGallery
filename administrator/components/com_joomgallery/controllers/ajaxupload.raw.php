@@ -35,7 +35,7 @@ class JoomGalleryControllerAjaxupload extends JoomGalleryController
 
     $uploader = new JoomUpload();
 
-    if($image = $uploader->upload(JRequest::getCmd('type', 'ajax')))
+    if($image = $uploader->upload($this->input->getCmd('type', 'ajax')))
     {
       $result['success'] = true;
       if(is_object($image))

@@ -71,7 +71,7 @@ class JoomRouting
    */
   public static function checkItemid($Itemid)
   {
-    $mainframe  = JApplication::getInstance('site');
+    $mainframe  = JFactory::getApplication();
     $menu       = $mainframe->getMenu();
     $menuItem   = $menu->getItem($Itemid);
     if(!isset($menuItem->query['view']) || $menuItem->query['view'] == 'gallery')

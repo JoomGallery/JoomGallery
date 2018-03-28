@@ -44,7 +44,7 @@ class JoomGalleryViewEdit extends JoomGalleryView
       $this->_mainframe->redirect(JRoute::_('index.php?view=gallery', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_YOU_ARE_NOT_LOGGED'), 'notice');
     }
 
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Breadcrumbs
     if($this->_config->get('jg_completebreadcrumbs'))
@@ -55,86 +55,75 @@ class JoomGalleryViewEdit extends JoomGalleryView
     }
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $pathway = null;
+    $this->pathway = null;
     if($this->_config->get('jg_showpathway'))
     {
-      $pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
-      $pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_EDIT_EDIT_IMAGE');
+      $this->pathway  = '<a href="'.JRoute::_('index.php?view=userpanel').'">'.JText::_('COM_JOOMGALLERY_COMMON_USER_PANEL').'</a>';
+      $this->pathway .= ' &raquo; '.JText::_('COM_JOOMGALLERY_EDIT_EDIT_IMAGE');
     }
 
-    $backtarget = JRoute::_('index.php?view=userpanel'); //see above
-    $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_USER_PANEL');
+    $this->backtarget = JRoute::_('index.php?view=userpanel'); //see above
+    $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_USER_PANEL');
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
     $model = $this->getModel();
-    $array = JRequest::getVar('id',  0, '', 'array');
+    $array = $this->_mainframe->input->get('id', array(0), 'array');
     $model->setId((int)$array[0]);
-    $image = $model->getImage();
+    $this->image = $model->getImage();
 
     // Get the form and fill the fields
-    $form = $this->get('Form');
+    $this->form = $this->get('Form');
 
     // Bind the data to the form
-    $form->bind($image);
+    $this->form->bind($this->image);
 
     // Set some form fields manually
-    $form->setValue('imagelib', null, $image->thumb_url);
+    $this->form->setValue('imagelib', null, $this->image->thumb_url);
 
     // Get limitstart from request to set the correct limitstart (page) in userpanel when
     // leaving edit mode with save or cancel
-    $limitstart = JRequest::getVar('limitstart', null);
-    $slimitstart = ($limitstart != null ? '&limitstart='.(int)$limitstart : '');
+    $limitstart = $this->_mainframe->input->get('limitstart', null);
+    $this->slimitstart = ($limitstart != null ? '&limitstart='.(int)$limitstart : '');
 
     // Get redirect page, if any given by request
-    $redirect     = JRequest::getVar('redirect', null);
-    $redirecturl  = '';
-    if($redirect === null)
+    $this->redirect     = $this->_mainframe->input->getBase64('redirect');
+    $this->redirecturl  = '';
+    if($this->redirect === null)
     {
-      $redirect = '';
+      $this->redirect = '';
     }
     else
     {
-      $redirecturl = base64_decode($redirect);
-      if(!JURI::isInternal($redirecturl))
+      $this->redirecturl = base64_decode($this->redirect);
+      if(!JURI::isInternal($this->redirecturl))
       {
-        $redirecturl = '';
-        $redirect    = '';
+        $this->redirecturl = '';
+        $this->redirect    = '';
       }
       else
       {
-        $redirect = '&redirect='.$redirect;
+        $this->redirect = '&redirect='.$this->redirect;
       }
     }
-
-    $this->assignRef('params',          $params);
-    $this->assignRef('form',            $form);
-    $this->assignRef('image',           $image);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
-    $this->assignRef('slimitstart',     $slimitstart);
-    $this->assignRef('redirect',        $redirect);
-    $this->assignRef('redirecturl',     $redirecturl);
 
     parent::display($tpl);
   }

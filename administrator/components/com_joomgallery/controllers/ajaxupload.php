@@ -32,7 +32,7 @@ class JoomGalleryControllerAjaxupload extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    JRequest::setVar('view', 'ajaxupload');
+    $this->input->set('view', 'ajaxupload');
   }
 
   /**

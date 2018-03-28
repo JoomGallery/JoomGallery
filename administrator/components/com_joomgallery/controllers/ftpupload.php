@@ -32,7 +32,7 @@ class JoomGalleryControllerFtpupload extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    JRequest::setVar('view', 'ftpupload');
+    $this->input->set('view', 'ftpupload');
   }
 
   /**
@@ -66,13 +66,13 @@ class JoomGalleryControllerFtpupload extends JoomGalleryController
   {
     require_once JPATH_COMPONENT.'/helpers/upload.php';
     $uploader = new JoomUpload();
-    if($uploader->upload(JRequest::getCmd('type', 'ftp')))
+    if($uploader->upload($this->input->getCmd('type', 'ftp')))
     {
       $msg  = JText::_('COM_JOOMGALLERY_UPLOAD_MSG_SUCCESSFULL');
       $url  = $this->_ambit->getRedirectUrl();
 
       // Set custom redirect if we are asked for that
-      if($redirect = JRequest::getVar('redirect', '', '', 'base64'))
+      if($redirect = $this->input->getBase64('redirect', ''))
       {
         $url_decoded  = base64_decode($redirect);
         if(JURI::isInternal($url))

@@ -87,7 +87,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
   {
     parent::__construct();
 
-    $id = JRequest::getInt('catid', 0);
+    $id = $this->_mainframe->input->getInt('catid', 0);
     $this->setId($id);
   }
 
@@ -179,7 +179,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     {
       // We still have to select the categories according to the pagination
       $limit      = $this->_config->get('jg_subperpage');
-      $limitstart = JRequest::getInt('catlimitstart', 0);
+      $limitstart = $this->_mainframe->input->getInt('catlimitstart', 0);
       $cats       = array_slice($this->_categorieswithoutempty, $limitstart, $limit);
 
       return $cats;
@@ -452,7 +452,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
 
       if(!$row = $this->_db->loadObject())
       {
-        JError::raiseError(500, JText::sprintf('Category with ID %d not found', $this->_id));
+        throw new RuntimeException(JText::sprintf('Category with ID %d not found', $this->_id));
       }
 
       $this->_category = $row;
@@ -465,7 +465,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
           &&  $this->_category->parent_id > 1
           &&  !isset($categories[$this->_category->parent_id]))
       {
-        JError::raiseError(500, JText::sprintf('Category with ID %d not found', $this->_id));
+        throw new RuntimeException(JText::sprintf('Category with ID %d not found', $this->_id));
       }
     }
 
@@ -484,8 +484,8 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     if(empty($this->_categories))
     {
       // Get the pagination request variables
-      $limit      = $this->_config->get('jg_subperpage');#JRequest::getVar('limit', 0, '', 'int');
-      $limitstart = JRequest::getInt('catlimitstart', 0);
+      $limit      = $this->_config->get('jg_subperpage');
+      $limitstart = $this->_mainframe->input->getInt('catlimitstart', 0);
 
       $query = $this->_buildCategoriesQuery();
 
@@ -548,7 +548,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     if(empty($this->_images))
     {
       // Get the pagination request variables
-      $limitstart = JRequest::getInt('limitstart', 0);
+      $limitstart = $this->_mainframe->input->getInt('limitstart', 0);
       if($limitstart == -1)
       {
         // If we want to display all images in a popup box we will need all images
@@ -556,7 +556,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
       }
       else
       {
-        $limit  = JRequest::getInt('limit', 0);
+        $limit  = $this->_mainframe->input->getInt('limit', 0);
       }
 
       $query = $this->_buildImagesQuery();
@@ -583,7 +583,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     // Let's load the data if it doesn't already exist
     if(empty($this->_allimages))
     {
-      $limit = JRequest::getInt('limit', 0);
+      $limit = $this->_mainframe->input->getInt('limit', 0);
 
       if(!$limit)
       {

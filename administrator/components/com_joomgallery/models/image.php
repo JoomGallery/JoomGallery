@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.form.form');
-
 /**
  * Image model
  *
@@ -47,7 +45,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
   {
     parent::__construct();
 
-    $array = JRequest::getVar('cid',  0, '', 'array');
+    $array = $this->_mainframe->input->get('cid', array(0), 'array');
     $this->setId((int)$array[0]);
   }
 
@@ -78,30 +76,49 @@ class JoomGalleryModelImage extends JoomGalleryModel
 
     if(!$this->_id)
     {
-      $row->imgtitle      = $this->_mainframe->getUserStateFromRequest('joom.image.imgtitle',       'imgtitle');
-      $row->imgtext       = $this->_mainframe->getUserStateFromRequest('joom.image.imgtext',        'imgtext');
-      $row->imgauthor     = $this->_mainframe->getUserStateFromRequest('joom.image.imgauthor',      'imgauthor');
-      $row->owner         = $this->_mainframe->getUserStateFromRequest('joom.image.owner',          'owner');
-      $row->metadesc      = $this->_mainframe->getUserStateFromRequest('joom.image.metadesc',       'metadesc');
-      $row->metakey       = $this->_mainframe->getUserStateFromRequest('joom.image.metakey',        'metakey');
-      $row->published     = $this->_mainframe->getUserStateFromRequest('joom.image.published',      'published', 1, 'int');
-      $row->imgfilename   = $this->_mainframe->getUserStateFromRequest('joom.image.imgfilename',    'imgfilename');
-      $row->imgthumbname  = $this->_mainframe->getUserStateFromRequest('joom.image.imgthumbname',   'imgthumbname');
-      $row->catid         = $this->_mainframe->getUserStateFromRequest('joom.image.catid',          'catid', 0, 'int');
-      $row->access        = $this->_mainframe->getUserStateFromRequest('joom.image.access',         'access', 1, 'int');
-      // Source category for original and detail picture
-      $row->detail_catid  = $this->_mainframe->getUserStateFromRequest('joom.image.detail_catid',   'detail_catid', 0, 'int');
-      if(!$row->detail_catid)
+
+      $formData = $this->_mainframe->getUserStateFromRequest('joom.image.jform', 'jform', NULL, 'array');
+
+      if($formData != NULL)
       {
-        $row->imgfilename = '';
+        $row->imgtitle      = $formData['imgtitle'];
+        $row->imgtext       = $formData['imgtext'];
+        $row->imgauthor     = $formData['imgauthor'];
+        $row->owner         = $formData['owner'];
+        $row->metadesc      = $formData['metadesc'];
+        $row->metakey       = $formData['metakey'];
+        $row->published     = $formData['published'];
+        $row->imgfilename   = $formData['imgfilename'];
+        $row->imgthumbname  = $formData['imgthumbname'];
+        $row->catid         = $formData['catid'];
+        $row->access        = $formData['access'];
+        // Source category for original and detail picture
+        $row->detail_catid  = $formData['detail_catid'];
+        if(empty($row->detail_catid))
+        {
+          $row->detail_catid = 0;
+          $row->imgfilename  = '';
+        }
+        // Source category for thumbnail
+        $row->thumb_catid   = $formData['thumb_catid'];
+        if(empty($row->thumb_catid))
+        {
+          $row->thumb_catid  = 0;
+          $row->imgthumbname = '';
+        }
+        $row->copy_original = $formData['copy_original'];
       }
-      // Source category for thumbnail
-      $row->thumb_catid   = $this->_mainframe->getUserStateFromRequest('joom.image.thumb_catid',    'thumb_catid', 0, 'int');
-      if(!$row->thumb_catid)
+      else
       {
-        $row->imgthumbname = '';
+        $row->published     = 1;
+        $row->catid         = 0;
+        $row->access        = 1;
+        $row->detail_catid  = 0;
+        $row->imgfilename   = '';
+        $row->thumb_catid   = 0;
+        $row->imgthumbname  = '';
+        $row->copy_original = 0;
       }
-      $row->copy_original = $this->_mainframe->getUserStateFromRequest('joom.image.copy_original',  'copy_original', 0, 'int');
     }
 
     $this->_mainframe->triggerEvent('onContentPrepareData', array(_JOOM_OPTION.'.image', $row));
@@ -153,7 +170,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     JForm::addFieldPath(JPATH_COMPONENT.'/models/fields');
     JForm::addRulePath(JPATH_COMPONENT.'/models/rules');
 
-    $form = JForm::getInstance(_JOOM_OPTION.'.image', 'image');
+    $form = JForm::getInstance(_JOOM_OPTION.'.image', 'image', array('control' => 'jform'));
     if(empty($form))
     {
       return false;
@@ -193,23 +210,8 @@ class JoomGalleryModelImage extends JoomGalleryModel
     // Import the appropriate plugin group
     JPluginHelper::importPlugin($group);
 
-    // Get the dispatcher
-    $dispatcher = JDispatcher::getInstance();
-
     // Trigger the form preparation event
-    $results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
-
-    // Check for errors encountered while preparing the form
-    if(count($results) && in_array(false, $results, true))
-    {
-      // Get the last error
-      $error = $dispatcher->getError();
-
-      if(!($error instanceof Exception))
-      {
-        throw new Exception($error);
-      }
-    }
+    $this->_mainframe->triggerEvent('onContentPrepareForm', array($form, $data));
   }
 
   /**
@@ -228,7 +230,8 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $validate = true;
     if(is_null($data))
     {
-      $data = JRequest::get('post', 2);
+      $data        = $this->_mainframe->input->post->get('jform', array(), 'array');
+      $data['cid'] = $this->_mainframe->input->post->getInt('cid');
     }
     else
     {
@@ -237,7 +240,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     }
     if(is_null($params))
     {
-      $params = JRequest::getVar('params', array(), 'post', 'array');
+      $params = $this->_mainframe->input->post->get('params', array(), 'array');
     }
 
     // Check for validation errors
@@ -384,7 +387,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     // Get new image files
     if(is_null($files))
     {
-      $files = JRequest::getVar('files', '', 'files');
+      $files = $this->_mainframe->input->files->get('jform', NULL, 'raw');
     }
 
     // Clear votes if 'clearvotes' is checked
@@ -399,7 +402,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
             ->where('picid = '.$row->id);
 
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->setError($row->getError());
 
@@ -423,12 +426,12 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $types = array('thumb', 'img', 'orig');
     foreach($types as $type)
     {
-      if(isset($files['tmp_name']) && isset($files['tmp_name'][$type]) && $files['tmp_name'][$type])
+      if(isset($files['files']) && isset($files['files'][$type]) && isset($files['files'][$type]['tmp_name']) && $files['files'][$type]['tmp_name'])
       {
         jimport('joomla.filesystem.file');
 
         // Possibly the file name has to be changed because of another image format
-        $temp_filename = $files['name'][$type];
+        $temp_filename = $files['files'][$type]['name'];
         $columnname = 'imgfilename';
         if($type == 'thumb')
         {
@@ -445,9 +448,9 @@ class JoomGalleryModelImage extends JoomGalleryModel
         // Upload the file
         $file = $this->_ambit->getImg($type.'_path', $row);
         //JFile::delete($file);
-        if(!JFile::upload($files['tmp_name'][$type], $file))
+        if(!JFile::upload($files['files'][$type]['tmp_name'], $file))
         {
-          JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_UPLOAD_ERROR_UPLOADING', $this->_ambit->getImg($type.'_path', $row)));
+          $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_UPLOAD_ERROR_UPLOADING', $this->_ambit->getImg($type.'_path', $row)), 'error');
 
           // Revert database entry
           $row->$columnname = $filename;
@@ -464,8 +467,10 @@ class JoomGalleryModelImage extends JoomGalleryModel
                                             $this->_config->get('jg_thumbwidth'),
                                             $this->_config->get('jg_thumbheight'),
                                             $this->_config->get('jg_thumbcreation'),
-                                            $this->_config->get('jg_thumbquality')
-                                            );
+                                            $this->_config->get('jg_thumbquality'),
+                                            false,
+                                            $this->_config->get('jg_cropposition')
+                                           );
             break;
           case 'img':
             $return = JoomFile::resizeImage($debugoutput,
@@ -476,7 +481,8 @@ class JoomGalleryModelImage extends JoomGalleryModel
                                             false,
                                             $this->_config->get('jg_thumbcreation'),
                                             $this->_config->get('jg_picturequality'),
-                                            true
+                                            true,
+                                            0
                                             );
             break;
           default:
@@ -562,7 +568,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
    *
    * @param   string  $file   The file name to look for
    * @param   int     $catid  Optional category ID for setting an additional limit
-   * @param   thumb   $thumb  True if the given file name is the name of a thumbnail, false otherwise
+   * @param   boolean $thumb  True if the given file name is the name of a thumbnail, false otherwise
    * @return  int     The ID of the image
    * @since   2.0
    */
@@ -795,7 +801,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $thumb_dest     = $this->_ambit->get('thumb_path').$catpath_new.$item->imgthumbname;
     if(JFile::exists($thumb_dest))
     {
-      JError::raiseNotice(0, JText::_('COM_JOOMGALLERY_COMMON_DEST_THUMB_ALREADY_EXISTS'));
+      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_DEST_THUMB_ALREADY_EXISTS'), 'notice');
 
       if($thumb_count && JFile::exists($thumb_source))
       {
@@ -806,7 +812,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     {
       if(!JFile::exists($thumb_source))
       {
-        JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_COMMON_SOURCE_THUMB_NOT_EXISTS', $thumb_source));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COMMON_SOURCE_THUMB_NOT_EXISTS', $thumb_source), 'error');
 
         return false;
       }
@@ -827,7 +833,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
         // If not succesful raise an error message and abort
         if(!$result)
         {
-          JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_THUMB', JPath::clean($thumb_dest)));
+          $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_THUMB', JPath::clean($thumb_dest)), 'error');
 
           return false;
         }
@@ -854,7 +860,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $img_dest     = $this->_ambit->get('img_path').$catpath_new.$item->imgfilename;
     if(JFile::exists($img_dest))
     {
-      JError::raiseNotice(0, JText::_('COM_JOOMGALLERY_COMMON_DEST_IMG_ALREADY_EXISTS'));
+      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_DEST_IMG_ALREADY_EXISTS'), 'notice');
 
       if($img_count && JFile::exists($img_source))
       {
@@ -865,7 +871,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     {
       if(!JFile::exists($img_source))
       {
-        JError::raiseWarning(500, JText::sprintf('COM_JOOMGALLERY_COMMON_SOURCE_IMG_NOT_EXISTS', $img_source));
+        $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COMMON_SOURCE_IMG_NOT_EXISTS', $img_source), 'error');
 
         return false;
       }
@@ -893,7 +899,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
             }
           }
 
-          JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_IMG', JPath::clean($img_dest)));
+          $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_IMG', JPath::clean($img_dest)), 'error');
 
           return false;
         }
@@ -908,7 +914,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $orig_dest    = $this->_ambit->get('orig_path').$catpath_new.$item->imgfilename;
     if(JFile::exists($orig_dest))
     {
-      JError::raiseNotice(0, JText::_('COM_JOOMGALLERY_COMMON_DEST_ORIG_ALREADY_EXISTS'));
+      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_DEST_ORIG_ALREADY_EXISTS'), 'notice');
 
       if($img_count && JFile::exists($orig_source))
       {
@@ -952,7 +958,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
             }
           }
 
-          JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_ORIGINAL', JPath::clean($orig_dest)));
+          $this->_mainframe->enqueueMessage(JText::sprintf('COM_JOOMGALLERY_COULD_NOT_MOVE_ORIGINAL', JPath::clean($orig_dest)), 'error');
 
           return false;
         }
@@ -967,7 +973,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     // Make sure the record is valid
     if(!$item->check())
     {
-      JError::raiseWarning($item->getError());
+      $this->_mainframe->enqueueMessage($item->getError(), 'error');
 
       return false;
     }
@@ -975,7 +981,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     // Store the entry to the database
     if(!$item->store())
     {
-      JError::raiseWarning($item->getError());
+      $this->_mainframe->enqueueMessage($item->getError(), 'error');
 
       return false;
     }

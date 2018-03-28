@@ -28,7 +28,7 @@
       name="imgtitle"
       type="text"
       class="inputbox"
-      id="jform_title"
+      id="title"
       label="COM_JOOMGALLERY_COMMON_TITLE"
       maxLength="255"
       required="true"
@@ -168,7 +168,7 @@
       label="COM_JOOMGALLERY_IMGMAN_IMAGE_PREVIEW"
     />
     <field
-      id="jform_rules"
+      id="rules"
       name="rules"
       type="rules"
       label="JFIELD_RULES_LABEL"

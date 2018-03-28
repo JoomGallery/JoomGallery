@@ -13,7 +13,7 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.form.form');
+use Joomla\Utilities\ArrayHelper;
 
 /**
  * Category model
@@ -33,7 +33,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
   {
     parent::__construct();
 
-    $array = JRequest::getVar('cid',  0, '', 'array');
+    $array = $this->_mainframe->input->get('cid', array(0), 'array');
     $this->setId((int)$array[0]);
   }
 
@@ -129,7 +129,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
     JForm::addFieldPath(JPATH_COMPONENT.'/models/fields');
 
-    $form = JForm::getInstance(_JOOM_OPTION.'.category', 'category');
+    $form = JForm::getInstance(_JOOM_OPTION.'.category', 'category', array('control' => 'jform'));
     if(empty($form))
     {
       return false;
@@ -168,23 +168,8 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     // Import the appropriate plugin group
     JPluginHelper::importPlugin($group);
 
-    // Get the dispatcher
-    $dispatcher = JDispatcher::getInstance();
-
     // Trigger the form preparation event
-    $results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
-
-    // Check for errors encountered while preparing the form
-    if(count($results) && in_array(false, $results, true))
-    {
-      // Get the last error
-      $error = $dispatcher->getError();
-
-      if(!($error instanceof Exception))
-      {
-        throw new Exception($error);
-      }
-    }
+    $this->_mainframe->triggerEvent('onContentPrepareForm', array($form, $data));
   }
 
   /**
@@ -198,7 +183,8 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     $row = $this->getTable('joomgallerycategories');
 
     // Get all necessary data from the post
-    $data     = JRequest::get('post', 2);
+    $data = $this->_mainframe->input->post->get('jform', array(), 'array');
+
     $params   = isset($data['params']) ? $data['params'] : array();
 
     // Creating a main category means creating
@@ -241,7 +227,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
       $isNew = true;
 
       // Alter the name and the alias //for save as copy
-      //if(JRequest::getCmd('task') == 'save2copy')
+      //if($this->_mainframe->input->getCmd('task') == 'save2copy')
       //{
         list($title, $alias) = $this->generateNewTitle($data['parent_id'], $data['alias'], $data['name']);
         $data['name']  = $title;
@@ -429,7 +415,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
 
         /*if(!$row->store())
         {
-            JError::raiseError(100, $row->getError());
+            throw new RuntimeException($row->getError());
             return false;
         }*/
         $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_STORE_IMAGE_IN_CATEGORY'), 'notice');
@@ -558,7 +544,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
   {
     // Sanitize user IDs
     $pks = array_unique($pks);
-    JArrayHelper::toInteger($pks);
+    ArrayHelper::toInteger($pks);
 
     // Remove any values of zero
     if(array_search(0, $pks, true))
@@ -575,7 +561,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
 
     $done = false;
 
-    if($cmd = JArrayHelper::getValue($commands, 'move_copy'))
+    if($cmd = ArrayHelper::getValue($commands, 'move_copy'))
     {
       if($cmd == 'c')
       {
@@ -1100,7 +1086,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
 
     if($this->_db->getErrorNum())
     {
-      JError::raiseWarning(500, $this->_db->getErrorMsg());
+      $this->_mainframe->enqueueMessage($this->_db->getErrorMsg(), 'error');
     }
 
     // Nothing found, return
@@ -1122,7 +1108,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
       $row->catpath = $catpath;
       if(!$row->store())
       {
-        JError::raiseError(500, $row->getError());
+        throw new RuntimeException($row->getError());
       }
     }
 
@@ -1208,7 +1194,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     if($return !== true)
     {
       // If not successfull
-      JError::raiseWarning(100, $return);
+      $this->_mainframe->enqueueMessage($return, 'error');
       return false;
     }
     else
@@ -1219,7 +1205,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
       {
         // If not successful
         JFolder::move($orig_dest, $orig_src);
-        JError::raiseWarning(100, $return);
+        $this->_mainframe->enqueueMessage($return, 'error');
         return false;
       }
       else
@@ -1231,7 +1217,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
           // If not successful
           JFolder::move($orig_dest, $orig_src);
           JFolder::move($img_dest, $img_src);
-          JError::raiseWarning(100, $return);
+          $this->_mainframe->enqueueMessage($return, 'error');
           return false;
         }
       }

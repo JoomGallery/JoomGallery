@@ -37,7 +37,7 @@ class JoomGalleryViewMaintenance extends JoomGalleryView
       background-image:url(templates/khepri/images/toolbar/icon-32-refresh.png);
     }');
 
-    $lists = array();
+    $this->lists = array();
 
     jimport('joomla.html.pane');
     $tabs = array('images'      => 0,
@@ -56,106 +56,106 @@ class JoomGalleryViewMaintenance extends JoomGalleryView
       $tab = 'images';
     }
 
-    $checked = $this->_mainframe->getUserState('joom.maintenance.checked');
+    $this->checked = $this->_mainframe->getUserState('joom.maintenance.checked');
 
-    $state  = $this->get('State');
+    $this->state   = $this->get('State');
 
     switch($tab)
     {
       case 'categories':
         // Select list of the batch jobs for the categories
-        $b_options              = array();
-        $b_options[]            = JHTML::_('select.option', '',                   JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
-        $b_options[]            = JHTML::_('select.option', 'setuser',            JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_SET_NEW_USER'));
-        $b_options[]            = JHTML::_('select.option', 'addorphanedfolders', JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANED_FOLDERS'));
-        $b_options[]            = JHTML::_('select.option', 'create',             JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_CREATE_FOLDERS'));
-        $b_options[]            = JHTML::_('select.option', 'removecategory',     JText::_('COM_JOOMGALLERY_MAIMAN_CT_OPTION_REMOVE_CATEGORIES'));
-        $lists['cat_jobs']      = JHTML::_( 'select.genericlist', $b_options, 'job',
+        $b_options               = array();
+        $b_options[]             = JHTML::_('select.option', '',                   JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
+        $b_options[]             = JHTML::_('select.option', 'setuser',            JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_SET_NEW_USER'));
+        $b_options[]             = JHTML::_('select.option', 'addorphanedfolders', JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANED_FOLDERS'));
+        $b_options[]             = JHTML::_('select.option', 'create',             JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_CREATE_FOLDERS'));
+        $b_options[]             = JHTML::_('select.option', 'removecategory',     JText::_('COM_JOOMGALLERY_MAIMAN_CT_OPTION_REMOVE_CATEGORIES'));
+        $this->lists['cat_jobs'] = JHTML::_('select.genericlist', $b_options, 'job',
                                             'class="inputbox" size="1" onchange="joom_selectbatchjob(this.value);"',
                                             'value', 'text');
 
-        $f_options              = array();
-        $f_options[]            = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_COMMON_OPTION_ALL_CATEGORIES'));
-        $f_options[]            = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_THUMB_FOLDER_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_IMG_FOLDER_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_ORIG_FOLDER_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_USER_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 5, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_PARENT_CATEGORY_ONLY'));
-        $lists['cat_filter']    = JHTML::_( 'select.genericlist', $f_options, 'filter_type',
-                                            'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                            'value', 'text', $state->get('filter.type'));
+        $f_options                 = array();
+        $f_options[]               = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_COMMON_OPTION_ALL_CATEGORIES'));
+        $f_options[]               = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_THUMB_FOLDER_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_IMG_FOLDER_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_ORIG_FOLDER_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_USER_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 5, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_PARENT_CATEGORY_ONLY'));
+        $this->lists['cat_filter'] = JHTML::_('select.genericlist', $f_options, 'filter_type',
+                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                              'value', 'text', $this->state->get('filter.type'));
 
-        if(!is_null($checked))
+        if(!is_null($this->checked))
         {
           // Get data from the model
-          $items  = $this->get('Categories');
+          $items = $this->get('Categories');
         }
         break;
       case 'orphans':
         // Select list of the batch jobs for the orphans
-        $b_options              = array();
-        $b_options[]            = JHTML::_('select.option', '',                 JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
-        $b_options[]            = JHTML::_('select.option', 'addorphan',        JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANS'));
-        $b_options[]            = JHTML::_('select.option', 'applysuggestions', JText::_('COM_JOOMGALLERY_MAIMAN_APPLY_SUGGESTIONS'));
-        $b_options[]            = JHTML::_('select.option', 'deleteorphan',     JText::_('COM_JOOMGALLERY_MAIMAN_REMOVE_ORPHANS'));
-        $lists['orphan_jobs']   = JHTML::_( 'select.genericlist', $b_options, 'job',
-                                            'class="inputbox" size="1"',
-                                            'value', 'text');
+        $b_options                  = array();
+        $b_options[]                = JHTML::_('select.option', '',                 JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
+        $b_options[]                = JHTML::_('select.option', 'addorphan',        JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANS'));
+        $b_options[]                = JHTML::_('select.option', 'applysuggestions', JText::_('COM_JOOMGALLERY_MAIMAN_APPLY_SUGGESTIONS'));
+        $b_options[]                = JHTML::_('select.option', 'deleteorphan',     JText::_('COM_JOOMGALLERY_MAIMAN_REMOVE_ORPHANS'));
+        $this->lists['orphan_jobs'] = JHTML::_('select.genericlist', $b_options, 'job',
+                                               'class="inputbox" size="1"',
+                                               'value', 'text');
 
-        $p_options                = array();
-        $p_options[]              = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
-        $p_options[]              = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_PROPOSAL_AVAILABLE'));
-        $p_options[]              = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_NO_PROPOSAL_AVAILABLE'));
-        $lists['orphan_proposal'] = JHTML::_( 'select.genericlist', $p_options, 'filter_proposal',
-                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                              'value', 'text', $state->get('filter.proposal'));
+        $p_options                      = array();
+        $p_options[]                    = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
+        $p_options[]                    = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_PROPOSAL_AVAILABLE'));
+        $p_options[]                    = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_NO_PROPOSAL_AVAILABLE'));
+        $this->lists['orphan_proposal'] = JHTML::_('select.genericlist', $p_options, 'filter_proposal',
+                                                   'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                                   'value', 'text', $this->state->get('filter.proposal'));
 
-        $f_options                = array();
-        $f_options[]              = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
-        $f_options[]              = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_THUMB_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_IMG_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_ORIG_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_UNKNOWN_ONLY'));
-        $lists['orphan_filter']   = JHTML::_( 'select.genericlist', $f_options, 'filter_type',
-                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                              'value', 'text', $state->get('filter.type'));
+        $f_options                    = array();
+        $f_options[]                  = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
+        $f_options[]                  = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_THUMB_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_IMG_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_ORIG_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_UNKNOWN_ONLY'));
+        $this->lists['orphan_filter'] = JHTML::_('select.genericlist', $f_options, 'filter_type',
+                                                 'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                                 'value', 'text', $this->state->get('filter.type'));
 
-        if(!is_null($checked))
+        if(!is_null($this->checked))
         {
           // Get data from the model
-          $items  = $this->get('Orphans');
+          $items = $this->get('Orphans');
         }
         break;
       case 'folders':
         // Select list of the batch jobs for the orphans
-        $b_options              = array();
-        $b_options[]            = JHTML::_('select.option', '',                         JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
-        $b_options[]            = JHTML::_('select.option', 'addorphanedfolder',        JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANED_FOLDERS'));
-        $b_options[]            = JHTML::_('select.option', 'applyfoldersuggestions',   JText::_('COM_JOOMGALLERY_MAIMAN_APPLY_SUGGESTIONS'));
-        $b_options[]            = JHTML::_('select.option', 'deleteorphanedfolder',     JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_REMOVE_ORPHANED_FOLDERS'));
-        $lists['folder_jobs']   = JHTML::_( 'select.genericlist', $b_options, 'job',
-                                            'class="inputbox" size="1"',
-                                            'value', 'text');
+        $b_options                  = array();
+        $b_options[]                = JHTML::_('select.option', '',                         JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
+        $b_options[]                = JHTML::_('select.option', 'addorphanedfolder',        JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANED_FOLDERS'));
+        $b_options[]                = JHTML::_('select.option', 'applyfoldersuggestions',   JText::_('COM_JOOMGALLERY_MAIMAN_APPLY_SUGGESTIONS'));
+        $b_options[]                = JHTML::_('select.option', 'deleteorphanedfolder',     JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_REMOVE_ORPHANED_FOLDERS'));
+        $this->lists['folder_jobs'] = JHTML::_('select.genericlist', $b_options, 'job',
+                                               'class="inputbox" size="1"',
+                                               'value', 'text');
 
-        $p_options                = array();
-        $p_options[]              = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_ALL_FOLDERS'));
-        $p_options[]              = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_PROPOSAL_AVAILABLE_FOLDERS'));
-        $p_options[]              = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_NO_PROPOSAL_AVAILABLE_FOLDERS'));
-        $lists['folder_proposal'] = JHTML::_( 'select.genericlist', $p_options, 'filter_proposal',
-                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                              'value', 'text', $state->get('filter.proposal'));
+        $p_options                      = array();
+        $p_options[]                    = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_ALL_FOLDERS'));
+        $p_options[]                    = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_PROPOSAL_AVAILABLE_FOLDERS'));
+        $p_options[]                    = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OF_OPTION_NO_PROPOSAL_AVAILABLE_FOLDERS'));
+        $this->lists['folder_proposal'] = JHTML::_('select.genericlist', $p_options, 'filter_proposal',
+                                                   'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                                   'value', 'text', $this->state->get('filter.proposal'));
 
-        $f_options                = array();
-        $f_options[]              = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
-        $f_options[]              = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_THUMB_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_IMG_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_ORIG_ONLY'));
-        $f_options[]              = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_UNKNOWN_ONLY'));
-        $lists['folder_filter']   = JHTML::_( 'select.genericlist', $f_options, 'filter_type',
-                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                              'value', 'text', $state->get('filter.type'));
+        $f_options                    = array();
+        $f_options[]                  = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ALL_FILES'));
+        $f_options[]                  = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_THUMB_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_IMG_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_ORIG_ONLY'));
+        $f_options[]                  = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_TYPE_UNKNOWN_ONLY'));
+        $this->lists['folder_filter'] = JHTML::_('select.genericlist', $f_options, 'filter_type',
+                                                 'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                                 'value', 'text', $this->state->get('filter.type'));
 
-        if(!is_null($checked))
+        if(!is_null($this->checked))
         {
           // Get data from the model
           $items = $this->get('OrphanedFolders');
@@ -163,28 +163,28 @@ class JoomGalleryViewMaintenance extends JoomGalleryView
         break;
       default:
         // Select list of the batch jobs for the images
-        $b_options              = array();
-        $b_options[]            = JHTML::_('select.option', '',           JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
-        $b_options[]            = JHTML::_('select.option', 'setuser',    JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_SET_NEW_USER'));
-        $b_options[]            = JHTML::_('select.option', 'addorphans', JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANS'));
-        $b_options[]            = JHTML::_('select.option', 'recreate',   JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_RECREATE'));
-        $b_options[]            = JHTML::_('select.option', 'remove',     JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_REMOVE_IMAGES'));
-        $lists['img_jobs']    = JHTML::_( 'select.genericlist', $b_options, 'job',
+        $b_options               = array();
+        $b_options[]             = JHTML::_('select.option', '',           JText::_('COM_JOOMGALLERY_MAIMAN_SELECT_JOB'));
+        $b_options[]             = JHTML::_('select.option', 'setuser',    JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_SET_NEW_USER'));
+        $b_options[]             = JHTML::_('select.option', 'addorphans', JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_ADD_ORPHANS'));
+        $b_options[]             = JHTML::_('select.option', 'recreate',   JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_RECREATE'));
+        $b_options[]             = JHTML::_('select.option', 'remove',     JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_REMOVE_IMAGES'));
+        $this->lists['img_jobs'] = JHTML::_('select.genericlist', $b_options, 'job',
                                             'class="inputbox" size="1" onchange="joom_selectbatchjob(this.value);"',
                                             'value', 'text');
 
-        $f_options              = array();
-        $f_options[]            = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_COMMON_OPTION_ALL_IMAGES'));
-        $f_options[]            = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_THUMB_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_IMG_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_ORIG_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_USER_ONLY'));
-        $f_options[]            = JHTML::_('select.option', 5, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_CATEGORY_ONLY'));
-        $lists['img_filter']    = JHTML::_( 'select.genericlist', $f_options, 'filter_type',
-                                            'class="inputbox" size="1" onchange="document.adminForm.submit();"',
-                                            'value', 'text', $state->get('filter.type'));
+        $f_options                 = array();
+        $f_options[]               = JHTML::_('select.option', 0, JText::_('COM_JOOMGALLERY_COMMON_OPTION_ALL_IMAGES'));
+        $f_options[]               = JHTML::_('select.option', 1, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_THUMB_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 2, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_IMG_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 3, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_ORIG_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 4, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_USER_ONLY'));
+        $f_options[]               = JHTML::_('select.option', 5, JText::_('COM_JOOMGALLERY_MAIMAN_OPTION_MISSING_CATEGORY_ONLY'));
+        $this->lists['img_filter'] = JHTML::_('select.genericlist', $f_options, 'filter_type',
+                                              'class="inputbox" size="1" onchange="document.adminForm.submit();"',
+                                              'value', 'text', $this->state->get('filter.type'));
 
-        if(!is_null($checked))
+        if(!is_null($this->checked))
         {
           // Get data from the model
           $items = $this->get('Images');
@@ -192,37 +192,33 @@ class JoomGalleryViewMaintenance extends JoomGalleryView
         break;
     }
 
-    if(!is_null($checked))
+    if(!is_null($this->checked))
     {
       $this->items = $items;
       $this->pagination = $this->get('Pagination');
 
-      if($state->get('filter.inuse') && !$this->get('Total'))
+      if($this->state->get('filter.inuse') && !$this->get('Total'))
       {
         $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_MAIMAN_MSG_NO_ITEMS_FOUND_MATCHING_YOUR_QUERY'));
       }
     }
 
-    $information = $this->get('Information');
+    $this->information = $this->get('Information');
     $warning  = '<img src="'.$this->_ambit->getIcon('error.png').'" border="0" alt="Warning" height="11" width="11" />';
-    foreach($information as $key => $found)
+    foreach($this->information as $key => $found)
     {
       if($found)
       {
-        $information[$key] = '&nbsp;'.$warning;
+        $this->information[$key] = '&nbsp;'.$warning;
       }
       else
       {
-        $information[$key] = '';
+        $this->information[$key] = '';
       }
     }
 
-    $this->assignRef('current_tab',   $tab);
-    $this->assignRef('startOffset',   $tabs[$tab]);
-    $this->assignRef('checked',       $checked);
-    $this->assignRef('information',   $information);
-    $this->assignRef('lists',         $lists);
-    $this->assignRef('state',         $state);
+    $this->current_tab = $tab;
+    $this->startOffset = $tabs[$tab];
 
     $this->_doc->addScript($this->_ambit->getScript('maintenance.js'));
 

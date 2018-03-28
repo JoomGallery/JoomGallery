@@ -1361,7 +1361,7 @@ class JoomInterface
   public function addSearchTerms($query, $searchstring)
   {
     $aliases = array('images' => 'jg', 'categories' => 'jgc');
-    $plugins = JDispatcher::getInstance()->trigger('onJoomSearch', array($searchstring, $aliases, _JOOM_OPTION.'.interface'));
+    $plugins = JFactory::getApplication()->triggerEvent('onJoomSearch', array($searchstring, $aliases, _JOOM_OPTION.'.interface'));
 
     $searchstring = $this->_db->quote('%'.$this->_db->escape(strtolower(trim($searchstring))).'%');
 

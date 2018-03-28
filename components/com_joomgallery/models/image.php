@@ -149,7 +149,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
           ->delete(_JOOM_TABLE_COUNTSTOP)
           ->where('NOW() > date_add(cstime, interval '.(int) $stoptime.' SECOND)');
     $this->_db->setQuery($query);
-    $this->_db->query();
+    $this->_db->execute();
 
     // Check whether entry exists
     $query->clear()
@@ -173,7 +173,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
             ->columns('csip, cssessionid, cspicid, cstime')
             ->values($this->_db->q($ip).','.$this->_db->q($session_id).','.$this->_id.', NOW()');
       $this->_db->setQuery($query);
-      $this->_db->query();
+      $this->_db->execute();
 
       return false;
     }

@@ -277,7 +277,7 @@ class JoomAmbit extends JObject
     $types = array('thumb_path', 'thumb_url', 'img_path', 'img_url', 'orig_path', 'orig_url');
     if(!in_array($type, $types))
     {
-      JError::raiseError(500, JText::sprintf('Wrong image type: %s', $type));
+      throw new UnexpectedValueException(JText::sprintf('Wrong image type: %s', $type));
     }
 
     if(!is_object($img))
@@ -369,7 +369,7 @@ class JoomAmbit extends JObject
 
       if(!$row->load($id))
       {
-        JError::raiseError(500, JText::sprintf('Image with ID %d not found', $id));
+        throw new RuntimeException(JText::sprintf('Image with ID %d not found', $id));
       }
 
       $properties   = $row->getProperties();

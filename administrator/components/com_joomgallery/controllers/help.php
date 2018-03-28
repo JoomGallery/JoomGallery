@@ -33,7 +33,7 @@ class JoomGalleryControllerHelp extends JoomGalleryController
     parent::__construct();
 
     // Set view
-    JRequest::setVar('view', 'help');
+    $this->input->set('view', 'help');
   }
 
   /**
@@ -47,11 +47,11 @@ class JoomGalleryControllerHelp extends JoomGalleryController
    */
   function install()
   {
-    $language = JRequest::getCmd('language', 0, 'get');
+    $language = $this->input->get->getCmd('language', 0);
 
     if(!$this->_config->get('jg_checkupdate') || !$language || !extension_loaded('curl'))
     {
-      $link = base64_decode(JRequest::getCmd('downloadlink'));
+      $link = base64_decode($this->input->getCmd('downloadlink'));
       $this->setRedirect($this->_ambit->getRedirectUrl(), JText::sprintf('COM_JOOMGALLERY_ADMENU_MSG_ERROR_FETCHING_LANGUAGE_ZIP', $link), 'error');
     }
     else

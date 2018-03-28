@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport( 'joomla.application.component.view' );
-
 /**
  * HTML View class for the CSS edit view
  *
@@ -46,47 +44,43 @@ class JoomGalleryViewCssedit extends JoomGalleryView
 
       JToolBarHelper::deleteList(JText::_('COM_JOOMGALLERY_CSSMAN_CSS_CONFIRM_DELETE', true), 'remove', 'COM_JOOMGALLERY_CSSMAN_TOOLBAR_DELETE_CSS');
 
-      $file = $path.'joom_local.css';
+      $this->file = $path.'joom_local.css';
 
-      if(!is_writable($file))
+      if(!is_writable($this->file))
       {
-        JError::raiseNotice(111, JText::_('COM_JOOMGALLERY_CSSMAN_CSS_WARNING_PERMS'));
+        $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_CSSMAN_CSS_WARNING_PERMS'), 'notice');
       }
 
-      $edit = true;
+      $this->edit = true;
     }
     else
     {
       $title .= ' ('.JText::_('COM_JOOMGALLERY_COMMON_TOOLBAR_NEW').')';
 
-      $file = $path.'joom_local.css.README';
+      $this->file = $path.'joom_local.css.README';
 
       if(!is_writable($path))
       {
-        JError::raiseNotice(111, JText::_('COM_JOOMGALLERY_CSSMAN_CSS_WARNING_PERMS'));
+        $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_CSSMAN_CSS_WARNING_PERMS'), 'notice');
       }
 
-      $edit = false;
+      $this->edit = false;
     }
 
     JToolBarHelper::title($title, 'file');
 
-    $content =  JFile::read($file);
-    if($content === false)
+    $this->content =  file_get_contents($this->file);
+    if($this->content === false)
     {
       // Unable to read the file
-      JError::raiseWarning(111, JText::_('COM_JOOMGALLERY_CSSMAN_CSS_ERROR_READING') . $file);
+      $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_CSSMAN_CSS_ERROR_READING') . $this->file, 'error');
     }
     else
     {
-      $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+      $this->content = htmlspecialchars($this->content, ENT_QUOTES, 'UTF-8');
     }
 
-    $file = $path.'joom_local.css';
-
-    $this->assignRef('content', $content);
-    $this->assignRef('edit',    $edit);
-    $this->assignRef('file',    $file);
+    $this->file = $path.'joom_local.css';
 
     $this->sidebar = JHtmlSidebar::render();
 

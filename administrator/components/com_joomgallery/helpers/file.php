@@ -650,7 +650,7 @@ class JoomFile
         }
         break;
       default:
-        JError::raiseError(500, JText::_('COM_JOOMGALLERY_UPLOAD_UNSUPPORTED_RESIZING_METHOD'));
+        throw new UnexpectedValueException(JText::_('COM_JOOMGALLERY_UPLOAD_UNSUPPORTED_RESIZING_METHOD'));
         break;
     }
 

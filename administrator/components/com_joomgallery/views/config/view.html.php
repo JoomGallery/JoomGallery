@@ -35,17 +35,17 @@ class JoomGalleryViewConfig extends JoomGalleryView
     $language->load(_JOOM_OPTION.'.exif', JPATH_SITE);
     $language->load(_JOOM_OPTION.'.iptc', JPATH_SITE);
 
-    $display = true;
+    $this->display = true;
     if($this->_config->isExtended())
     {
-      $config_id = JRequest::getInt('id');
+      $config_id = $this->_mainframe->input->getInt('id');
 
       // Overwrite config object with specified one
       $this->_config = JoomConfig::getInstance($config_id);
 
-      if(JRequest::getInt('group_id') || ($config_id && $config_id != 1))
+      if($this->_mainframe->input->getInt('group_id') || ($config_id && $config_id != 1))
       {
-        $display = false;
+        $this->display = false;
       }
     }
 
@@ -55,17 +55,17 @@ class JoomGalleryViewConfig extends JoomGalleryView
     // to be installed but not verified
     if($gdver > 0)
     {
-      $gdmsg = JText::sprintf('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_INSTALLED', $gdver);
+      $this->gdmsg = JText::sprintf('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_INSTALLED', $gdver);
     }
     else
     {
       if($gdver == -1)
       {
-        $gdmsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_NO_VERSION');
+        $this->gdmsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_NO_VERSION');
       }
       else
       {
-        $gdmsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_NOT_INSTALLED') .
+        $this->gdmsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_GDLIB_NOT_INSTALLED') .
                 '<a href="http://www.php.net/gd" target="_blank">http://www.php.net/gd</a>'
                 . JText::_('COM_JOOMGALLERY_GD_MORE_INFO');
       }
@@ -74,7 +74,7 @@ class JoomGalleryViewConfig extends JoomGalleryView
     // first check if exec() has been diabled in php.ini
     if($this->get('DisabledExec'))
     {
-      $immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_EXEC_DISABLED');
+      $this->immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_EXEC_DISABLED');
     }
     else
     {
@@ -82,31 +82,31 @@ class JoomGalleryViewConfig extends JoomGalleryView
       // Returns version, 0 if not installed or path not properly configured
       if($imver)
       {
-        $immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_INSTALLED') .  $imver;
+        $this->immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_INSTALLED') .  $imver;
         // Add the information that IM was detected automatically if path is empty
         if(!$this->_config->get('jg_impath'))
         {
-          $immsg .= JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_INSTALLED_AUTO') ;
+          $this->immsg .= JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_INSTALLED_AUTO') ;
         }
       }
       else
       {
-        $immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_NOT_INSTALLED');
+        $this->immsg = JText::_('COM_JOOMGALLERY_CONFIG_GS_IP_IMAGIC_NOT_INSTALLED');
       }
     }
 
     // Check the installation of Exif
-    $exifmsg = '';
+    $this->exifmsg = '';
     if(!extension_loaded('exif'))
     {
-      $exifmsg    = '<div style="color:#f00;font-weight:bold; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NOT_INSTALLED') . ' ' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NO_OPTIONS') . ']</div>';
+      $this->exifmsg    = '<div style="color:#f00;font-weight:bold; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NOT_INSTALLED') . ' ' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NO_OPTIONS') . ']</div>';
     }
     else
     {
-      $exifmsg    = '<div style="color:#080; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_INSTALLED') . ']</div>';
+      $this->exifmsg    = '<div style="color:#080; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_INSTALLED') . ']</div>';
       if(!function_exists('exif_read_data'))
       {
-        $exifmsg = '<div style="color:#f00;font-weight:bold; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_INSTALLED_BUT') . ' ' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NO_OPTIONS') . ']</div>';
+        $this->exifmsg = '<div style="color:#f00;font-weight:bold; text-align:center;">[' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_INSTALLED_BUT') . ' ' . JText::_('COM_JOOMGALLERY_CONFIG_DV_ED_NO_OPTIONS') . ']</div>';
       }
     }
 
@@ -120,61 +120,61 @@ class JoomGalleryViewConfig extends JoomGalleryView
 
     if(is_writeable($this->getPath('img')))
     {
-      $write_pathimages = $writeable;
+      $this->write_pathimages = $writeable;
     }
     else
     {
-      $write_pathimages = $unwriteable;
+      $this->write_pathimages = $unwriteable;
     }
     if(is_writeable($this->getPath('orig')))
     {
-      $write_pathoriginalimages = $writeable;
+      $this->write_pathoriginalimages = $writeable;
     }
     else
     {
-      $write_pathoriginalimages = $unwriteable;
+      $this->write_pathoriginalimages = $unwriteable;
     }
     if(is_writeable($this->getPath('thumb')))
     {
-      $write_paththumbs = $writeable;
+      $this->write_paththumbs = $writeable;
     }
     else
     {
-      $write_paththumbs = $unwriteable;
+      $this->write_paththumbs = $unwriteable;
     }
     if(is_writeable($this->getPath('ftp')))
     {
-      $write_pathftpupload = $writeable;
+      $this->write_pathftpupload = $writeable;
     }
     else
     {
-      $write_pathftpupload = $unwriteable;
+      $this->write_pathftpupload = $unwriteable;
     }
     if(is_writeable($this->getPath('temp')))
     {
-      $write_pathtemp = $writeable;
+      $this->write_pathtemp = $writeable;
     }
     else
     {
-      $write_pathtemp = $unwriteable;
+      $this->write_pathtemp = $unwriteable;
     }
     if(is_writeable($this->getPath('wtm')))
     {
-      $write_pathwm = $writeable;
+      $this->write_pathwm = $writeable;
     }
     else
     {
-      $write_pathwm = $unwriteable;
+      $this->write_pathwm = $unwriteable;
     }
     if(is_file($this->getPath('wtm').'/'.$this->_config->get('jg_wmfile')))
     {
-      $wmfilemsg = '<span style="color:#080;">'
+      $this->wmfilemsg = '<span style="color:#080;">'
         . JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_FILE_EXIST') .
         '</span>';
     }
     else
     {
-      $wmfilemsg = '<span style="color:#f00;">'
+      $this->wmfilemsg = '<span style="color:#f00;">'
         . JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_FILE_NOT_EXIST') .
         '</span>';
     }
@@ -182,11 +182,11 @@ class JoomGalleryViewConfig extends JoomGalleryView
     // Check whether CSS file (joom_settings.css) is writeable
     if(is_writeable(JPATH_ROOT.'/media/joomgallery/css/'.$this->_config->getStyleSheetName()))
     {
-      $cssfilemsg = '<div style="color:#080; text-align:center;">['.JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_CSS_CONFIGURATION_WRITEABLE').']</div>';
+      $this->cssfilemsg = '<div style="color:#080; text-align:center;">['.JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_CSS_CONFIGURATION_WRITEABLE').']</div>';
     }
     else
     {
-      $cssfilemsg = '<div style="color:#f00;font-weight:bold; text-align:center;">['.JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_CSS_CONFIGURATION_NOT_WRITEABLE').' '.JText::_('COM_JOOMGALLERY_COMMON_CHECK_PERMISSIONS').']</div>';
+      $this->cssfilemsg = '<div style="color:#f00;font-weight:bold; text-align:center;">['.JText::_('COM_JOOMGALLERY_CONFIG_GS_PD_CSS_CONFIGURATION_NOT_WRITEABLE').' '.JText::_('COM_JOOMGALLERY_COMMON_CHECK_PERMISSIONS').']</div>';
     }
 
     // Exif
@@ -196,7 +196,7 @@ class JoomGalleryViewConfig extends JoomGalleryView
     $subifdtags = explode(',', $this->_config->get('jg_subifdtags'));
     $gpstags    = explode(',', $this->_config->get('jg_gpstags'));
 
-    $exif_definitions = array(
+    $this->exif_definitions = array(
       1 => array ('TAG' => 'IFD0', 'JG' => $ifdotags, 'NAME' => 'jg_ifdotags[]', 'HEAD' => JText::_('COM_JOOMGALLERY_IFD0TAGS')),
       2 => array ('TAG' => 'EXIF', 'JG' => $subifdtags, 'NAME' => 'jg_subifdtags[]', 'HEAD' => JText::_('COM_JOOMGALLERY_SUBIFDTAGS')),
       3 => array ('TAG' => 'GPS',  'JG' => $gpstags,  'NAME' => 'jg_gpstags[]',  'HEAD' => JText::_('COM_JOOMGALLERY_GPSTAGS'))
@@ -207,7 +207,7 @@ class JoomGalleryViewConfig extends JoomGalleryView
 
     $iptctags   = explode(',', $this->_config->get('jg_iptctags'));
 
-    $iptc_definitions = array(
+    $this->iptc_definitions = array(
     1 => array ('TAG' => 'IPTC', 'JG' => $iptctags, 'NAME' => 'jg_iptctags[]', 'HEAD' => JText::_('COM_JOOMGALLERY_IPTCTAGS')),
     );
 
@@ -216,22 +216,8 @@ class JoomGalleryViewConfig extends JoomGalleryView
 
     JText::script('COM_JOOMGALLERY_CONFIG_GS_PD_ALERT_THUMBNAIL_PATH_SUPPORT');
 
-    $this->assignRef('display',                   $display);
-    $this->assignRef('cssfilemsg',                $cssfilemsg);
-    $this->assignRef('exifmsg',                   $exifmsg);
-    $this->assignRef('gdmsg',                     $gdmsg);
-    $this->assignRef('immsg',                     $immsg);
-    $this->assignRef('write_pathimages',          $write_pathimages);
-    $this->assignRef('write_pathoriginalimages',  $write_pathoriginalimages);
-    $this->assignRef('write_paththumbs',          $write_paththumbs);
-    $this->assignRef('write_pathftpupload',       $write_pathftpupload);
-    $this->assignRef('write_pathtemp',            $write_pathtemp);
-    $this->assignRef('write_pathwm',              $write_pathwm);
-    $this->assignRef('wmfilemsg',                 $wmfilemsg);
-    $this->assignRef('exif_definitions',          $exif_definitions);
-    $this->assignRef('exif_config_array',         $exif_config_array);
-    $this->assignRef('iptc_definitions',          $iptc_definitions);
-    $this->assignRef('iptc_config_array',         $iptc_config_array);
+    $this->exif_config_array =& $exif_config_array;
+    $this->iptc_config_array =& $iptc_config_array;
 
     $this->addToolbar();
 
@@ -249,7 +235,7 @@ class JoomGalleryViewConfig extends JoomGalleryView
     if($this->_config->isExtended())
     {
       $config_title = $this->get('ConfigTitle');
-      if(JRequest::getInt('id') == 1)
+      if($this->_mainframe->input->getInt('id') == 1)
       {
         $config_title = JText::sprintf('COM_JOOMGALLERY_CONFIGS_DEFAULT_TITLE', $config_title);
       }

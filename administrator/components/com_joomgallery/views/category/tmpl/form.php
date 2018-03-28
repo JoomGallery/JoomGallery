@@ -1,8 +1,8 @@
 <?php defined('_JEXEC') or die('Restricted access');?>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
   Joomla.submitbutton = function(task)
   {
-    var form = document.id('item-form');
+    var form = document.getElementById('item-form');
     if (task == 'cancel' || document.formvalidator.isValid(form)) {
       <?php echo $this->form->getField('description')->save(); ?>
       Joomla.submitform(task, form);
@@ -10,8 +10,8 @@
     else {
       var msg = new Array();
       msg.push('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true);?>');
-      if (form.name.hasClass('invalid')) {
-          msg.push('<?php echo JText::_('COM_JOOMGALLERY_CATMAN_ALERT_CATEGORY_MUST_HAVE_TITLE', true);?>');
+      if (form.getElementById('jform_title').hasClass('invalid')) {
+        msg.push('<?php echo JText::_('COM_JOOMGALLERY_CATMAN_ALERT_CATEGORY_MUST_HAVE_TITLE', true);?>');
       }
       alert(msg.join('\n'));
     }

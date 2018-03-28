@@ -95,8 +95,8 @@ class JoomGalleryModelGallery extends JoomGalleryModel
     if($this->_loadCategoriesWithoutEmpty())
     {
       // We still have to select the categories according to the pagination
-      $limit      = $this->_config->get('jg_catperpage');#JRequest::getVar('limit', 0, '', 'int');
-      $limitstart = JRequest::getInt('limitstart', 0);
+      $limit      = $this->_config->get('jg_catperpage');
+      $limitstart = $this->_mainframe->input->getInt('limitstart', 0);
       $cats       = array_slice($this->_categorieswithoutempty, $limitstart, $limit);
 
       return $cats;
@@ -180,8 +180,8 @@ class JoomGalleryModelGallery extends JoomGalleryModel
     if(empty($this->_categories))
     {
       // Get the pagination request variables
-      $limit      = $this->_config->get('jg_catperpage');#JRequest::getVar('limit', 0, '', 'int');
-      $limitstart = JRequest::getInt('limitstart', 0);
+      $limit      = $this->_config->get('jg_catperpage');
+      $limitstart = $this->_mainframe->input->getInt('limitstart', 0);
 
       $query = $this->_buildQuery();
 

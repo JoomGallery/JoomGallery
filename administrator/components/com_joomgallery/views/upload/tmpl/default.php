@@ -1,7 +1,7 @@
 <?php defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 JHtml::_('behavior.formvalidation');
 JHtml::_('bootstrap.tooltip'); ?>
-<form action="index.php" method="post" name="adminForm" id="upload-form" enctype="multipart/form-data" class="form-validate form-horizontal" onsubmit="if(this.task.value == 'upload' && !document.formvalidator.isValid(document.id('upload-form'))){alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true); ?>');return false;} return joomOnSubmit();">
+<form action="index.php" method="post" name="adminForm" id="upload-form" enctype="multipart/form-data" class="form-validate form-horizontal" onsubmit="if(document.getElementsByName('task')[0].value == 'upload' && !document.formvalidator.isValid(document.id('upload-form'))){alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true); ?>');return false;} return joomOnSubmit();">
 <?php if(!empty($this->sidebar)): ?>
   <div id="j-sidebar-container" class="span2">
     <?php echo $this->sidebar; ?>

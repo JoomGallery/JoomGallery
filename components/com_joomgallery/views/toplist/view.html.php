@@ -30,62 +30,64 @@ class JoomGalleryViewToplist extends JoomGalleryView
    */
   public function display($tpl = null)
   {
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
-    $backtarget = JRoute::_('index.php?view=gallery'); //see above
-    $backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
+    $this->backtarget = JRoute::_('index.php?view=gallery'); //see above
+    $this->backtext   = JText::_('COM_JOOMGALLERY_COMMON_BACK_TO_GALLERY');
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
-    $type = JRequest::getCmd('type');
-    switch($type)
+    $this->type = $this->_mainframe->input->getCmd('type');
+    switch($this->type)
     {
       case 'lastcommented':
-        $rows     = $this->get('LastCommented');
-        $title    = JText::sprintf('COM_JOOMGALLERY_TOPLIST_LAST_COMMENTED_IMAGE', $this->_config->get('jg_toplist'));
-        $pathway  = $title;
+        $this->rows    = $this->get('LastCommented');
+        $this->title   = JText::sprintf('COM_JOOMGALLERY_TOPLIST_LAST_COMMENTED_IMAGE', $this->_config->get('jg_toplist'));
+        $this->pathway = $this->title;
         break;
       case 'lastadded':
-        $rows     = $this->get('LastAdded');
-        $title    = JText::sprintf('COM_JOOMGALLERY_TOPLIST_LAST_ADDED_IMAGE', $this->_config->get('jg_toplist'));
-        $pathway  = $title;
+        $this->rows    = $this->get('LastAdded');
+        $this->title   = JText::sprintf('COM_JOOMGALLERY_TOPLIST_LAST_ADDED_IMAGE', $this->_config->get('jg_toplist'));
+        $this->pathway = $this->title;
         break;
       case 'toprated':
-        $rows     = $this->get('TopRated');
-        $title    = JText::sprintf('COM_JOOMGALLERY_TOPLIST_BEST_RATED_IMAGE', $this->_config->get('jg_toplist'));
-        $pathway  = $title;
+        $this->rows    = $this->get('TopRated');
+        $this->title   = JText::sprintf('COM_JOOMGALLERY_TOPLIST_BEST_RATED_IMAGE', $this->_config->get('jg_toplist'));
+        $this->pathway = $this->title;
         break;
       default:
-        $rows     = $this->get('MostViewed');
-        $title    = JText::sprintf('COM_JOOMGALLERY_TOPLIST_MOST_VIEWED_IMAGE', $this->_config->get('jg_toplist'));
-        $pathway  = $title;
+        $this->rows    = $this->get('MostViewed');
+        $this->title   = JText::sprintf('COM_JOOMGALLERY_TOPLIST_MOST_VIEWED_IMAGE', $this->_config->get('jg_toplist'));
+        $this->pathway = $this->title;
         break;
     }
 
     // Check whether this is the active menu item. This is a
     // special case in addition to code in constructor of parent class
     // because here we have to check the toplist type, too.
-    if($type == 'lastcommented' || $type == 'lastadded' || $type == 'toprated')
+    if($this->type == 'lastcommented' || $this->type == 'lastadded' || $this->type == 'toprated')
     {
       $active = $this->_mainframe->getMenu()->getActive();
-      if(!$active || strpos($active->link, '&type='.$type) === false)
+      if(!$active || strpos($active->link, '&type='.$this->type) === false)
       {
         // Get the default layout from the configuration
         if($layout = $this->_config->get('jg_alternative_layout'))
@@ -99,18 +101,18 @@ class JoomGalleryViewToplist extends JoomGalleryView
     if($this->_config->get('jg_completebreadcrumbs'))
     {
       $breadcrumbs  = $this->_mainframe->getPathway();
-      $breadcrumbs->addItem($title);
+      $breadcrumbs->addItem($this->title);
     }
 
     // Check whether the (comments) data rows where delivered by a plugin
-    if(isset($rows[0]->delivered_by_plugin) && $rows[0]->delivered_by_plugin)
+    if(isset($this->rows[0]->delivered_by_plugin) && $this->rows[0]->delivered_by_plugin)
     {
-      $params->set('delivered_by_plugin', 1);
+      $this->params->set('delivered_by_plugin', 1);
     }
 
-    foreach($rows as $key => $row)
+    foreach($this->rows as $key => $row)
     {
-      $rows[$key]->link = JHTML::_('joomgallery.openimage', $this->_config->get('jg_detailpic_open'), $row);
+      $this->rows[$key]->link = JHTML::_('joomgallery.openimage', $this->_config->get('jg_detailpic_open'), $row);
 
       $cropx    = null;
       $cropy    = null;
@@ -121,46 +123,46 @@ class JoomGalleryViewToplist extends JoomGalleryView
         $cropy    = $this->_config->get('jg_dyncropheight');
         $croppos  = $this->_config->get('jg_dyncropposition');
       }
-      $rows[$key]->thumb_src = $this->_ambit->getImg('thumb_url', $row, null, 0, true, $cropx, $cropy, $croppos);
+      $this->rows[$key]->thumb_src = $this->_ambit->getImg('thumb_url', $row, null, 0, true, $cropx, $cropy, $croppos);
 
       // Set the title attribute in a tag with title and/or description of image
       // if a box is activated
       if(!is_numeric($this->_config->get('jg_detailpic_open')) || $this->_config->get('jg_detailpic_open') > 1)
       {
-        $rows[$key]->atagtitle = JHTML::_('joomgallery.getTitleforATag', $row);
+        $this->rows[$key]->atagtitle = JHTML::_('joomgallery.getTitleforATag', $row);
       }
       else
       {
         // Set the imgtitle by default
-        $rows[$key]->atagtitle = 'title="'.$row->imgtitle.'"';
+        $this->rows[$key]->atagtitle = 'title="'.$row->imgtitle.'"';
       }
 
       if($this->_config->get('jg_showauthor'))
       {
         if($row->imgauthor)
         {
-          $rows[$key]->authorowner = $row->imgauthor;
+          $this->rows[$key]->authorowner = $row->imgauthor;
         }
         else
         {
           if($this->_config->get('jg_showowner'))
           {
-            $rows[$key]->authorowner = JHTML::_('joomgallery.displayname', $row->owner);
+            $this->rows[$key]->authorowner = JHTML::_('joomgallery.displayname', $row->owner);
           }
           else
           {
-            $rows[$key]->authorowner = JText::_('COM_JOOMGALLERY_COMMON_NO_DATA');
+            $this->rows[$key]->authorowner = JText::_('COM_JOOMGALLERY_COMMON_NO_DATA');
           }
         }
       }
 
-      if(!$params->get('delivered_by_plugin'))
+      if(!$this->params->get('delivered_by_plugin'))
       {
-        if($type == 'lastcommented' && $this->_config->get('jg_showthiscomment'))
+        if($this->type == 'lastcommented' && $this->_config->get('jg_showthiscomment'))
         {
           if($row->userid)
           {
-            $rows[$key]->cmtname = JHTML::_('joomgallery.displayname', $row->userid, false);
+            $this->rows[$key]->cmtname = JHTML::_('joomgallery.displayname', $row->userid, false);
           }
 
           $cmttext = $row->cmttext;
@@ -179,31 +181,31 @@ class JoomGalleryViewToplist extends JoomGalleryView
           }
           $cmttext = stripslashes($cmttext);
 
-          $rows[$key]->processed_cmttext = $cmttext;
+          $this->rows[$key]->processed_cmttext = $cmttext;
         }
       }
 
       // Show editor links for that image
-      $rows[$key]->show_edit_icon   = false;
-      $rows[$key]->show_delete_icon = false;
+      $this->rows[$key]->show_edit_icon   = false;
+      $this->rows[$key]->show_delete_icon = false;
       if(   $this->_config->get('jg_showtoplisteditorlinks') == 1
          && $this->_config->get('jg_userspace') == 1
         )
       {
-        if( (   $this->_user->authorise('core.edit', _JOOM_OPTION.'.image.'.$rows[$key]->id)
-            ||  (   $this->_user->authorise('core.edit.own', _JOOM_OPTION.'.image.'.$rows[$key]->id)
-                &&  $rows[$key]->owner
-                &&  $rows[$key]->owner == $this->_user->get('id')
+        if( (   $this->_user->authorise('core.edit', _JOOM_OPTION.'.image.'.$this->rows[$key]->id)
+            ||  (   $this->_user->authorise('core.edit.own', _JOOM_OPTION.'.image.'.$this->rows[$key]->id)
+                &&  $this->rows[$key]->owner
+                &&  $this->rows[$key]->owner == $this->_user->get('id')
                 )
             )
         )
         {
-          $rows[$key]->show_edit_icon = true;
+          $this->rows[$key]->show_edit_icon = true;
         }
 
-        if($this->_user->authorise('core.delete', _JOOM_OPTION.'.image.'.$rows[$key]->id))
+        if($this->_user->authorise('core.delete', _JOOM_OPTION.'.image.'.$this->rows[$key]->id))
         {
-          $rows[$key]->show_delete_icon = true;
+          $this->rows[$key]->show_delete_icon = true;
         }
       }
     }
@@ -213,19 +215,19 @@ class JoomGalleryViewToplist extends JoomGalleryView
     {
       if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
       {
-        $params->set('show_download_icon', 1);
+        $this->params->set('show_download_icon', 1);
       }
       else
       {
         if($this->_config->get('jg_download_hint'))
         {
-          $params->set('show_download_icon', -1);
+          $this->params->set('show_download_icon', -1);
         }
       }
     }
 
     // Favourites icon
-    if(!$params->get('disable_global_info') && $this->_config->get('jg_favourites') && $this->_config->get('jg_showtoplistfavourite'))
+    if(!$this->params->get('disable_global_info') && $this->_config->get('jg_favourites') && $this->_config->get('jg_showtoplistfavourite'))
     {
       if(   $this->_user->get('id')
          || ($this->_config->get('jg_usefavouritesforpubliczip') == 1 && !$this->_user->get('id'))
@@ -235,11 +237,11 @@ class JoomGalleryViewToplist extends JoomGalleryView
            || ($this->_config->get('jg_usefavouritesforpubliczip') && !$this->_user->get('id'))
           )
         {
-          $params->set('show_favourites_icon', 2);
+          $this->params->set('show_favourites_icon', 2);
         }
         else
         {
-          $params->set('show_favourites_icon', 1);
+          $this->params->set('show_favourites_icon', 1);
         }
       }
       else
@@ -248,11 +250,11 @@ class JoomGalleryViewToplist extends JoomGalleryView
         {
           if($this->_config->get('jg_usefavouritesforzip'))
           {
-            $params->set('show_favourites_icon', -2);
+            $this->params->set('show_favourites_icon', -2);
           }
           else
           {
-            $params->set('show_favourites_icon', -1);
+            $this->params->set('show_favourites_icon', -1);
           }
         }
       }
@@ -263,7 +265,7 @@ class JoomGalleryViewToplist extends JoomGalleryView
     {
       if($this->_user->get('id') || $this->_config->get('jg_report_unreg'))
       {
-        $params->set('show_report_icon', 1);
+        $this->params->set('show_report_icon', 1);
 
         JHTML::_('behavior.modal');
       }
@@ -271,25 +273,13 @@ class JoomGalleryViewToplist extends JoomGalleryView
       {
         if($this->_config->get('jg_report_hint'))
         {
-          $params->set('show_report_icon', -1);
+          $this->params->set('show_report_icon', -1);
         }
       }
     }
 
     // Set redirect url used in editor links to redirect back to favourites view after edit/delete
-    $redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
-
-    $this->assignRef('params',          $params);
-    $this->assignRef('rows',            $rows);
-    $this->assignRef('title',           $title);
-    $this->assignRef('type',            $type);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backtarget);
-    $this->assignRef('backtext',        $backtext);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
-    $this->assignRef('redirect',        $redirect);
+    $this->redirect = '&redirect='.base64_encode(JFactory::getURI()->toString());
 
     parent::display($tpl);
   }

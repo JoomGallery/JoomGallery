@@ -13,6 +13,8 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Comments model
  *
@@ -199,7 +201,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
   protected function loadForm($name, $source = null, $options = array(), $clear = false, $xpath = false)
   {
     // Handle the optional arguments.
-    $options['control'] = JArrayHelper::getValue($options, 'control', false);
+    $options['control'] = ArrayHelper::getValue($options, 'control', false);
 
     // Get the form.
     JForm::addFormPath(JPATH_COMPONENT . '/models/forms');
@@ -459,7 +461,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
    */
   public function delete()
   {
-    $cids = JRequest::getVar('cid', array(0), 'post', 'array');
+    $cids = $this->_mainframe->input->post->get('cid', array(0), 'array');
 
     $row = $this->getTable('joomgallerycomments');
 
@@ -491,7 +493,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
    */
   public function publish($cid, $publish = 1, $task = 'publish')
   {
-    JArrayHelper::toInteger($cid);
+    ArrayHelper::toInteger($cid);
     $cids = implode(',', $cid);
 
     $column = 'approved';
@@ -505,7 +507,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
           ->set($column.' = '.(int) $publish)
           ->where('cmtid IN ('.$cids.' )');
     $this->_db->setQuery($query);
-    if(!$this->_db->query())
+    if(!$this->_db->execute())
     {
       return false;
     }
@@ -562,7 +564,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
    * @param   string  $default    The default value for the variable if not found (optional)
    * @param   string  $type       Filter for the variable, for valid values see {@link JFilterInput::clean()} (optional)
    * @param   boolean $resetPage  If true, the limitstart in request is set to zero if the state has changed
-   * @return  The requested user state
+   * @return  mixed The requested user state
    * @since   2.0
    */
   public function getUserStateFromRequest($key, $request, $default = null, $type = 'none', $resetPage = true)
@@ -571,11 +573,11 @@ class JoomGalleryModelComments extends JoomGalleryModel
 
     $old_state = $app->getUserState($key);
     $cur_state = (!is_null($old_state)) ? $old_state : $default;
-    $new_state = JRequest::getVar($request, null, 'default', $type);
+    $new_state = $app->input->get($request, null, $type);
 
     if($cur_state != $new_state && !is_null($new_state) && !is_null($old_state) && $resetPage)
     {
-      JRequest::setVar('limitstart', 0);
+      $app->input->set('limitstart', 0);
     }
 
     // Save the new value only if it was set in this request.

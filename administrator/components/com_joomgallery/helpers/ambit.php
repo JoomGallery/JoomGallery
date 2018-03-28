@@ -148,7 +148,7 @@ class JoomAmbit extends JObject
     jimport('joomla.filesystem.folder');
 
     $config     = JoomConfig::getInstance();
-    $mainframe  = JFactory::getApplication('administrator');
+    $mainframe  = JFactory::getApplication();
 
     // Fill all variables
     $this->icon_url   = JURI::root().'media/joomgallery/images/';
@@ -286,8 +286,10 @@ class JoomAmbit extends JObject
 
     if(is_null($controller))
     {
-      $url .= '&controller='.JRequest::getCmd('controller');
-      if(!is_null($id) && JRequest::getCmd('task') == 'apply')
+      $input = JFactory::getApplication()->input;
+
+      $url .= '&controller='.$input->getCmd('controller');
+      if(!is_null($id) && $input->getCmd('task') == 'apply')
       {
         $url .= '&task=edit&'.$key.'='.$id;
       }
@@ -317,7 +319,7 @@ class JoomAmbit extends JObject
     $types = array('thumb_path', 'thumb_url', 'img_path', 'img_url', 'orig_path', 'orig_url');
     if(!in_array($type, $types))
     {
-      JError::raiseError(500, JText::sprintf('Wrong image type: %s', $type));
+      throw new UnexpectedValueException(JText::sprintf('Wrong image type: %s', $type));
     }
 
     if(!is_object($img))
@@ -396,7 +398,7 @@ class JoomAmbit extends JObject
 
       if(!$row->load($id))
       {
-        JError::raiseError(500, JText::sprintf('Image with ID %d not found', $id));
+        throw new RuntimeException(JText::sprintf('Image with ID %d not found', $id));
       }
 
       $properties   = $row->getProperties();

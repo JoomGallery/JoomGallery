@@ -31,18 +31,18 @@ class JoomGalleryViewCategory extends JoomGalleryView
   public function display($tpl = null)
   {
     // Get the category data
-    $item = $this->get('Data');
+    $this->item = $this->get('Data');
 
-    $isNew = ($item->cid < 1);
-    if($isNew)
+    $this->isNew = ($this->item->cid < 1);
+    if($this->isNew)
     {
-      $item->published = 1;
+      $this->item->published = 1;
     }
 
     // Get image source for the thumbnail preview
-    if($item->thumbnail && $item->thumbnail_available)
+    if($this->item->thumbnail && $this->item->thumbnail_available)
     {
-      $imgsource = $this->_ambit->getImg('thumb_url', $item->thumbnail);
+      $imgsource = $this->_ambit->getImg('thumb_url', $this->item->thumbnail);
     }
     else
     {
@@ -50,67 +50,64 @@ class JoomGalleryViewCategory extends JoomGalleryView
     }
 
     // Get the form and fill the fields
-    $form = $this->get('Form');
-    if(!$isNew)
+    $this->form = $this->get('Form');
+    if(!$this->isNew)
     {
       // Add additional attribute for category form field to exclude current
       // category id from select box
-      $form->setFieldAttribute('parent_id', 'exclude', $item->cid);
+      $this->form->setFieldAttribute('parent_id', 'exclude', $this->item->cid);
     }
 
     // Ordering box is not available if option for performance improvement has been enabled
     if(!$this->_config->get('jg_disableunrequiredchecks'))
     {
       // Set some additional attributes for the ordering select box
-      $form->setFieldAttribute('ordering', 'originalOrder', $item->cid);
-      $form->setFieldAttribute('ordering', 'originalParent', $item->parent_id == 1 ? 0 : $item->parent_id);
-      $form->setFieldAttribute('ordering', 'orderings', base64_encode(serialize($this->getModel()->getOrderings($item->cid ? $item->parent_id : null))));
+      $this->form->setFieldAttribute('ordering', 'originalOrder', $this->item->cid);
+      $this->form->setFieldAttribute('ordering', 'originalParent', $this->item->parent_id == 1 ? 0 : $this->item->parent_id);
+      $this->form->setFieldAttribute('ordering', 'orderings', base64_encode(serialize($this->getModel()->getOrderings($this->item->cid ? $this->item->parent_id : null))));
       // Perhaps there is a better way to set the field attribute
-      $parent_field = $this->_findFieldByFieldName($form, 'parent_id');
+      $parent_field = $this->_findFieldByFieldName($this->form, 'parent_id');
       if($parent_field !== false)
       {
-        $form->setFieldAttribute('ordering', 'parent_id', $parent_field->id);
+        $this->form->setFieldAttribute('ordering', 'parent_id', $parent_field->id);
       }
     }
 
-    $imagelib_field = $this->_findFieldByFieldName($form, 'imagelib');
+    $imagelib_field = $this->_findFieldByFieldName($this->form, 'imagelib');
     // Set additional attribute for the thumbnail select box
     if($imagelib_field !== false)
     {
-      $form->setFieldAttribute('thumbnail', 'imagelib_id', $imagelib_field->id);
+      $this->form->setFieldAttribute('thumbnail', 'imagelib_id', $imagelib_field->id);
     }
 
     // Set maximum allowed user count to switch from listbox to modal popup selection
-    $form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
+    $this->form->setFieldAttribute('owner', 'useListboxMaxUserCount', $this->_config->get('jg_use_listbox_max_user_count'));
 
     // Bind the data to the form
-    $form->bind($item);
+    $this->form->bind($this->item);
 
     // Set thumbnail image source for thumbnail preview form field
-    $form->setValue('imagelib', null, $imgsource);
+    $this->form->setValue('imagelib', null, $imgsource);
 
     // Set immutable fields
-    if($item->published)
+    if($this->item->published)
     {
-      $form->setValue('publishhiddenstate', null, $item->hidden ? JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN') : JText::_('COM_JOOMGALLERY_COMMON_STATE_PUBLISHED') );
+      $this->form->setValue('publishhiddenstate', null, $this->item->hidden ? JText::_('COM_JOOMGALLERY_COMMON_PUBLISHED_BUT_HIDDEN') : JText::_('COM_JOOMGALLERY_COMMON_STATE_PUBLISHED') );
     }
     else
     {
-      $form->setValue('publishhiddenstate', null, JText::_('COM_JOOMGALLERY_COMMON_STATE_UNPUBLISHED'));
+      $this->form->setValue('publishhiddenstate', null, JText::_('COM_JOOMGALLERY_COMMON_STATE_UNPUBLISHED'));
     }
 
-    if($item->thumbnail && !$item->thumbnail_available)
+    if($this->item->thumbnail && !$this->item->thumbnail_available)
     {
-      $form->setValue('notice', null, JText::sprintf('COM_JOOMGALLERY_CATMAN_THUMBNAIL_NOT_AVAILABLE', $item->thumbnail));
+      $this->form->setValue('notice', null, JText::sprintf('COM_JOOMGALLERY_CATMAN_THUMBNAIL_NOT_AVAILABLE', $this->item->thumbnail));
     }
 
     JHtml::_('jquery.framework');
 
-    $this->assignRef('item', $item);
-    $this->assignRef('isNew', $isNew);
-    $this->assignRef('form', $form);
-
     $this->addToolbar();
+
     parent::display($tpl);
   }
 

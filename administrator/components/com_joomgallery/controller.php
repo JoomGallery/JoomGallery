@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport('joomla.application.component.controller');
-
 /**
  * JoomGallery Component Controller
  *
@@ -24,20 +22,12 @@ jimport('joomla.application.component.controller');
 class JoomGalleryController extends JControllerLegacy
 {
   /**
-   * JApplication object
-   *
-   * @access  protected
-   * @var     object
-   */
-  #var $_mainframe;
-
-  /**
    * JoomConfig object
    *
    * @access  protected
    * @var     object
    */
-  var $_config;
+  protected $_config;
 
   /**
    * JoomAmbit object
@@ -45,15 +35,7 @@ class JoomGalleryController extends JControllerLegacy
    * @access  protected
    * @var     object
    */
-  var $_ambit;
-
-  /**
-   * JUser object, holds the current user data
-   *
-   * @access  protected
-   * @var     object
-   */
-  #var $_user;
+  protected $_ambit;
 
   /**
    * JDatabase object
@@ -61,7 +43,7 @@ class JoomGalleryController extends JControllerLegacy
    * @access  protected
    * @var     object
    */
-  var $_db;
+  protected $_db;
 
   /**
    * Constructor
@@ -76,9 +58,6 @@ class JoomGalleryController extends JControllerLegacy
 
     $this->_ambit     = JoomAmbit::getInstance();
     $this->_config    = JoomConfig::getInstance();
-
-    /*$this->_mainframe = JFactory::getApplication('site');
-    $this->_user      = JFactory::getUser();*/
     $this->_db        = JFactory::getDBO();
 
     // Uncomment following line to disable update check

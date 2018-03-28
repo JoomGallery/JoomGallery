@@ -45,8 +45,14 @@ class JFormFieldCbjoomuser extends JFormFieldJoomuser
 
     $cbname     = $this->element['cbname'] ? $this->element['cbname'] : 'change[]';
     $cbvalue    = $this->element['cbvalue'] ? $this->element['cbvalue'] : $this->name;
+    $cbid       = str_replace(array('[', ']'), array('', ''), $cbname . '_' . $cbvalue);
 
-    $cbid       = str_replace(array('[', ']'), array('', ''), $cbname.$cbvalue);
+    if($this->formControl && strlen($cbname) > 2 && substr($cbname, -2) === '[]')
+    {
+      $cbname = $this->formControl . '[' . substr($cbname, 0, -2) . '][]';
+      $cbid   = $this->formControl . '_' . $cbid;
+    }
+
     $cbhtml     = '<input id="'.$cbid.'" type="checkbox" name="'.$cbname.'" value="'.$cbvalue.'" />';
     $label      = $cbhtml . parent::getLabel();
 

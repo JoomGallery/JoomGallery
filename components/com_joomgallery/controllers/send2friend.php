@@ -33,11 +33,11 @@ class JoomGalleryControllerSend2Friend extends JControllerLegacy
 
     if(!$model->send())
     {
-      $this->setRedirect(JRoute::_('index.php?view=detail&id='.JRequest::getInt('id'), false), $model->getError(), 'error');
+      $this->setRedirect(JRoute::_('index.php?view=detail&id='.$this->input->getInt('id'), false), $model->getError(), 'error');
     }
     else
     {
-      $this->setRedirect(JRoute::_('index.php?view=detail&id='.JRequest::getInt('id'), false), JText::_('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_MSG_MAIL_SENT'));
+      $this->setRedirect(JRoute::_('index.php?view=detail&id='.$this->input->getInt('id'), false), JText::_('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_MSG_MAIL_SENT'));
     }
   }
 }

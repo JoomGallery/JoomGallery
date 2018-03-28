@@ -31,40 +31,44 @@ class JoomGalleryViewGallery extends JoomGalleryView
   public function display($tpl = null)
   {
     jimport('joomla.filesystem.file');
-    $params = $this->_mainframe->getParams();
+    $this->params = $this->_mainframe->getParams();
 
     // Prepare params for header and footer
-    JoomHelper::prepareParams($params);
+    JoomHelper::prepareParams($this->params);
 
     // Load modules at position 'top'
-    $modules['top'] = JoomHelper::getRenderedModules('top');
-    if(count($modules['top']))
+    $this->modules['top'] = JoomHelper::getRenderedModules('top');
+    if(count($this->modules['top']))
     {
-      $params->set('show_top_modules', 1);
+      $this->params->set('show_top_modules', 1);
     }
     // Load modules at position 'btm'
-    $modules['btm'] = JoomHelper::getRenderedModules('btm');
-    if(count($modules['btm']))
+    $this->modules['btm'] = JoomHelper::getRenderedModules('btm');
+    if(count($this->modules['btm']))
     {
-      $params->set('show_btm_modules', 1);
+      $this->params->set('show_btm_modules', 1);
     }
 
-    $pathway  = null;
+    $this->pathway = null;
 
-    $params->set('show_header_backlink', 0);
-    $params->set('show_footer_backlink', 0);
+    $this->params->set('show_header_backlink', 0);
+    $this->params->set('show_footer_backlink', 0);
+    $this->backtarget = '';
+    $this->backtext   = '';
 
     // Get number of images and hits in gallery
-    $numbers  = JoomHelper::getNumberOfImgHits();
+    $numbers            = JoomHelper::getNumberOfImgHits();
+    $this->numberofpics = $numbers[0];
+    $this->numberofhits = $numbers[1];
 
     // Get number of all root categories
     if($this->_config->get('jg_hideemptycats') == 2)
     {
-      $total = $this->get('TotalWithoutEmpty');
+      $this->total = $this->get('TotalWithoutEmpty');
     }
     else
     {
-      $total = $this->get('Total');
+      $this->total = $this->get('Total');
     }
 
     // Calculation of the number of total pages
@@ -73,42 +77,42 @@ class JoomGalleryViewGallery extends JoomGalleryView
     {
       $catperpage = 10;
     }
-    $totalpages = floor($total / $catperpage);
-    $offcut     = $total % $catperpage;
+    $this->totalpages = floor($this->total / $catperpage);
+    $offcut           = $this->total % $catperpage;
     if($offcut > 0)
     {
-      $totalpages++;
+      $this->totalpages++;
     }
 
-    $totalcategories = $total;
-    $total = number_format($total, 0, ',', '.');
+    $totalcategories = $this->total;
+    $this->total     = number_format($this->total, 0, ',', '.');
     // Get the current page
-    $page = JRequest::getInt('page', 0);
-    if($page > $totalpages)
+    $this->page = $this->_mainframe->input->getInt('page', 0);
+    if($this->page > $this->totalpages)
     {
-      $page = $totalpages;
+      $this->page = $this->totalpages;
     }
-    if($page < 1)
+    if($this->page < 1)
     {
-      $page = 1;
+      $this->page = 1;
     }
 
     // Limitstart
-    $limitstart = ($page - 1) * $catperpage;
-    JRequest::setVar('limitstart', $limitstart);
+    $limitstart = ($this->page - 1) * $catperpage;
+    $this->_mainframe->input->set('limitstart', $limitstart);
 
     require_once JPATH_COMPONENT_ADMINISTRATOR.'/helpers/pagination.php';
     $this->pagination = new JoomPagination($totalcategories, $limitstart, $catperpage, '', 'gallery');
 
-    if($totalpages > 1 && $total != 0)
+    if($this->totalpages > 1 && $this->total != 0)
     {
       if(($this->_config->get('jg_showgallerypagenav') == 1) || ($this->_config->get('jg_showgallerypagenav') == 2))
       {
-        $params->set('show_pagination_top', 1);
+        $this->params->set('show_pagination_top', 1);
       }
       if(($this->_config->get('jg_showgallerypagenav') == 2) || ($this->_config->get('jg_showgallerypagenav') == 3))
       {
-        $params->set('show_pagination_bottom', 1);
+        $this->params->set('show_pagination_bottom', 1);
       }
     }
 
@@ -117,11 +121,11 @@ class JoomGalleryViewGallery extends JoomGalleryView
     {
       if($this->_config->get('jg_showgallerypagenav') <= 2)
       {
-        $params->set('show_count_top', 1);
+        $this->params->set('show_count_top', 1);
       }
       if($this->_config->get('jg_showgallerypagenav') >= 2)
       {
-        $params->set('show_count_bottom', 1);
+        $this->params->set('show_count_bottom', 1);
       }
     }
 
@@ -136,11 +140,11 @@ class JoomGalleryViewGallery extends JoomGalleryView
            || ($this->_config->get('jg_usefavouritesforpubliczip') && !$this->_user->get('id'))
           )
         {
-          $params->set('show_favourites_icon', 2);
+          $this->params->set('show_favourites_icon', 2);
         }
         else
         {
-          $params->set('show_favourites_icon', 1);
+          $this->params->set('show_favourites_icon', 1);
         }
       }
       else
@@ -149,11 +153,11 @@ class JoomGalleryViewGallery extends JoomGalleryView
         {
           if($this->_config->get('jg_usefavouritesforzip'))
           {
-            $params->set('show_favourites_icon', -2);
+            $this->params->set('show_favourites_icon', -2);
           }
           else
           {
-            $params->set('show_favourites_icon', -1);
+            $this->params->set('show_favourites_icon', -1);
           }
         }
       }
@@ -380,7 +384,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
 
             // Get the category model, set catid before instantation because
             // it will be needed in the constructor
-            JRequest::setVar('catid', $categories[$key]->cid);
+            $this->_mainframe->input->set('catid', $categories[$key]->cid);
             $categoryModel = $model->getInstance('category', 'joomgallerymodel');
 
             // Get the id of image
@@ -399,7 +403,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
             $categories[$key]->link = JHTML::_('joomgallery.openimage', $this->_config->get('jg_detailpic_open'), $categories[$key]->dtlimgid);
 
             // If category view is skipped we display the favourites icon for adding all images at the thumbnail.
-            $categories[$key]->show_favourites_icon = $params->get('show_favourites_icon');
+            $categories[$key]->show_favourites_icon = $this->params->get('show_favourites_icon');
           }
           else
           {
@@ -436,17 +440,7 @@ class JoomGalleryViewGallery extends JoomGalleryView
       $i++;
     }
 
-    $this->assignRef('params',          $params);
-    $this->assignRef('rows',            $categories);
-    $this->assignRef('total',           $total);
-    $this->assignRef('totalpages',      $totalpages);
-    $this->assignRef('page',            $page);
-    $this->assignRef('pathway',         $pathway);
-    $this->assignRef('modules',         $modules);
-    $this->assignRef('backtarget',      $backlink[0]);
-    $this->assignRef('backtext',        $backlink[1]);
-    $this->assignRef('numberofpics',    $numbers[0]);
-    $this->assignRef('numberofhits',    $numbers[1]);
+    $this->rows = &$categories;
 
     // Include dTree script, dTree styles and treeview styles, if neccessary
     if($this->_config->get('jg_showsubsingalleryview'))

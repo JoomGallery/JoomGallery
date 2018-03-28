@@ -388,7 +388,7 @@ class JoomConfig extends JObject
       $db->setQuery($query, 0, 1);
       if(!$properties = $db->loadAssoc())
       {
-        JError::raiseError(500, JText::_('Error loading config data'));
+        throw new RuntimeException(JText::_('Error loading config data'));
       }
 
       $this->_id = $properties['id'];

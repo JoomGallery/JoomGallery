@@ -13,6 +13,8 @@
 
 defined( '_JEXEC' ) or die( 'Direct Access to this location is not allowed.' );
 
+use Joomla\Utilities\ArrayHelper;
+
 /**
  * Utility class for creating HTML Grids
  *
@@ -81,11 +83,8 @@ abstract class JHtmlJoomGallery
     }
 
     $config     = JoomConfig::getInstance();
-    $dispatcher = JDispatcher::getInstance();
-
     $realname   = $config->get('jg_realname') ? true : false;
-
-    $plugins    = $dispatcher->trigger('onJoomDisplayUser', array($userId, $realname, $context));
+    $plugins    = JFactory::getApplication()->triggerEvent('onJoomDisplayUser', array($userId, $realname, $context));
 
     foreach($plugins as $plugin)
     {
@@ -377,7 +376,7 @@ abstract class JHtmlJoomGallery
     $config   = JoomConfig::getInstance();
     $ambit    = JoomAmbit::getInstance();
     $user     = JFactory::getUser();
-    $view     = JRequest::getCmd('view');
+    $view     = JFactory::getApplication()->input->getCmd('view');
 
     $html = '';
 
@@ -553,7 +552,7 @@ abstract class JHtmlJoomGallery
       }
       else
       {
-        if(JRequest::getCmd('view') == 'detail')
+        if(JFactory::getApplication()->input->getCmd('view') == 'detail')
         {
           $type = 'orig';
         }
@@ -687,12 +686,8 @@ abstract class JHtmlJoomGallery
         }
         break;
       default: // Plugins
-        if(!isset($loaded[12]))
-        {
-          $loaded[12] = JDispatcher::getInstance();
-        }
         $link = '';
-        $loaded[12]->trigger('onJoomOpenImage', array(&$link, $image, $img_url, $group, $type, $open));
+        JFactory::getApplication()->triggerEvent('onJoomOpenImage', array(&$link, $image, $img_url, $group, $type, $open));
         if(!$link)
         {
           // Fallback to new window
@@ -1433,7 +1428,7 @@ abstract class JHtmlJoomGallery
    */
   public static function approved($states, $value, $i, $prefix = '', $enabled = true, $id = 0, $owner = 0, $translate = true, $checkbox = 'cb')
   {
-    $state = JArrayHelper::getValue($states, (int) $value, $states[0]);
+    $state = ArrayHelper::getValue($states, (int) $value, $states[0]);
     $task = array_key_exists('task', $state) ? $state['task'] : $state[0];
     $text = array_key_exists('text', $state) ? $state['text'] : (array_key_exists(1, $state) ? $state[1] : '');
     $active_title = array_key_exists('active_title', $state) ? $state['active_title'] : (array_key_exists(2, $state) ? $state[2] : '');

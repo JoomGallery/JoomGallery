@@ -13,6 +13,8 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
+use Joomla\Utilities\ArrayHelper;
+
 jimport('joomla.plugin.plugin');
 
 /**
@@ -115,7 +117,7 @@ abstract class JoomOpenImagePlugin extends JPlugin
       return;
     }
 
-    $attribs = JArrayHelper::toString($attribs);
+    $attribs = ArrayHelper::toString($attribs);
 
     // Remove the last quotation marks and create the tag
     $link = $href.'" '.substr($attribs, 0, -1);

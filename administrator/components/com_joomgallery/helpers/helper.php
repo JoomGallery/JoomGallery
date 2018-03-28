@@ -30,7 +30,7 @@ class JoomHelper
    */
   public static function addSubmenu()
   {
-    $current_controller = JRequest::getCmd('controller', 'control');
+    $current_controller = JFactory::getApplication()->input->getCmd('controller', 'control');
 
     $controllers = array( 'control'     => JText::_('COM_JOOMGALLERY_CONTROL_PANEL'),
                           'categories'  => JText::_('COM_JOOMGALLERY_CATEGORY_MANAGER'),

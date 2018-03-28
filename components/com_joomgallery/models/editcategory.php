@@ -53,7 +53,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
       throw new Exception(JText::_('COM_JOOMGALLERY_COMMON_MSG_YOU_ARE_NOT_LOGGED'));
     }
 
-    $array = JRequest::getVar('catid',  0, '', 'array');
+    $array = $this->_mainframe->input->get('catid', array(0), 'array');
 
     $this->setId($array[0]);
   }
@@ -201,23 +201,8 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     // Import the appropriate plugin group
     JPluginHelper::importPlugin($group);
 
-    // Get the dispatcher
-    $dispatcher = JDispatcher::getInstance();
-
     // Trigger the form preparation event
-    $results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
-
-    // Check for errors encountered while preparing the form
-    if(count($results) && in_array(false, $results, true))
-    {
-      // Get the last error
-      $error = $dispatcher->getError();
-
-      if(!($error instanceof Exception))
-      {
-        throw new Exception($error);
-      }
-    }
+    $this->_mainframe->triggerEvent('onContentPrepareForm', array($form, $data));
   }
 
   /**
@@ -264,7 +249,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
   public function store()
   {
     $row  = $this->getTable('joomgallerycategories');
-    $data = JRequest::get('post', 2);
+    $data = $this->_mainframe->input->post->getArray(array(), NULL, 'RAW');
 
     // Creating a main category means creating
     // a category in ROOT category
@@ -320,7 +305,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     // Bind the form fields to the category table
     if(!$row->bind($data))
     {
-      JError::raiseError(0, $row->getError());
+      throw new RuntimeException($row->getError());
       return false;
     }
 
@@ -410,7 +395,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
       // Store the entry to the database in order to get the new ID
       if(!$row->store())
       {
-        JError::raiseError(0, $row->getError());
+        throw new RuntimeException($row->getError());
         return false;
       }
 
@@ -446,7 +431,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
         // Store the entry to the database
         if(!$row->store())
         {
-          JError::raiseError(0, $row->getError());
+          throw new RuntimeException($row->getError());
           return false;
         }
       }
@@ -468,7 +453,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
 
         /*if(!$row->store())
         {
-            JError::raiseError(100, $row->getError());
+            throw new RuntimeException($row->getError());
             return false;
         }*/
         $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_STORE_IMAGE_IN_CATEGORY'), 'notice');
@@ -575,7 +560,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     // Store the entry to the database
     if(!$row->store())
     {
-      JError::raiseError(0, $row->getError());
+      throw new RuntimeException($row->getError());
       return false;
     }
 
@@ -715,7 +700,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     $subcatids = $this->_db->loadColumn();
     if($this->_db->getErrorNum())
     {
-      JError::raiseWarning(500, $this->_db->getErrorMsg());
+      $this->_mainframe->enqueueMessage($this->_db->getErrorMsg(), 'error');
     }
 
     // Nothing found, return
@@ -737,7 +722,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
       $row->catpath = $catpath;
       if(!$row->store())
       {
-        JError::raiseError(500, $row->getError());
+        throw new RuntimeException($row->getError());
       }
     }
 
@@ -823,7 +808,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     if($return !== true)
     {
       // If not successfull
-      JError::raiseWarning(100, $return);
+      $this->_mainframe->enqueueMessage($return, 'error');
       return false;
     }
     else
@@ -834,7 +819,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
       {
         // If not successful
         JFolder::move($orig_dest, $orig_src);
-        JError::raiseWarning(100, $return);
+        $this->_mainframe->enqueueMessage($return, 'error');
         return false;
       }
       else
@@ -846,7 +831,7 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
           // If not successful
           JFolder::move($orig_dest, $orig_src);
           JFolder::move($img_dest, $img_src);
-          JError::raiseWarning(100, $return);
+          $this->_mainframe->enqueueMessage($return, 'error');
           return false;
         }
       }

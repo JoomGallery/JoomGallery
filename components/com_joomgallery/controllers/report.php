@@ -34,10 +34,10 @@ class JoomGalleryControllerReport extends JControllerLegacy
     $model = $this->getModel('report');
 
     // Determine correct redirect URL
-    $id       = JRequest::getInt('id');
-    $catid    = JRequest::getInt('catid');
-    $toplist  = JRequest::getVar('toplist');
-    $sstring  = JRequest::getVar('sstring');
+    $id       = $this->input->getInt('id');
+    $catid    = $this->input->getInt('catid');
+    $toplist  = $this->input->get('toplist');
+    $sstring  = $this->input->get('sstring');
 
     $redirect_url = 'index.php?view=detail&id='.$id;
     if($catid)

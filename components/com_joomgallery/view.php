@@ -13,8 +13,6 @@
 
 defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 
-jimport( 'joomla.application.component.view');
-
 /**
  * Parent HTML View Class for JoomGallery
  *
@@ -71,14 +69,18 @@ class JoomGalleryView extends JViewLegacy
     $this->_ambit     = JoomAmbit::getInstance();
     $this->_config    = JoomConfig::getInstance();
 
-    $this->_mainframe = JFactory::getApplication('site');
+    $this->_mainframe = JFactory::getApplication();
     $this->_user      = JFactory::getUser();
     $this->_doc       = JFactory::getDocument();
 
     JHtml::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.'/helpers/html');
 
     // If we are just displaying an image we don't need anything else
-    if(JRequest::getCmd('format') == 'raw' || JRequest::getCmd('format') == 'jpg' || JRequest::getCmd('format') == 'json' || JRequest::getCmd('format') == 'feed')
+    if(   $this->_mainframe->input->getCmd('format') == 'raw'
+       || $this->_mainframe->input->getCmd('format') == 'jpg'
+       || $this->_mainframe->input->getCmd('format') == 'json'
+       || $this->_mainframe->input->getCmd('format') == 'feed'
+      )
     {
       return;
     }
@@ -142,7 +144,7 @@ class JoomGalleryView extends JViewLegacy
   public function display($tpl = null)
   {
     $layout = $this->getLayout();
-    if($layout != 'default' && ($layout != 'list' || JRequest::getCmd('view') != 'favourites'))
+    if($layout != 'default' && ($layout != 'list' || $this->_mainframe->input->getCmd('view') != 'favourites'))
     {
       JFactory::getLanguage()->load('com_joomgallery.layout.'.$layout);
 

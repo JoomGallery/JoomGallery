@@ -391,7 +391,7 @@ abstract class JHtmlJoomSelect
 
     // Load plugins in order to search for additional OpenImage plugins
     JPluginHelper::importPlugin('joomgallery');
-    $plugins = JDispatcher::getInstance()->trigger('onJoomOpenImageGetName');
+    $plugins = JFactory::getApplication()->triggerEvent('onJoomOpenImageGetName');
 
     foreach($plugins as $plugin)
     {

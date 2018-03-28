@@ -31,65 +31,21 @@ class JoomGalleryControllerImage extends JControllerLegacy
   {
     $model = $this->getModel('edit');
 
-    $array = JRequest::getVar('id',  0, '', 'array');
+    $array = $this->input->get('id', array(0), 'array');
 
     $model->setId((int)$array[0]);
 
-    /*$data = JRequest::get('post');
-
-    //editing more than one image?
-    if(isset($data['cids']))
-    {
-      //we need selected fields
-      if(!isset($data['change']))
-      {
-        $this->setRedirect($this->_ambit->getRedirectUrl(), JText::_('Please check the boxes of fields you want to change'), 'notice');
-        return;
-      }
-
-      $cids_string  = $data['cids'];
-      $cids         = explode(',', $cids_string);
-      $change       = $data['change'];
-
-      //delete all unselected fields
-      foreach($data as $key => $value)
-      {
-        if(!in_array($key, $change))
-        {
-          unset($data[$key]);
-        }
-      }
-
-      //save each image
-      $return = array();
-      foreach($cids as $cid)
-      {
-        $data['cid']  = $cid;
-        $return[]     = $model->store($data);
-      }
-
-      if(!in_array(false, $return))
-      {
-      $this->setRedirect($this->_ambit->getRedirectUrl(), JText::sprintf('Successfully saved %d images.', count($return)));
-      }
-      else
-      {
-        $this->setRedirect($this->_ambit->getRedirectUrl(), JText::sprintf('Error saving images.'), 'error');
-      }
-      return;
-    }*/
-
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->getInt('limitstart', 0);
     }
 
     // Set standard redirect URL
     $redirect = 'index.php?view=userpanel'.$slimitstart;
     // Is there any redirect requested?
-    $url = JRequest::getVar('redirect', null, 'default', 'base64');
+    $url = $this->input->getBase64('redirect', null);
     if($url !== null)
     {
       $url = base64_decode($url);
@@ -122,21 +78,21 @@ class JoomGalleryControllerImage extends JControllerLegacy
   {
     $model = $this->getModel('edit');
 
-    $array = JRequest::getVar('id',  0, '', 'array');
+    $array = $this->input->get('id', array(0), 'array');
 
     $model->setId((int)$array[0]);
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->get('limitstart', 0);
     }
 
     // Set standard redirect URL
     $redirect = 'index.php?view=userpanel'.$slimitstart;
     // Is there any redirect requested?
-    $url = JRequest::getVar('redirect', null, 'default', 'base64');
+    $url = $this->input->getBase64('redirect', null);
     if($url !== null)
     {
       $url = base64_decode($url);
@@ -169,15 +125,15 @@ class JoomGalleryControllerImage extends JControllerLegacy
   {
     $model = $this->getModel('edit');
 
-    $array = JRequest::getVar('id',  0, '', 'array');
+    $array = $this->input->get('id', array(0), 'array');
 
     $model->setId((int)$array[0]);
 
     // Get limitstart from request to set the correct limitstart (page) for redirect url
     $slimitstart = '';
-    if(JRequest::getVar('limitstart', null) != null)
+    if($this->input->get('limitstart', null) != null)
     {
-      $slimitstart = '&limitstart='.JRequest::getInt('limitstart', 0);
+      $slimitstart = '&limitstart='.$this->input->getInt('limitstart', 0);
     }
 
     if($model->publish())

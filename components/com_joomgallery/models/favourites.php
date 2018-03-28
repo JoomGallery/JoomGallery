@@ -91,8 +91,8 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
     }
 
     // Set the image id
-    $view = JRequest::getCmd('view');
-    $task = JRequest::getCmd('task');
+    $view = $this->_mainframe->input->getCmd('view');
+    $task = $this->_mainframe->input->getCmd('task');
     if(  ($view != 'favourites' || $task == 'removeimage')
       &&  $view != 'downloadzip'
       &&  $task != 'removeall'
@@ -101,7 +101,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       &&  $task != 'addimages'
       )
     {
-      $id = JRequest::getInt('id');
+      $id = $this->_mainframe->input->getInt('id');
       $this->setId($id);
     }
 
@@ -152,7 +152,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
     // Set new image ID if valid
     if(!$id)
     {
-      JError::raiseError(500, JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
+      throw new RuntimeException(JText::_('COM_JOOMGALLERY_COMMON_NO_IMAGE_SPECIFIED'));
     }
     $this->_id  = $id;
   }
@@ -225,7 +225,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
         }
 
         $this->_db->setQuery($query);
-        $return = $this->_db->query();
+        $return = $this->_db->execute();
       }
       else
       {
@@ -258,7 +258,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
               ->set('piclist = '.$this->_db->q($this->piclist.', '.$this->_id))
               ->where('uuserid = '.$this->_user->get('id'));
         $this->_db->setQuery($query);
-        $return = $this->_db->query();
+        $return = $this->_db->execute();
       }
       else
       {
@@ -335,7 +335,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
         }
 
         $this->_db->setQuery($query);
-        $return = $this->_db->query();
+        $return = $this->_db->execute();
       }
       else
       {
@@ -371,7 +371,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
               ->set('piclist = '.$this->_db->q(implode(',', $new_piclist_array)))
               ->where('uuserid = '.$this->_user->get('id'));
         $this->_db->setQuery($query);
-        $return = $this->_db->query();
+        $return = $this->_db->execute();
       }
       else
       {
@@ -434,7 +434,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       $query->update(_JOOM_TABLE_USERS)
             ->where('uuserid = '.$this->_user->get('id'));
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->setError($this->_db->getErrorMsg());
 
@@ -466,7 +466,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
             ->set('piclist = NULL')
             ->where('uuserid = '.$this->_user->get('id'));
       $this->_db->setQuery($query);
-      if(!$this->_db->query())
+      if(!$this->_db->execute())
       {
         $this->setError($this->_db->getErrorMsg());
 
@@ -492,7 +492,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
    */
   public function switchLayout()
   {
-    $layout = JRequest::getCmd('layout');
+    $layout = $this->_mainframe->input->getCmd('layout');
     if(
         ($layout && $layout == 'list')
       ||
@@ -513,7 +513,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
             ->set('layout = '.$new_layout)
             ->where('uuserid = '.$this->_user->get('id'));
       $this->_db->setQuery($query);
-      $this->_db->query();
+      $this->_db->execute();
     }
     else
     {
@@ -656,7 +656,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
             imagepng($imgres);
             break;
           default:
-            JError::raiseError(404, JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $mime));
+            throw new UnexpectedValueException(JText::sprintf('COM_JOOMGALLERY_COMMON_MSG_MIME_NOT_ALLOWED', $mime));
             break;
         }
 
@@ -751,7 +751,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
 
       $this->_db->setQuery($query);
     }
-    $this->_db->query();
+    $this->_db->execute();
 
     $this->_mainframe->setUserState('joom.favourites.zipname', $zipname);
 
@@ -937,7 +937,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
               ->set('piclist = '.((count($rows)) ? $this->_db->q(trim($ids, ',')) : 'NULL'))
               ->where('uuserid = '.$this->_user->get('id'));
         $this->_db->setQuery($query);
-        $this->_db->query();
+        $this->_db->execute();
       }
 
       return true;

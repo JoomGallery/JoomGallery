@@ -31,7 +31,7 @@ class JoomGalleryModelSend2Friend extends JoomGalleryModel
    */
   public function send()
   {
-    $id = JRequest::getInt('id');
+    $id = $this->_mainframe->input->getInt('id');
 
     if(!$this->_user->get('id'))
     {
@@ -49,8 +49,8 @@ class JoomGalleryModelSend2Friend extends JoomGalleryModel
 
     require_once JPATH_COMPONENT.'/helpers/messenger.php';
 
-    $send2friendname  = JRequest::getVar('send2friendname', '', 'post');
-    $send2friendemail = JRequest::getVar('send2friendemail', '', 'post');
+    $send2friendname  = $this->_mainframe->input->post->get('send2friendname', '');
+    $send2friendemail = $this->_mainframe->input->post->get('send2friendemail', '');
 
     // Prepare link
     $link = JRoute::_('index.php?view=detail&id='.$id);

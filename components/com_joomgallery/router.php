@@ -37,7 +37,7 @@ function JoomGalleryBuildRoute(&$query)
       switch($query['type'])
       {
         case 'toprated':
-          $segment = JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED'));
+          $segment = JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED'));
           if(trim(str_replace('-', '', $segment)) == '')
           {
             $segments[] = 'top-rated';
@@ -48,7 +48,7 @@ function JoomGalleryBuildRoute(&$query)
           }
           break;
         case 'lastadded':
-          $segment = JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED'));
+          $segment = JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED'));
           if(trim(str_replace('-', '', $segment)) == '')
           {
             $segments[] = 'last-added';
@@ -59,7 +59,7 @@ function JoomGalleryBuildRoute(&$query)
           }
           break;
         case 'lastcommented':
-          $segment = JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED'));
+          $segment = JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED'));
           if(trim(str_replace('-', '', $segment)) == '')
           {
             $segments[] = 'last-commented';
@@ -70,7 +70,7 @@ function JoomGalleryBuildRoute(&$query)
           }
           break;
         default:
-          $segment = JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED'));
+          $segment = JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED'));
           if(trim(str_replace('-', '', $segment)) == '')
           {
             $segments[] = 'most-viewed';
@@ -84,7 +84,7 @@ function JoomGalleryBuildRoute(&$query)
     }
     else
     {
-      $segment = JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED'));
+      $segment = JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED'));
       if(trim(str_replace('-', '', $segment)) == '')
       {
         $segments[] = 'most-viewed';
@@ -378,10 +378,10 @@ function JoomGalleryParseRoute($segments)
   $language = JFactory::getLanguage();
   $language->load('com_joomgallery');
 
-  if(   $segments[0] == str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED')))
-    ||  $segments[0] == str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED')))
-    ||  $segments[0] == str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED')))
-    ||  $segments[0] == str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED')))
+  if(   $segments[0] == str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED')))
+    ||  $segments[0] == str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED')))
+    ||  $segments[0] == str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED')))
+    ||  $segments[0] == str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_MOST_VIEWED')))
     ||  $segments[0] == str_replace('-', ':', 'top-rated')
     ||  $segments[0] == str_replace('-', ':', 'last-added')
     ||  $segments[0] == str_replace('-', ':', 'last-commented')
@@ -393,15 +393,15 @@ function JoomGalleryParseRoute($segments)
     switch($segments[0])
     {
       case str_replace('-', ':', 'top-rated'):
-      case str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED'))):
+      case str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_TOP_RATED'))):
         $vars['type'] = 'toprated';
         break;
       case str_replace('-', ':', 'last-added'):
-      case str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED'))):
+      case str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_ADDED'))):
         $vars['type'] = 'lastadded';
         break;
       case str_replace('-', ':', 'last-commented'):
-      case str_replace('-', ':', JApplication::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED'))):
+      case str_replace('-', ':', JApplicationHelper::stringURLSafe(JText::_('COM_JOOMGALLERY_COMMON_TOPLIST_LAST_COMMENTED'))):
         $vars['type'] = 'lastcommented';
         break;
       default:
