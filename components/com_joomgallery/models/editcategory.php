@@ -201,23 +201,8 @@ class JoomGalleryModelEditcategory extends JoomGalleryModel
     // Import the appropriate plugin group
     JPluginHelper::importPlugin($group);
 
-    // Get the dispatcher
-    $dispatcher = JDispatcher::getInstance();
-
     // Trigger the form preparation event
-    $results = $dispatcher->trigger('onContentPrepareForm', array($form, $data));
-
-    // Check for errors encountered while preparing the form
-    if(count($results) && in_array(false, $results, true))
-    {
-      // Get the last error
-      $error = $dispatcher->getError();
-
-      if(!($error instanceof Exception))
-      {
-        throw new Exception($error);
-      }
-    }
+    $this->_mainframe->triggerEvent('onContentPrepareForm', array($form, $data));
   }
 
   /**

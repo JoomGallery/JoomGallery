@@ -550,7 +550,7 @@ class JoomMessenger extends JObject
 
       // Send messages only if all plugins allow that
       // A plugin could disallow that if it sends the message via another system, for example.
-      $plugins = JDispatcher::getInstance()->trigger('onJoomBeforeSendMessage', array($message));
+      $plugins = JFactory::getApplication()->triggerEvent('onJoomBeforeSendMessage', array($message));
       if(!in_array(false, $plugins, true))
       {
         $message['user_id_to']    = $recipient;

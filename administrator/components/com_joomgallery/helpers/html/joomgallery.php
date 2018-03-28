@@ -83,11 +83,8 @@ abstract class JHtmlJoomGallery
     }
 
     $config     = JoomConfig::getInstance();
-    $dispatcher = JDispatcher::getInstance();
-
     $realname   = $config->get('jg_realname') ? true : false;
-
-    $plugins    = $dispatcher->trigger('onJoomDisplayUser', array($userId, $realname, $context));
+    $plugins    = JFactory::getApplication()->triggerEvent('onJoomDisplayUser', array($userId, $realname, $context));
 
     foreach($plugins as $plugin)
     {
@@ -689,12 +686,8 @@ abstract class JHtmlJoomGallery
         }
         break;
       default: // Plugins
-        if(!isset($loaded[12]))
-        {
-          $loaded[12] = JDispatcher::getInstance();
-        }
         $link = '';
-        $loaded[12]->trigger('onJoomOpenImage', array(&$link, $image, $img_url, $group, $type, $open));
+        JFactory::getApplication()->triggerEvent('onJoomOpenImage', array(&$link, $image, $img_url, $group, $type, $open));
         if(!$link)
         {
           // Fallback to new window
