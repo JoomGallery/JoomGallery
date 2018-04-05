@@ -202,4 +202,30 @@ class JoomGalleryControllerComments extends JoomGalleryController
     // Redirect to maintenance manager because this task is usually launched there
     $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), JText::_('COM_JOOMGALLERY_MAIMAN_CM_MSG_COMMENTS_SYNCHRONIZED'));
   }
+
+  /**
+   * Deletes the stored IP addresses of all comments.
+   *
+   * @return  void
+   * @since   3.4
+   */
+  public function deleteip()
+  {
+    $query = $this->_db->getQuery(true)
+          ->update(_JOOM_TABLE_COMMENTS)
+          ->set('cmtip='."''");
+
+    $this->_db->setQuery($query);
+
+    if(!$this->_db->execute())
+    {
+      // Redirect to maintenance manager because this task is usually launched there
+      $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), $this->_db->getErrorMsg(), 'error');
+
+      return;
+    }
+
+    // Redirect to maintenance manager because this task is usually launched there
+    $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=comments'), JText::_('COM_JOOMGALLERY_MAIMAN_CM_MSG_COMMENTS_IPS_DELETED'));
+  }
 }
