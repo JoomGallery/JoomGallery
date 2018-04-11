@@ -268,6 +268,7 @@ class JoomConfig extends JObject
   var $jg_nameshields_others;
   var $jg_nameshields_unreg;
   var $jg_show_nameshields_unreg;
+  var $jg_storenametagip;
   var $jg_nameshields_height;
   var $jg_nameshields_width;
   var $jg_slideshow;
