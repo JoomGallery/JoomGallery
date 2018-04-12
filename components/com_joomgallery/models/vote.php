@@ -115,7 +115,17 @@ class JoomGalleryModelVote extends JoomGalleryModel
       return false;
     }
 
-      // Get voted or not
+    // Clearing stored but unused IP addresses of voters on a regulary base
+    $query->clear()
+    ->update(_JOOM_TABLE_VOTES)
+    ->set('userip = ' . "''")
+    ->where('datevoted <= DATE_SUB(NOW(), INTERVAL 24 HOUR)')
+    ->where("userip != ''");
+
+    $this->_db->setQuery($query);
+    $this->_db->execute();
+
+    // Checking wether it is allowed to count the vote
     if($this->_config->get('jg_votingonlyreg'))
     {
       // Check whether the user already voted on that image
@@ -143,7 +153,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
         $query->clear()
               ->select('COUNT(*)')
               ->from(_JOOM_TABLE_VOTES)
-              ->where('userip  = '.$this->_db->q($_SERVER['REMOTE_ADDR']))
+              ->where('userip  = '.$this->_db->q($this->_mainframe->input->server->getString('REMOTE_ADDR', '')))
               ->where('picid   = '.$this->_id)
               ->where('datevoted > DATE_SUB(NOW(), INTERVAL 24 HOUR)');
         $this->_db->setQuery($query);
@@ -197,7 +207,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
 
     $row->picid     = $this->_id;
     $row->userid    = $this->_user->get('id');
-    $row->userip    = $_SERVER['REMOTE_ADDR'];
+    $row->userip    = $this->_mainframe->input->server->getString('REMOTE_ADDR', '');
     $row->datevoted = $date->toSQL();
     $row->vote      = $vote;
 

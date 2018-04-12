@@ -453,7 +453,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_votes` (
   `voteid` int(11) NOT NULL auto_increment,
   `picid` int(11) NOT NULL default '0',
   `userid` int(11) UNSIGNED NOT NULL default '0',
-  `userip` varchar(15) NOT NULL default '0',
+  `userip` varchar(45) NOT NULL default '',
   `datevoted` datetime NOT NULL,
   `vote` int(11) NOT NULL default '0',
   PRIMARY KEY (`voteid`),
