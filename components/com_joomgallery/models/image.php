@@ -142,7 +142,7 @@ class JoomGalleryModelImage extends JoomGalleryModel
     $session_id = $session->getToken();
 
     $stoptime   = $this->_mainframe->getCfg('lifetime') * 60;
-    $ip         = $_SERVER['REMOTE_ADDR'];
+    $ip         = $this->_mainframe->input->server->getString('REMOTE_ADDR', '');
 
     // Delete all dated entries
     $query = $this->_db->getQuery(true)
