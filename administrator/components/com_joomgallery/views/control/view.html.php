@@ -49,6 +49,7 @@ class JoomGalleryViewControl extends JoomGalleryView
     $this->notApprovedImages    = $model->getImages('a.imgdate desc', false, 5);
     $this->notApprovedComments  = $model->getComments('c.cmtdate desc', false, 5);
     $this->topDownloads         = $model->getImages('a.downloads desc', true, 5, 'a.downloads > 0');
+    $this->StatisticInfo        = $model->getStatisticInfo();
 
     $lang = JFactory::getLanguage();
 
