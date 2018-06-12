@@ -181,7 +181,10 @@ class JoomGalleryViewHelp extends JoomGalleryView
                             'link'    => 'http://www.buntesuppe.de/blog/123/bayessche-bewertung'),
                       array('title'   => 'Fine Uploader',
                             'author'  => 'Ray Nicholus, Andrew Valums',
-                            'link'    => 'http://fineuploader.com')
+                            'link'    => 'http://fineuploader.com'),
+                      array('title'   => 'PEL Library (reading and writing Exif headers)',
+                            'author'  => 'Martin Geisler',
+                            'link'    => 'https://github.com/lsolesen/pel')
                      );
 
     $params = JComponentHelper::getParams('com_joomgallery');

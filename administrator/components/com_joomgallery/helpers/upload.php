@@ -407,8 +407,64 @@ class JoomUpload extends JObject
         continue;
       }*/
 
+      // Begin rotation
+      $angle = 0;
+
+      if($this->_site)
+      {
+        $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+      }
+      else
+      {
+        $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+      }
+
+      if($autorotate_images != 0)
+      {
+        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+        $imginfo[2] = $imagetype[$imginfo[2]];
+        if($imginfo[2] == 'JPG')
+        {
+          if(extension_loaded('exif') && function_exists('exif_read_data'))
+          {
+            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+            if(empty($exif['Orientation']))
+            {
+              $angle = 0;
+              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+            }
+            else
+            {
+              switch ($exif['Orientation'])
+              {
+                case 3:
+                  $angle = 180;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                  break;
+                case 6:
+                  $angle = 270;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                  break;
+                case 8:
+                  $angle = 90;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                  break;
+                default:
+                  $angle = 0;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                  break;
+              }
+            }
+          }
+        }
+      }
+
       // Create thumbnail and detail image
-      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
+      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -774,8 +830,66 @@ class JoomUpload extends JObject
 
       $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_UPLOAD_COMPLETE').'<br />';
 
+      // Begin rotation
+      if($this->_site)
+      {
+        $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+      }
+      else
+      {
+        $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+      }
+
+      if($autorotate_images == 0)
+      {
+        $angle = 0;
+      }
+      else
+      {
+        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+        $imginfo[2] = $imagetype[$imginfo[2]];
+        if($imginfo[2] == 'JPG')
+        {
+          if(extension_loaded('exif') && function_exists('exif_read_data'))
+          {
+            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+            if(empty($exif['Orientation']))
+            {
+              $angle = 0;
+              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+            }
+            else
+            {
+              switch ($exif['Orientation'])
+              {
+                case 3:
+                  $angle = 180;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                  break;
+                case 6:
+                  $angle = 270;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                  break;
+                case 8:
+                  $angle = 90;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                  break;
+                default:
+                  $angle = 0;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                  break;
+              }
+            }
+          }
+        }
+      }
+
       // Create thumbnail and detail image
-      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
+      if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1069,6 +1183,74 @@ class JoomUpload extends JObject
           continue;
         }*/
 
+        // Begin rotation
+        if($this->_site)
+        {
+          $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+        }
+        else
+        {
+          $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+        }
+
+        if($autorotate_images == 0)
+        {
+          $angle = 0;
+        }
+        else
+        {
+          // Copy original image into original folder
+          $return = JFile::copy($this->_ambit->get('ftp_path').$subdirectory.$origfilename,
+                                $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+          if(!$return)
+          {
+            $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_COPYING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
+            $this->debug        = true;
+            return false;
+          }
+
+          $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+          $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                             6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                             11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+          $imginfo[2] = $imagetype[$imginfo[2]];
+          if($imginfo[2] == 'JPG')
+          {
+            if(extension_loaded('exif') && function_exists('exif_read_data'))
+            {
+              $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+              if(empty($exif['Orientation']))
+              {
+                $angle = 0;
+                $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+              }
+              else
+              {
+                switch ($exif['Orientation'])
+                {
+                  case 3:
+                    $angle = 180;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                    break;
+                  case 6:
+                    $angle = 270;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                    break;
+                  case 8:
+                    $angle = 90;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                    break;
+                  default:
+                    $angle = 0;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                    break;
+                }
+              }
+            }
+          }
+        }
+
         // Create thumbnail
         $return = JoomFile::resizeImage($this->_debugoutput,
                                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1079,7 +1261,8 @@ class JoomUpload extends JObject
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_thumbquality'),
                                         false,
-                                        $this->_config->get('jg_cropposition')
+                                        $this->_config->get('jg_cropposition'),
+                                        $angle
                                         );
         if(!$return)
         {
@@ -1116,8 +1299,76 @@ class JoomUpload extends JObject
           continue;
         }*/
 
+        // Begin rotation
+        if($this->_site)
+        {
+          $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+        }
+        else
+        {
+          $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+        }
+
+        if($autorotate_images == 0)
+        {
+          $angle = 0;
+        }
+        else
+        {
+          // Copy original image into original folder
+          $return = JFile::copy($this->_ambit->get('ftp_path').$subdirectory.$origfilename,
+                                $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+          if(!$return)
+          {
+            $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_COPYING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
+            $this->debug        = true;
+            return false;
+          }
+
+          $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+          $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                             6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                             11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+          $imginfo[2] = $imagetype[$imginfo[2]];
+          if($imginfo[2] == 'JPG')
+          {
+            if(extension_loaded('exif') && function_exists('exif_read_data'))
+            {
+              $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+              if(empty($exif['Orientation']))
+              {
+                $angle = 0;
+                $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+              }
+              else
+              {
+                switch ($exif['Orientation'])
+                {
+                  case 3:
+                    $angle = 180;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                    break;
+                  case 6:
+                    $angle = 270;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                    break;
+                  case 8:
+                    $angle = 90;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                    break;
+                  default:
+                    $angle = 0;
+                    $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                    break;
+                }
+              }
+            }
+          }
+        }
+
         // Create thumbnail and detail image
-        if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
+        if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
         {
           $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                           $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1319,9 +1570,77 @@ class JoomUpload extends JObject
 
       $newfilename = $this->_genFilename($newfilename, $tag, $filecounter);
 
+      // Copy original image into original folder
+      $return = JFile::copy($this->_ambit->get('ftp_path').$subdirectory.$origfilename,
+                            $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+      if(!$return)
+      {
+        $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_COPYING', $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)).'<br />';
+        $this->debug        = true;
+        return false;
+      }
+
+      // Begin rotation
+      if($this->_site)
+      {
+        $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+      }
+      else
+      {
+        $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+      }
+
+      if($autorotate_images == 0)
+      {
+        $angle = 0;
+      }
+      else
+      {
+        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+        $imginfo[2] = $imagetype[$imginfo[2]];
+        if($imginfo[2] == 'JPG')
+        {
+          if(extension_loaded('exif') && function_exists('exif_read_data'))
+          {
+            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+            if(empty($exif['Orientation']))
+            {
+              $angle = 0;
+              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+            }
+            else
+            {
+              switch ($exif['Orientation'])
+              {
+                case 3:
+                  $angle = 180;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                  break;
+                case 6:
+                  $angle = 270;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                  break;
+                case 8:
+                  $angle = 90;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                  break;
+                default:
+                  $angle = 0;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                  break;
+              }
+            }
+          }
+        }
+      }
+
       // Resize image
       $delete_file = $this->_mainframe->getUserStateFromRequest('joom.upload.file_delete', 'file_delete', false, 'bool');
-      if(!$this->resizeImage(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename), $newfilename, false, $delete_file))
+      if(!$this->resizeImage(JPath::clean($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid)), $newfilename, true, $delete_file, $angle))
       {
         $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
                         $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1330,6 +1649,23 @@ class JoomUpload extends JObject
         $this->debug = true;
         unset($ftpfiles[$key]);
         continue;
+      }
+      else
+      {
+        // Delete file from ftp path if needed
+        if($delete_file)
+        {
+          if(JFile::delete(JPath::clean($this->_ambit->get('ftp_path').$subdirectory.$origfilename)))
+          {
+            $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_ORIGINAL_DELETED_FROM_FTP').'<br />';
+          }
+          else
+          {
+            $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_PROBLEM_DELETING_ORIGINAL_FROM_FTP', $this->_ambit->get('ftp_path').$subdirectory.$origfilename).' '.JText::_('COM_JOOMGALLERY_COMMON_CHECK_PERMISSIONS').'<br />';
+            $this->debug = true;
+            return false;
+          }
+        }
       }
 
       $row = JTable::getInstance('joomgalleryimages', 'Table');
@@ -1403,6 +1739,7 @@ class JoomUpload extends JObject
     $screenshot          = $image['tmp_name'];
     $origfilename        = JRequest::getString('qqfilename', '');
     $screenshot_filesize = $image['size'];
+    $angle               = 0;
     if(empty($origfilename))
     {
       $origfilename = $image['name'];
@@ -1615,8 +1952,66 @@ class JoomUpload extends JObject
       //       return false;
       //     }
 
+      // Begin rotation
+      if($this->_site)
+      {
+        $autorotate_images = $this->_config->get('jg_fe_exif_rotation');
+      }
+      else
+      {
+        $autorotate_images = $this->_config->get('jg_be_exif_rotation');
+      }
+
+      if($autorotate_images == 0)
+      {
+        $angle = 0;
+      }
+      else
+      {
+        $imginfo = getimagesize($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid));
+        $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                           6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                           11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+        $imginfo[2] = $imagetype[$imginfo[2]];
+        if($imginfo[2] == 'JPG')
+        {
+          if(extension_loaded('exif') && function_exists('exif_read_data'))
+          {
+            $exif = exif_read_data($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), 'IFD0');
+            if(empty($exif['Orientation']))
+            {
+              $angle = 0;
+              $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_NO_EXIF').'<br />';
+            }
+            else
+            {
+              switch ($exif['Orientation'])
+              {
+                case 3:
+                  $angle = 180;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_180').'<br />';
+                  break;
+                case 6:
+                  $angle = 270;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_270').'<br />';
+                  break;
+                case 8:
+                  $angle = 90;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_90').'<br />';
+                  break;
+                default:
+                  $angle = 0;
+                  $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_AUTOROTATE_0').'<br />';
+                  break;
+              }
+            }
+          }
+        }
+      }
+
     // Create thumbnail and detail image
-    if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
+    if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename, true, false, $angle))
     {
       $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
               $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
@@ -1944,16 +2339,17 @@ class JoomUpload extends JObject
   }
 
   /**
-   * Creates thumbnail and detail image for an image file
+   * Creates thumbnail and detail image for an image file and rotate if needed
    *
    * @param   string  $source         The source file for which the thumbnail and the detail image shall be created
    * @param   string  $filename       The file name for the created files
    * @param   boolean $is_in_original Determines whether the source file is already in the original images folders
    * @param   boolean $delete_source  Determines whether the source file shall be deleted after the procedure
+   * @param   int     $angle          The degrees of rotation anticlockwise
    * @return  boolean True on success, false otherwise
    * @since   1.5.7
    */
-  protected function resizeImage($source, $filename, $is_in_original = true, $delete_source = false)
+  protected function resizeImage($source, $filename, $is_in_original = true, $delete_source = false, $angle = 0)
   {
     if(!getimagesize($source))
     {
@@ -1982,7 +2378,8 @@ class JoomUpload extends JObject
                                     $this->_config->get('jg_thumbcreation'),
                                     $this->_config->get('jg_thumbquality'),
                                     false,
-                                    $this->_config->get('jg_cropposition')
+                                    $this->_config->get('jg_cropposition'),
+                                    $angle
                                     );
     if(!$return)
     {
@@ -2013,7 +2410,8 @@ class JoomUpload extends JObject
                                       $this->_config->get('jg_thumbcreation'),
                                       $this->_config->get('jg_picturequality'),
                                       true,
-                                      0
+                                      0,
+                                      $angle
                                       );
       if(!$return)
       {
@@ -2033,6 +2431,26 @@ class JoomUpload extends JObject
                         ||  (!$this->_site && $this->_config->get('jg_delete_original') == 1)
                         ||  (!$this->_site && $this->_config->get('jg_delete_original') == 2 && $delete_original)
                         );
+    // Rotate original image if needed
+    // since 3.4.0
+    if($angle > 0 && !$delete_original)
+    {
+      // $this->_debugoutput .= JText::sprintf('source: '. $source).'<br />';
+      $return = JoomFile::rotateOriginal($this->_debugoutput,
+                                    $source,
+                                    $this->_config->get('jg_thumbcreation'),
+                                    $this->_config->get('jg_picturequality'),
+                                    $angle
+                                    );
+      if(!$return)
+      {
+        $this->_debugoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_ORIGINAL_NOT_ROTATED', $this->_ambit->getImg('orig_path', $filename, null, $this->catid)).'<br />';
+        $this->debug = true;
+        return false;
+      }
+    }
+
+
     if(   ($delete_original && !$is_in_original && $delete_source)
       ||  ($delete_original && $is_in_original)
       )

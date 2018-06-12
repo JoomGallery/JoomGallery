@@ -675,6 +675,7 @@ class JoomGalleryModelImages extends JoomGalleryModel
       $orig   = $this->_ambit->getImg('orig_path', $row);
       $img    = $this->_ambit->getImg('img_path', $row);
       $thumb  = $this->_ambit->getImg('thumb_path', $row);
+      $angle  = 0;
 
       // Check if there is an original image
       if(JFile::exists($orig))
@@ -717,7 +718,8 @@ class JoomGalleryModelImages extends JoomGalleryModel
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_thumbquality'),
                                         false,
-                                        $this->_config->get('jg_cropposition')
+                                        $this->_config->get('jg_cropposition'),
+                                        $angle
                                         );
         if(!$return)
         {
@@ -751,7 +753,8 @@ class JoomGalleryModelImages extends JoomGalleryModel
                                         $this->_config->get('jg_thumbcreation'),
                                         $this->_config->get('jg_picturequality'),
                                         true,
-                                        0
+                                        0,
+                                        $angle
                                         );
         if(!$return)
         {
@@ -788,6 +791,333 @@ class JoomGalleryModelImages extends JoomGalleryModel
     $this->_mainframe->setUserState('joom.recreate.recreated', null);
 
     return array($thumb_count, $img_count, $recreated);
+  }
+
+  /**
+   * Rotate the selected images clockwise or anti clockwise
+   *
+   * @param   int     $angle       The degrees to rotate the image anticlockwise
+   * @param   int     $method      method with image processor gd1, gd2 or im
+   * @param   int     $quality     The quality parameter
+   * @return  array   An array of result information (thumbnail number, detail image number, array with information which image types have been rotated)
+   * @since   3.4.0
+   */
+  public function rotate($angle, $method = NULL, $quality = NULL)
+  {
+    // Load image processor
+    if(is_null($method))
+    {
+      $method = $this->_config->get('jg_thumbcreation');
+    }
+
+    // Load image quality
+    if(is_null($quality))
+    {
+      $quality = $this->_config->get('jg_picturequality');
+    }
+
+    // Setting parameters when image proessor is imagemagick
+    if($method == 'im')
+    {
+      $disabled_functions = explode(',', ini_get('disabled_functions'));
+      foreach($disabled_functions as $disabled_function)
+      {
+        if(trim($disabled_function) == 'exec')
+        {
+          $debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_EXEC_DISABLED').'<br />';
+
+          return false;
+        }
+      }
+
+      if(!empty($this->_config->get('jg_impath')))
+      {
+        $convert_path = $this->_config->get('jg_impath') . 'convert';
+      }
+      else
+      {
+        $convert_path = 'convert';
+      }
+      $commands  = '-rotate "-' . $angle . '"';
+      $commands .= ' -quality "' . $quality . '"';
+    }
+
+    jimport('joomla.filesystem.file');
+
+    $cids         = $this->_mainframe->getUserStateFromRequest('joom.rotate.cids', 'cid', array(), 'array');
+    $type         = $this->_mainframe->getUserStateFromRequest('joom.rotate.type', 'type', '', 'cmd');
+    $thumb_count  = $this->_mainframe->getUserState('joom.rotate.thumbcount');
+    $img_count    = $this->_mainframe->getUserState('joom.rotate.imgcount');
+    $rotated      = $this->_mainframe->getUserState('joom.rotate.rotated');
+
+    $row  = $this->getTable('joomgalleryimages');
+
+    // Before first loop check for selected images
+    if(is_null($thumb_count) && !count($cids))
+    {
+      $this->setError(JText::_('COM_JOOMGALLERY_COMMON_MSG_NO_IMAGES_SELECTED'));
+      return array(false);
+    }
+
+    if(is_null($rotated))
+    {
+      $rotated = array();
+    }
+
+    require_once JPATH_COMPONENT_ADMINISTRATOR.'/helpers/refresher.php';
+    require_once JPATH_COMPONENT_ADMINISTRATOR.'/includes/pel/PelJpeg.php';
+
+    $refresher = new JoomRefresher(array('controller' => 'images', 'task' => 'rotate', 'remaining' => count($cids), 'start' => JRequest::getBool('cid')));
+
+    $debugoutput = '';
+
+    // Loop through selected images
+    foreach($cids as $key => $cid)
+    {
+      $row->load($cid);
+
+      $orig   = $this->_ambit->getImg('orig_path', $row);
+      $img    = $this->_ambit->getImg('img_path', $row);
+      $thumb  = $this->_ambit->getImg('thumb_path', $row);
+
+      // Check if there is an original image
+      if(JFile::exists($orig))
+      {
+        $orig_existent = true;
+      }
+      else
+      {
+        $orig_existent = false;
+        if(JFile::exists($img))
+        {
+          $orig = $img;
+        }
+        else
+        {
+          JError::raiseWarning(100, JText::sprintf('COM_JOOMGALLERY_IMGMAN_MSG_IMAGE_NOT_EXISTENT', $img));
+          $this->_mainframe->setUserState('joom.rotate.cids', array());
+          $this->_mainframe->setUserState('joom.rotate.imgcount', null);
+          $this->_mainframe->setUserState('joom.rotate.thumbcount', null);
+          $this->_mainframe->setUserState('joom.rotate.rotated', null);
+          return false;
+        }
+      }
+
+      $imginfo = getimagesize($orig);
+      $imagetype = array(1 => 'GIF', 2 => 'JPG', 3 => 'PNG', 4 => 'SWF', 5 => 'PSD',
+                         6 => 'BMP', 7 => 'TIFF', 8 => 'TIFF', 9 => 'JPC', 10 => 'JP2',
+                         11 => 'JPX', 12 => 'JB2', 13 => 'SWC', 14 => 'IFF');
+
+      $imginfo[2] = $imagetype[$imginfo[2]];
+
+      // only JPEG images can be rotated, other formats are ignored
+      if($imginfo[2] == 'JPG')
+      {
+        // Method for creation of the resized image
+        switch($method)
+        {
+          case 'gd1':
+            JError::raiseError(500, JText::_('COM_JOOMGALLERY_COMMON_ROTATE_GD_NOT_SUPPORTED'));
+            break;
+          case 'gd2':
+            // Rotate thumbnail
+            if(!$type || $type == 'thumb')
+            {
+              if(JFile::exists($thumb))
+              {
+                $src_img = imagecreatefromjpeg($thumb);
+                $rotated_img = imagerotate($src_img, $angle, 0);
+                imagejpeg($rotated_img, $thumb, $quality);
+                imagedestroy($rotated_img);
+                imagedestroy($src_img);
+              }
+              $rotated[$cid][] = 'thumb';
+              $thumb_count++;
+            }
+
+            // Rotate detail image
+            if(!$type || $type == 'img')
+            {
+              if(JFile::exists($img))
+              {
+                $src_img = imagecreatefromjpeg($img);
+                $rotated_img = imagerotate($src_img, $angle, 0);
+                imagejpeg($rotated_img, $img, $quality);
+                imagedestroy($rotated_img);
+                imagedestroy($src_img);
+              }
+              $rotated[$cid][] = 'img';
+              $img_count++;
+            }
+
+            // Rotate original image
+            if(!$type || $type == 'orig')
+            {
+              if($orig_existent)
+              {
+                $exif = false;
+                $iptc = false;
+
+                // load IPTC-Data
+                $iptcdata = getImageSize($orig, $iptcinfo);
+                if(isset($iptcinfo['APP13'])){
+                  $iptc = true;
+                }
+
+                // load Exif-Data
+                $jpegold = new PelJpeg($orig);
+                $exifdata = $jpegold->getExif();
+                if($exifdata != null)
+                {
+                  $exif = true;
+                  $ifd0old = $jpegold->getExif()->getTiff()->getIfd();
+                  $orientation = $ifd0old->getEntry(PelTag::ORIENTATION);
+                }
+
+                // for debug:
+                // echo 'memory usage before imagecreate: ' . memory_get_usage() . "<br />";
+                $src_img = imagecreatefromjpeg($orig);
+                // for debug:
+                // echo 'memory usage after imagecreate: ' . memory_get_usage() . "<br />";
+
+                // Begin Rotation
+                $src_img = imagerotate($src_img, $angle, 0);
+                imagejpeg($src_img, $orig, $quality);
+                imagedestroy($src_img);
+
+                // Write IPTC-Data
+                if($iptc) 
+                {
+                  $iptcdata = iptcembed($iptcinfo['APP13'], $orig); 
+                  $fw = fopen($orig, 'w');
+                  fwrite($fw, $iptcdata);
+                  fclose($fw);
+                }
+
+                // Write Exif-Data
+                if($exif)
+                {
+                  $jpegnew = new PelJpeg($orig);
+                  $exifnew = new PelExif();
+                  $tiffnew = new PelTiff();
+                  $jpegnew->setExif($exifnew);
+                  $exifnew->setTiff($tiffnew);
+                  $ifd0 = $ifd0old; 
+                  $tiffnew->setIfd($ifd0);
+                  $ifd0->addEntry(new PelEntryshort(PelTag::ORIENTATION, 1));        // Set Orientation to "Top-left"
+                  file_put_contents($orig, $jpegnew->getBytes());
+                }
+                $rotated[$cid][] = 'orig';
+              }
+            }
+            break;
+          case 'im':
+            // Rotate thumbnail
+            if(!$type || $type == 'thumb')
+            {
+              if(JFile::exists($thumb))
+              {
+                $convert    = $convert_path . ' ' . $commands . ' "' . $thumb . '" "' . $thumb . '"';
+
+                $return_var = null;
+                $dummy      = null;
+                @exec($convert, $dummy, $return_var);
+                if($return_var != 0)
+                {
+                  // Workaround for servers with wwwrun problem
+                  $dir = dirname($thumb);
+                  JoomFile::chmod($dir, '0777', true);
+                  @exec($convert, $dummy, $return_var);
+                  JoomFile::chmod($dir, '0755', true);
+                  if($return_var != 0)
+                  {
+                    return false;
+                  }
+                }
+              }
+              $rotated[$cid][] = 'thumb';
+              $thumb_count++;
+            }
+
+            // Rotate detail image
+            if(!$type || $type == 'img')
+            {
+              if(JFile::exists($img))
+              {
+                $convert    = $convert_path . ' ' . $commands . ' "' . $img . '" "' . $img . '"';
+
+                $return_var = null;
+                $dummy      = null;
+                @exec($convert, $dummy, $return_var);
+                if($return_var != 0)
+                {
+                  // Workaround for servers with wwwrun problem
+                  $dir = dirname($img);
+                  JoomFile::chmod($dir, '0777', true);
+                  @exec($convert, $dummy, $return_var);
+                  JoomFile::chmod($dir, '0755', true);
+                  if($return_var != 0)
+                  {
+                    return false;
+                  }
+                }
+              }
+              $rotated[$cid][] = 'img';
+              $img_count++;
+            }
+
+            // Rotate original image
+            if(!$type || $type == 'orig')
+            {
+              if($orig_existent)
+              {
+                $convert    = $convert_path . ' ' . $commands . ' "' . $orig . '" "' . $orig . '"';
+
+                $return_var = null;
+                $dummy      = null;
+                @exec($convert, $dummy, $return_var);
+                if($return_var != 0)
+                {
+                  // Workaround for servers with wwwrun problem
+                  $dir = dirname($orig);
+                  JoomFile::chmod($dir, '0777', true);
+                  @exec($convert, $dummy, $return_var);
+                  JoomFile::chmod($dir, '0755', true);
+                  if($return_var != 0)
+                  {
+                    return false;
+                  }
+                }
+                $rotated[$cid][] = 'orig';
+              }
+            }
+            break;
+          default:
+            JError::raiseError(500, JText::_('COM_JOOMGALLERY_UPLOAD_UNSUPPORTED_RESIZING_METHOD'));
+            break;
+        }
+      }
+      
+      unset($cids[$key]);
+
+      // Check remaining time
+      if(!$refresher->check())
+      {
+        $this->_mainframe->setUserState('joom.rotate.cids', $cids);
+        $this->_mainframe->setUserState('joom.rotate.thumbcount', $thumb_count);
+        $this->_mainframe->setUserState('joom.rotate.imgcount', $img_count);
+        $this->_mainframe->setUserState('joom.rotate.rotated', $rotated);
+        $refresher->refresh(count($cids));
+      }
+    }
+
+    $this->_mainframe->setUserState('joom.rotate.cids', array());
+    $this->_mainframe->setUserState('joom.rotate.type', null);
+    $this->_mainframe->setUserState('joom.rotate.thumbcount', null);
+    $this->_mainframe->setUserState('joom.rotate.imgcount', null);
+    $this->_mainframe->setUserState('joom.rotate.rotated', null);
+
+    return array($thumb_count, $img_count, $rotated);
   }
 
   /**
