@@ -639,7 +639,7 @@ class JoomUpload extends JObject
       // because the uploaded archive is saved like php8900.tmp and JArchive
       // needs a valid extension
       $zipfile = $extractdir.'/'.$zippack['name'];
-      JFile::upload($zippack['tmp_name'], $zipfile, false, true);
+      JFile::upload($zippack['tmp_name'], $zipfile);
 
       // Extract archive to new directory, JArchive chooses the right adapter
       // according to the extension
@@ -2524,8 +2524,11 @@ class JoomUpload extends JObject
       }
       else
       {
-        $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgtitle'))).'<br />';
-        $metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgtitle'))).'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
@@ -2538,8 +2541,11 @@ class JoomUpload extends JObject
       }
       else
       {
-        $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgtext'))).'<br />';
-        $metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgtext'))).'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
@@ -2552,8 +2558,11 @@ class JoomUpload extends JObject
       }
       else
       {
-      	$this->_warningoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACEIMGDATE').'<br />';
-      	$metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACEIMGDATE').'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
@@ -2566,8 +2575,11 @@ class JoomUpload extends JObject
       }
       else
       {
-        $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgauthor'))).'<br />';
-        $metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replaceimgauthor'))).'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
@@ -2580,8 +2592,11 @@ class JoomUpload extends JObject
       }
       else
       {
-        $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replacemetakey'))).'<br />';
-        $metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replacemetakey'))).'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
@@ -2594,13 +2609,16 @@ class JoomUpload extends JObject
       }
       else
       {
-        $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replacemetadesc'))).'<br />';
-        $metaWarning = true;
+        if($this->_config->get('jg_replaceshowwarning') > 0)
+        {
+          $this->_warningoutput .= JText::sprintf('COM_JOOMGALLERY_UPLOAD_OUTPUT_WARNING_REPLACE', $this->getMetaName($this->_config->get('jg_replacemetadesc'))).'<br />';
+          $metaWarning = true;
+        }
       }
     }
 
-    if ($metaWarning == true) {
-      $this->_warningoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_UPLOAD_REPLACE_METAHINT').'<br />';
+    if ($metaWarning == true && $this->_config->get('jg_replaceshowwarning') == 2) {
+      $this->_warningoutput .= '<br />'.JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_UPLOAD_REPLACE_METAHINT').'<br />';
     }
 
     return $overridevalues;
