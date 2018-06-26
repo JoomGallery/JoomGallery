@@ -112,6 +112,11 @@ JHTML::_('joomconfig.start', 'page21');
     JHTML::_('joomconfig.row', 'jg_replacemetadesc', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_METADESC', $mc_metadescreplacer);
     $mc_metakeyreplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replacemetakey', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replacemetakey);
     JHTML::_('joomconfig.row', 'jg_replacemetakey', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_METAKEY', $mc_metakeyreplacer);
+    $imgreplaceshowwarning[] = JHTML::_('select.option','0', JText::_('JNO'));
+    $imgreplaceshowwarning[] = JHTML::_('select.option','1', JText::_('JYES'));
+    $imgreplaceshowwarning[] = JHTML::_('select.option','2', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACE_OPTION_2_SHOWWARNING'));
+    $mc_imgreplaceshowwarning = JHTML::_('select.genericlist',$imgreplaceshowwarning, 'jg_replaceshowwarning', 'class="inputbox" size="3"', 'value', 'text', $this->_config->jg_replaceshowwarning);
+    JHtml::_('joomconfig.row', 'jg_replaceshowwarning', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACE_SHOWWARNING', $mc_imgreplaceshowwarning);
 JHTML::_('joomconfig.end');
 
 // start Tab "Grundlegende Einstellungen->Bildmanipulation"

@@ -46,6 +46,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_replaceimgdate;
   var $jg_replacemetakey;
   var $jg_replacemetadesc;
+  var $jg_replaceshowwarning;
   var $jg_thumbcreation;
   var $jg_fastgd2thumbcreation;
   var $jg_impath;
