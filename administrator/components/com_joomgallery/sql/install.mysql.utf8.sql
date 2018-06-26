@@ -103,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_replaceimgdate` text NOT NULL,
   `jg_replacemetakey` text NOT NULL,
   `jg_replacemetadesc` text NOT NULL,
+  `jg_replaceshowwarning` int(1) NOT NULL,
   `jg_thumbcreation` varchar(5) NOT NULL,
   `jg_fastgd2thumbcreation` int(1) NOT NULL,
   `jg_impath` varchar(50) NOT NULL,
