@@ -62,6 +62,63 @@ JHTML::_('joomconfig.start', 'page2');
     JHTML::_('joomconfig.row', 'jg_filenamereplace', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_RP_FILENAME_REPLACE', $tl_jg_filenamereplace);
 JHTML::_('joomconfig.end');
 
+// start Tab "Grundlegende Einstellungen->Werte Ersetzungen"
+echo JHtml::_('tabs.panel', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES'), 'nested-two-one');
+
+JHTML::_('joomconfig.start', 'page21');
+    JHTML::_('joomconfig.intro', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_INTRO'));
+    $imgvaluereplacer[] = JHTML::_('select.option','0', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_NONE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','1', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_SUBIFD_USERCOMMENT'));
+    // $imgvaluereplacer[] = JHTML::_('select.option','2', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_SUBIFD_FILESOURCE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','3', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_IFD0_MAKE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','4', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_IFD0_MODEL'));
+    $imgvaluereplacer[] = JHTML::_('select.option','5', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_IFD0_SOFTWARE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','6', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_IFD0_DATETIME'));
+    $imgvaluereplacer[] = JHTML::_('select.option','7', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_SUBIFD_DATETIMEORIGINAL'));
+
+    // IPTC data
+    $imgvaluereplacer[] = JHTML::_('select.option','205',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_TITLE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','280',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_CREATOR'));
+    $imgvaluereplacer[] = JHTML::_('select.option','285',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_CREATORSJOBTITLE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2116', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_COPYRIGHTNOTICE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2120', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_DESCRIPTION'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2122', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_DESCRIPTIONWRITER'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2105', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_HEADLINE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','240',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_INSTRUCTIONS'));
+    $imgvaluereplacer[] = JHTML::_('select.option','225',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_KEYWORDS'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2110', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_CREDITLINE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2115', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_SOURCE'));
+    $imgvaluereplacer[] = JHTML::_('select.option','255',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_DATECREATED'));
+    $imgvaluereplacer[] = JHTML::_('select.option','290',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_CITYLEGACY'));
+    $imgvaluereplacer[] = JHTML::_('select.option','292',  JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_SUBLOCATIONLEGACY'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2101', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_COUNTRYLEGACY'));
+    $imgvaluereplacer[] = JHTML::_('select.option','2103', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_IPTC') . '-' . JText::_('COM_JOOMGALLERY_IPTC_TRANSMISSIONREFERENCE'));
+    // $imgvaluereplacer[] = JHTML::_('select.option','220',  JText::_('COM_JOOMGALLERY_IPTC_SUBLEMENTALS'));
+    // $imgvaluereplacer[] = JHTML::_('select.option','210',  JText::_('COM_JOOMGALLERY_IPTC_URGENCY'));
+    // $imgvaluereplacer[] = JHTML::_('select.option','29',   JText::_('COM_JOOMGALLERY_IPTC_CATEGORY'));
+
+    $mc_imgtitlereplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replaceimgtitle', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replaceimgtitle);
+    JHTML::_('joomconfig.row', 'jg_replaceimgtitle', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_IMGTITLE', $mc_imgtitlereplacer);
+    $mc_imgtextreplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replaceimgtext', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replaceimgtext);
+    JHTML::_('joomconfig.row', 'jg_replaceimgtext', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_IMGTEXT', $mc_imgtextreplacer);
+    $imgdatereplacer[] = JHTML::_('select.option','0', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_NONE'));
+    $imgdatereplacer[] = JHTML::_('select.option','6', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_IFD0_DATETIME'));
+    $imgdatereplacer[] = JHTML::_('select.option','7', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUES_EXIF') . '-' . JText::_('COM_JOOMGALLERY_SUBIFD_DATETIMEORIGINAL'));
+    $mc_imgdatereplacer = JHTML::_('select.genericlist',$imgdatereplacer, 'jg_replaceimgdate', 'class="inputbox" size="3"', 'value', 'text', $this->_config->jg_replaceimgdate);
+    JHTML::_('joomconfig.row', 'jg_replaceimgdate', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_IMGDATE', $mc_imgdatereplacer);
+    $mc_imgauthorreplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replaceimgauthor', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replaceimgauthor);
+    JHTML::_('joomconfig.row', 'jg_replaceimgauthor', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_IMGAUTHOR', $mc_imgauthorreplacer);
+    $mc_metadescreplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replacemetadesc', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replacemetadesc);
+    JHTML::_('joomconfig.row', 'jg_replacemetadesc', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_METADESC', $mc_metadescreplacer);
+    $mc_metakeyreplacer = JHTML::_('select.genericlist',$imgvaluereplacer, 'jg_replacemetakey', 'class="inputbox" size="6"', 'value', 'text', $this->_config->jg_replacemetakey);
+    JHTML::_('joomconfig.row', 'jg_replacemetakey', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACEVALUE_METAKEY', $mc_metakeyreplacer);
+    $imgreplaceshowwarning[] = JHTML::_('select.option','0', JText::_('JNO'));
+    $imgreplaceshowwarning[] = JHTML::_('select.option','1', JText::_('JYES'));
+    $imgreplaceshowwarning[] = JHTML::_('select.option','2', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACE_OPTION_2_SHOWWARNING'));
+    $mc_imgreplaceshowwarning = JHTML::_('select.genericlist',$imgreplaceshowwarning, 'jg_replaceshowwarning', 'class="inputbox" size="3"', 'value', 'text', $this->_config->jg_replaceshowwarning);
+    JHtml::_('joomconfig.row', 'jg_replaceshowwarning', 'custom', 'COM_JOOMGALLERY_CONFIG_GS_TAB_BACKEND_REPLACE_SHOWWARNING', $mc_imgreplaceshowwarning);
+JHTML::_('joomconfig.end');
+
 // start Tab "Grundlegende Einstellungen->Bildmanipulation"
 echo JHtml::_('tabs.panel', JText::_('COM_JOOMGALLERY_CONFIG_GS_TAB_IMAGE_PROCESSING'), 'nested-three');
 

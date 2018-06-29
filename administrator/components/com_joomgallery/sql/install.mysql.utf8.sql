@@ -97,6 +97,13 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_checkupdate` int(1) NOT NULL,
   `jg_filenamewithjs` int(1) NOT NULL,
   `jg_filenamereplace` text NOT NULL,
+  `jg_replaceimgtitle` text NOT NULL,
+  `jg_replaceimgtext` text NOT NULL,
+  `jg_replaceimgauthor` text NOT NULL,
+  `jg_replaceimgdate` text NOT NULL,
+  `jg_replacemetakey` text NOT NULL,
+  `jg_replacemetadesc` text NOT NULL,
+  `jg_replaceshowwarning` int(1) NOT NULL,
   `jg_thumbcreation` varchar(5) NOT NULL,
   `jg_fastgd2thumbcreation` int(1) NOT NULL,
   `jg_impath` varchar(50) NOT NULL,
@@ -384,7 +391,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_countstop` (
   `cspicid` int(11) NOT NULL default 0,
-  `csip` varchar(45) NOT NULL default '',
+  `csip` varchar(20) NOT NULL,
   `cssessionid` varchar(200),
   `cstime` DATETIME,
   INDEX idx_cspicid (`cspicid`)
