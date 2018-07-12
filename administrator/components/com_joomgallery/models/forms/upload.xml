@@ -45,10 +45,13 @@
       />
       <field
         name="imgtext"
-        type="textarea"
+        type="editor"
         class="inputbox span12"
         labelclass="control-label"
         label="COM_JOOMGALLERY_UPLOAD_GENERIC_DESCRIPTION_OPTIONAL"
+        filter="JComponentHelper::filterText"
+        buttons="false"
+        hide="readmore,pagebreak"
       />
       <field
         name="imgauthor"
