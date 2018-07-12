@@ -2154,6 +2154,7 @@ class JoomUpload extends JObject
     $old_info = $this->_mainframe->getUserState('joom.upload.post');
     $cur_info = (!is_null($old_info)) ? $old_info : array();
     $new_info = JRequest::get('post');
+    $new_info['imgtext'] = JRequest::getvar('imgtext', null, null, null, JREQUEST_ALLOWHTML);
 
     // Prevent setting access level in frontend
     if(isset($new_info['access']) && $this->_site)
