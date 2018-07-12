@@ -97,6 +97,13 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_checkupdate` int(1) NOT NULL,
   `jg_filenamewithjs` int(1) NOT NULL,
   `jg_filenamereplace` text NOT NULL,
+  `jg_replaceimgtitle` int(4) NOT NULL,
+  `jg_replaceimgtext` int(4) NOT NULL,
+  `jg_replaceimgauthor` int(4) NOT NULL,
+  `jg_replaceimgdate` int(4) NOT NULL,
+  `jg_replacemetakey` int(4) NOT NULL,
+  `jg_replacemetadesc` int(4) NOT NULL,
+  `jg_replaceshowwarning` int(1) NOT NULL,
   `jg_thumbcreation` varchar(5) NOT NULL,
   `jg_fastgd2thumbcreation` int(1) NOT NULL,
   `jg_impath` varchar(50) NOT NULL,
@@ -480,6 +487,14 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /* ### General settings->Replacements ####*/
   /*jg_filenamewithjs*/     1,
   /*jg_filenamereplace*/    'Š|S, Œ|O, Ž|Z, š|s, œ|oe, ž|z, Ÿ|Y, ¥|Y, µ|u, À|A, Á|A, Â|A, Ã|A, Ä|AE, Å|A, Æ|A, Ç|C, È|E, É|E, Ê|E, Ë|E, Ì|I, Í|I, Î|I, Ï|I, Ð|D, Ñ|N, Ò|O, Ó|O, Ô|O, Õ|O, Ö|OE, Ø|O, Ù|U, Ú|U, Û|U, Ü|UE, Ý|Y, à|a, á|a, â|a, ã|a, ä|ae, å|a, æ|a, ç|c, è|e, é|e, ê|e, ë|e, ì|i, í|i, î|i, ï|i, ð|o, ñ|n, ò|o, ó|o, ô|o, õ|o, ö|oe, ø|o, ù|u, ú|u, û|u, ü|ue, ý|y, ÿ|y, ß|ss, ă|a, ş|s, ţ|t, ț|t, Ț|T, Ș|S, ș|s, Ş|S',
+
+  /* ### General settings->Replace with meta data ####*/
+  /*jg_replaceimgtitle*/    0,
+  /*jg_replaceimgtext*/     0,
+  /*jg_replaceimgauthor*/   0,
+  /*jg_replaceimgdate*/     0,
+  /*jg_replacemetakey*/     0,
+  /*jg_replacemetadesc*/    0,
 
   /* ### General settings->Image Processing ####*/
   /*jg_thumbcreation*/          'gd2',
