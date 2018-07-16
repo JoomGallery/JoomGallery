@@ -61,7 +61,7 @@ class JoomGalleryViewMini extends JoomGalleryView
       if($this->extended > 0)
       {
         $plugin = JPluginHelper::getPlugin('content', 'joomplu');
-        if(!$this->upload_catid && !count($plugin))
+        if(!$this->upload_catid && empty($plugin))
         {
           $this->_mainframe->enqueueMessage(JText::_('COM_JOOMGALLERY_MINI_MSG_NOT_INSTALLED_OR_ACTIVATED'), 'notice');
           $params = '';
