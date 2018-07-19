@@ -650,7 +650,8 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
             imagegif($imgres);
             break;
           case 2:
-            imagejpeg($imgres);
+            $quali = $this->_config->get('jg_picturequality');
+            imagejpeg($imgres, null, $quali);
             break;
           case 3:
             imagepng($imgres);
