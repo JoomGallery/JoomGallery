@@ -39,6 +39,13 @@ class JoomConfig extends JObject
   var $jg_checkupdate;
   var $jg_filenamewithjs;
   var $jg_filenamereplace;
+  var $jg_replaceimgtitle;
+  var $jg_replaceimgtext;
+  var $jg_replaceimgauthor;
+  var $jg_replaceimgdate;
+  var $jg_replacemetakey;
+  var $jg_replacemetadesc;
+  var $jg_replaceshowwarning;
   var $jg_thumbcreation;
   var $jg_fastgd2thumbcreation;
   var $jg_impath;
