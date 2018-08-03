@@ -87,11 +87,11 @@ echo $this->loadTemplate('header');?>
           $results = $this->_mainframe->triggerEvent('onJoomAfterDisplayThumb', array($row->id));
           echo implode('', $results) ?>
             <li>
-<?php     if($this->params->get('show_download_icon') == 1): ?>
+<?php     if($row->show_download_icon == 1): ?>
               <a href="<?php echo JRoute::_('index.php?option=com_joomgallery&task=download&id='.$row->id); ?>"<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION', true); ?>>
                 <?php echo JHTML::_('joomgallery.icon', 'download.png', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?></a>
 <?php     endif;
-          if($this->params->get('show_download_icon') == -1): ?>
+          if($row->show_download_icon == -1): ?>
               <span<?php echo JHTML::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_LOGIN_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION', true); ?>>
                 <?php echo JHTML::_('joomgallery.icon', 'download_gr.png', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?>
               </span>

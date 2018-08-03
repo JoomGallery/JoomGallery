@@ -656,21 +656,31 @@ class JoomGalleryViewDetail extends JoomGalleryView
       }
 
       // Download icon
-      if(   $this->_config->get('jg_download')
+      if($image->catallow_download == -1)
+      {
+        // $params->set('show_download_icon', -1);
+      }
+      else
+      {
+        if(
+            $image->catallow_download == 1
+        || (
+            $this->_config->get('jg_download')
         &&  $this->_config->get('jg_showdetaildownload')
         &&  ($image->orig_exists || $this->_config->get('jg_downloadfile') != 1)
-        )
-      {
-        if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
+        ))
         {
-          $params->set('show_download_icon', 1);
-          $params->set('download_link', JRoute::_('index.php?task=download&id='.$image->id));
-        }
-        else
-        {
-          if($this->_config->get('jg_download_hint'))
+          if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
           {
-            $params->set('show_download_icon', -1);
+            $params->set('show_download_icon', 1);
+            $params->set('download_link', JRoute::_('index.php?task=download&id='.$image->id));
+          }
+          else
+          {
+            if($this->_config->get('jg_download_hint'))
+            {
+              $params->set('show_download_icon', -1);
+            }
           }
         }
       }
@@ -892,58 +902,65 @@ class JoomGalleryViewDetail extends JoomGalleryView
       }
 
       // Rating
-      if($this->_config->get('jg_showrating'))
+      if($image->catallow_rating == -1)
       {
-        if($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))
+        // $params->set('show_comments_block', 0);
+      }
+      else
+      {
+        if($image->catallow_rating == 1 || $this->_config->get('jg_showrating'))
         {
-          // Set voting_area to 3 to show only the message in template
-          $params->set('show_voting_area', 3);
-          $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
-        }
-        else
-        {
-          if($this->_config->get('jg_votingonlyreg') && $image->owner == $this->_user->get('id'))
+          if($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))
           {
             // Set voting_area to 3 to show only the message in template
             $params->set('show_voting_area', 3);
-            $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ON_OWN_IMAGES'));
+            $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_LOGIN_FIRST'));
           }
           else
           {
-            // Set to 1 will show the voting area
-            JHtml::_('behavior.framework');
-            $params->set('show_voting_area', 1);
-            $params->set('ajaxvoting', $this->_config->get('jg_ajaxrating'));
-            if($this->_config->get('jg_ratingdisplaytype') == 0)
+            if($this->_config->get('jg_votingonlyreg') && $image->owner == $this->_user->get('id'))
             {
-              // Set to 0 will show textual voting bar with radio buttons
-              $params->set('voting_display_type', 0);
-
-              $selected = floor($this->_config->get('jg_maxvoting') / 2) + 1;
-              $voting   = '';
-
-              $options = array();
-              for($i = 1; $i <= $this->_config->get('jg_maxvoting'); $i++)
-              {
-                $options[] = JHTML::_('select.option', $i);
-                // Delete options text manually, because it defaults to the value in JHTML::_('select.option'... ) if left empty
-                $options[$i-1]->text = '';
-              }
-              $voting .= JHTML::_('select.radiolist', $options, 'imgvote', null, 'value', 'text', $selected);
-
-              $maxvoting = $i-1;
-
-              $this->assignRef('voting', $voting);
-              $this->assignRef('maxvoting', $maxvoting);
+              // Set voting_area to 3 to show only the message in template
+              $params->set('show_voting_area', 3);
+              $params->set('voting_message', JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ON_OWN_IMAGES'));
             }
-            else if($this->_config->get('jg_ratingdisplaytype') == 1)
+            else
             {
-              // Set to 1 will show graphical voting bar with stars
-              $params->set('voting_display_type', 1);
+              // Set to 1 will show the voting area
+              JHtml::_('behavior.framework');
+              $params->set('show_voting_area', 1);
+              $params->set('ajaxvoting', $this->_config->get('jg_ajaxrating'));
+              if($this->_config->get('jg_ratingdisplaytype') == 0)
+              {
+                // Set to 0 will show textual voting bar with radio buttons
+                $params->set('voting_display_type', 0);
 
-              $maxvoting = $this->_config->get('jg_maxvoting');
+                $selected = floor($this->_config->get('jg_maxvoting') / 2) + 1;
+                $voting   = '';
 
-              $this->assignRef('maxvoting', $maxvoting);
+                $options = array();
+                for($i = 1; $i <= $this->_config->get('jg_maxvoting'); $i++)
+                {
+                  $options[] = JHTML::_('select.option', $i);
+                  // Delete options text manually, because it defaults to the value in JHTML::_('select.option'... ) if left empty
+                  $options[$i-1]->text = '';
+                }
+                $voting .= JHTML::_('select.radiolist', $options, 'imgvote', null, 'value', 'text', $selected);
+
+                $maxvoting = $i-1;
+
+                $this->assignRef('voting', $voting);
+                $this->assignRef('maxvoting', $maxvoting);
+              }
+              else if($this->_config->get('jg_ratingdisplaytype') == 1)
+              {
+                // Set to 1 will show graphical voting bar with stars
+                $params->set('voting_display_type', 1);
+
+                $maxvoting = $this->_config->get('jg_maxvoting');
+
+                $this->assignRef('maxvoting', $maxvoting);
+              }
             }
           }
         }
@@ -982,41 +999,51 @@ class JoomGalleryViewDetail extends JoomGalleryView
         }
       }
 
-      if($this->_config->get('jg_showcomment'))
+      // commenting area
+      // check if commenting allowed
+      if($image->catallow_comment == -1)
       {
-        $params->set('show_comments_block', 1);
-
-        // Check whether user is allowed to comment
-        if(      $this->_config->get('jg_anoncomment')
-            || (!$this->_config->get('jg_anoncomment') && $this->_user->get('id'))
-          )
+        $params->set('show_comments_block', 0);
+      }
+      else
+      {
+        if($image->catallow_comment == 1 || $this->_config->get('jg_showcomment'))
         {
-          $params->set('commenting_allowed', 1);
+          $params->set('show_comments_block', 1);
 
-          $plugins          = $this->_mainframe->triggerEvent('onJoomGetCaptcha');
-          $event->captchas  = implode('', $plugins);
-
-          $this->_doc->addScriptDeclaration('    var jg_use_code = '.$params->get('use_easycaptcha', 0).';');
-
-          if($this->_config->get('jg_bbcodesupport'))
+          // Check whether user is allowed to comment
+          if(     $image->catallow_comment == 1
+              || ($this->_config->get('jg_anoncomment')
+              || (!$this->_config->get('jg_anoncomment') && $this->_user->get('id')))
+            )
           {
-            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
-          }
-          else
-          {
-            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
-          }
+            $params->set('commenting_allowed', 1);
 
-          if($this->_config->get('jg_smiliesupport'))
-          {
-            $params->set('smiley_support', 1);
-            $smileys = JoomHelper::getSmileys();
-            $this->assignRef('smileys', $smileys);
-          }
+            $plugins          = $this->_mainframe->triggerEvent('onJoomGetCaptcha');
+            $event->captchas  = implode('', $plugins);
 
-          JText::script('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_ALERT_ENTER_NAME_EMAIL');
-          JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_COMMENT');
-          JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_CODE');
+            $this->_doc->addScriptDeclaration('    var jg_use_code = '.$params->get('use_easycaptcha', 0).';');
+
+            if($this->_config->get('jg_bbcodesupport'))
+            {
+              $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
+            }
+            else
+            {
+              $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
+            }
+
+            if($this->_config->get('jg_smiliesupport'))
+            {
+              $params->set('smiley_support', 1);
+              $smileys = JoomHelper::getSmileys();
+              $this->assignRef('smileys', $smileys);
+            }
+
+            JText::script('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_ALERT_ENTER_NAME_EMAIL');
+            JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_COMMENT');
+            JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_CODE');
+          }
         }
 
         // Check whether user is allowed to read comments

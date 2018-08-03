@@ -159,14 +159,34 @@ class JoomGalleryController extends JControllerLegacy
    */
   public function download()
   {
-    // Check permissions
-    if(   !$this->_config->get('jg_download')
-      ||  (!$this->_config->get('jg_download_unreg') && !JFactory::getUser()->get('id'))
-      )
+    // Check category settings
+    $this->_db = JFactory::getDBO();
+    $query = $this->_db->getQuery(true)
+          ->select('c.allow_download')
+          ->from(_JOOM_TABLE_IMAGES.' AS a')
+          ->innerJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
+          ->where('a.id = '.JRequest::getInt('id'));
+    $this->_db->setQuery($query);
+    $catallow_download = $this->_db->loadResult();
+
+    if($catallow_download == -1)
     {
-      $this->setRedirect(JRoute::_('index.php?view=gallery', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_VIEW_IMAGE'), 'notice');
+      $this->setRedirect(JRoute::_('index.php?view=gallery', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_DOWNLOAD_THIS_CATEGORY'), 'notice');
 
       return;
+    }
+    else
+    {
+      // Check permissions in JoomGallery config
+      if(   $catallow_download != 1 &&
+            (!$this->_config->get('jg_download')
+        ||  (!$this->_config->get('jg_download_unreg') && !JFactory::getUser()->get('id')))
+        )
+      {
+        $this->setRedirect(JRoute::_('index.php?view=gallery', false), JText::_('COM_JOOMGALLERY_COMMON_MSG_NOT_ALLOWED_VIEW_IMAGE'), 'notice');
+
+        return;
+      }
     }
 
     $type = $this->_config->get('jg_downloadfile') ? 'orig' : 'img';

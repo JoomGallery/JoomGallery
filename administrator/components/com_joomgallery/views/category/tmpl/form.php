@@ -210,7 +210,53 @@
         </div>
       </div>
       <div class="tab-pane" id="options">
+        <div class="row-fluid">
+          <div class="span6">
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('allow_download'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('allow_download'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('allow_comment'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('allow_comment'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('allow_rating'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('allow_rating'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('allow_watermark'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('allow_watermark'); ?>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <?php echo $this->form->getLabel('allow_watermark_download'); ?>
+              </div>
+              <div class="controls">
+                <?php echo $this->form->getInput('allow_watermark_download'); ?>
+              </div>
+            </div>
+          </div>
+          <div class="span6">
         <?php echo $this->loadTemplate('options'); ?>
+          </div>
+        </div>
       </div>
       <div class="tab-pane" id="metadata">
         <?php echo $this->loadTemplate('metadata'); ?>
