@@ -167,8 +167,8 @@ class JFormFieldFineuploader extends JFormField
           if(response.success) {
             uploader.fileCount--;
             var redirect = '<?php echo $redirect; ?>';
-            if(uploader.fileCount == 0 && redirect != '') {
-              // Redirect only if all file uploads were successful
+            if(uploader.fileCount == 0 && redirect != '' && response.ifRedirect) {
+              // Redirect only if all file uploads were successful and no warnings/
               location.href = redirect;
             }
           }
