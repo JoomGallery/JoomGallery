@@ -61,6 +61,11 @@ class JoomGalleryControllerAjaxupload extends JControllerLegacy
     {
       $result['debug_output'] = $debug_output;
     }
+    
+    if($ifRedirect = $uploader->getIfRedirect())
+    {
+      $result['ifRedirect'] = $ifRedirect;
+    }
 
     $doc = JFactory::getDocument();
     $doc->setMimeEncoding('text/plain');
