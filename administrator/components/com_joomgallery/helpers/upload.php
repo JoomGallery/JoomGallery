@@ -406,6 +406,20 @@ class JoomUpload extends JObject
         $this->debug  = true;
         continue;
       }*/
+	    
+      // read exif orientation
+      JLog::add('read exif orientation', JLog::DEBUG, 'joomgallery');
+      $transformMethod = 'gd';
+      $encodeExif = exif_read_data($readfile);
+      $imgType = exif_imagetype($readfile);
+      // check, if imagemagick is available
+          if (extension_loaded('imagick')) {
+            $transformMethod = 'im';
+            $imgToProcess = new imagick($readfile);
+            $imgOrientation = $imgToProcess->getImageOrientation();
+          } else {
+            $imgOrientation = '';
+          }
 
       // Create thumbnail and detail image
       if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
@@ -415,6 +429,22 @@ class JoomUpload extends JObject
                         $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
                         );
         $this->debug  = true;
+        continue;
+      }
+	    
+      // rotate images based on exif orientation
+      JLog::add('rotate Image', JLog::DEBUG, 'joomgallery');
+      $resizedImages = array('orig' => $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                             'detail' => $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                             'thumb' => $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                            );
+      if(!$this->adjustImageOrientation($transformMethod, $encodeExif, $imgType, $imgOrientation, $resizedImages))
+      {
+        $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                        );
+        $this->debug = true;
         continue;
       }
 
@@ -774,6 +804,19 @@ class JoomUpload extends JObject
 
       $this->_debugoutput .= JText::_('COM_JOOMGALLERY_UPLOAD_OUTPUT_UPLOAD_COMPLETE').'<br />';
 
+      // read exif orientation
+      $transformMethod = 'gd';
+      $encodeExif = exif_read_data($readfile);
+      $imgType = exif_imagetype($readfile);
+      // check, if imagemagick is available
+          if (extension_loaded('imagick')) {
+            $transformMethod = 'im';
+            $imgToProcess = new imagick($readfile);
+            $imgOrientation = $imgToProcess->getImageOrientation();
+          } else {
+            $imgOrientation = '';
+          }
+	    
       // Create thumbnail and detail image
       if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
       {
@@ -783,6 +826,21 @@ class JoomUpload extends JObject
                         );
         $this->debug = true;
         unset($ziplist[$key]);
+        continue;
+      }
+	    
+      // rotate images based on exif orientation
+      $resizedImages = array('orig' => $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                             'detail' => $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                             'thumb' => $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                            );
+      if(!$this->adjustImageOrientation($transformMethod, $encodeExif, $imgType, $imgOrientation, $resizedImages))
+      {
+        $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                        );
+        $this->debug = true;
         continue;
       }
 
@@ -1115,6 +1173,19 @@ class JoomUpload extends JObject
           $this->debug        = true;
           continue;
         }*/
+	      
+	// read exif orientation
+        $transformMethod = 'gd';
+        $encodeExif = exif_read_data($readfile);
+        $imgType = exif_imagetype($readfile);
+        // check, if imagemagick is available
+            if (extension_loaded('imagick')) {
+              $transformMethod = 'im';
+              $imgToProcess = new imagick($readfile);
+              $imgOrientation = $imgToProcess->getImageOrientation();
+            } else {
+              $imgOrientation = '';
+            }
 
         // Create thumbnail and detail image
         if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
@@ -1126,6 +1197,21 @@ class JoomUpload extends JObject
           $this->debug = true;
           continue;
         }
+      }
+	    
+      // rotate images based on exif orientation
+      $resizedImages = array('orig' => $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                             'detail' => $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                             'thumb' => $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                            );
+      if(!$this->adjustImageOrientation($transformMethod, $encodeExif, $imgType, $imgOrientation, $resizedImages))
+      {
+        $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                        );
+        $this->debug = true;
+        continue;
       }
 
       // Insert the database entry
@@ -1318,6 +1404,19 @@ class JoomUpload extends JObject
       }
 
       $newfilename = $this->_genFilename($newfilename, $tag, $filecounter);
+	    
+      // read exif orientation
+      $transformMethod = 'gd';
+      $encodeExif = exif_read_data($readfile);
+      $imgType = exif_imagetype($readfile);
+      // check, if imagemagick is available
+          if (extension_loaded('imagick')) {
+            $transformMethod = 'im';
+            $imgToProcess = new imagick($readfile);
+            $imgOrientation = $imgToProcess->getImageOrientation();
+          } else {
+            $imgOrientation = '';
+          }
 
       // Resize image
       $delete_file = $this->_mainframe->getUserStateFromRequest('joom.upload.file_delete', 'file_delete', false, 'bool');
@@ -1331,7 +1430,23 @@ class JoomUpload extends JObject
         unset($ftpfiles[$key]);
         continue;
       }
+	    
+      // rotate images based on exif orientation
+      $resizedImages = array('orig' => $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                             'detail' => $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                             'thumb' => $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                            );
+      if(!$this->adjustImageOrientation($transformMethod, $encodeExif, $imgType, $imgOrientation, $resizedImages))
+      {
+        $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                        $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                        );
+        $this->debug = true;
+        continue;
+      }
 
+      // Insert the database entry
       $row = JTable::getInstance('joomgalleryimages', 'Table');
       if(!$this->registerImage($row, $origfilename, $newfilename, $tag, $filecounter))
       {
@@ -1615,6 +1730,19 @@ class JoomUpload extends JObject
       //       return false;
       //     }
 
+     // read exif orientation
+      $transformMethod = 'gd';
+      $encodeExif = exif_read_data($readfile);
+      $imgType = exif_imagetype($readfile);
+      // check, if imagemagick is available
+          if (extension_loaded('imagick')) {
+            $transformMethod = 'im';
+            $imgToProcess = new imagick($readfile);
+            $imgOrientation = $imgToProcess->getImageOrientation();
+          } else {
+            $imgOrientation = '';
+          }
+	  
     // Create thumbnail and detail image
     if(!$this->resizeImage($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid), $newfilename))
     {
@@ -1623,6 +1751,21 @@ class JoomUpload extends JObject
               $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
       );
       $this->debug  = true;
+      return false;
+    }
+	  
+    // rotate images based on exif orientation
+    $resizedImages = array('orig' => $this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                           'detail' => $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                           'thumb' => $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                          );
+    if(!$this->adjustImageOrientation($transformMethod, $encodeExif, $imgType, $imgOrientation, $resizedImages))
+    {
+      $this->rollback($this->_ambit->getImg('orig_path', $newfilename, null, $this->catid),
+                      $this->_ambit->getImg('img_path', $newfilename, null, $this->catid),
+                      $this->_ambit->getImg('thumb_path', $newfilename, null, $this->catid)
+                      );
+      $this->debug = true;
       return false;
     }
 
@@ -2290,5 +2433,174 @@ class JoomUpload extends JObject
           ->where('cid = '.$catid);
     $this->_db->setQuery($query);
     return $this->_db->loadObject();
+  }
+
+   /**
+   * Method to rotate the images (thumb,detail,original) based on exif data
+   *
+   * @param   img           the current processed image 
+   * @return  image         the processed image (desinationIMG) on success the original one (img) on failure
+   * @since   3.4
+   *
+   */
+  protected function reflectImage($img)
+  {
+    $with = imagesx($img);
+    $height = imagesy($img);
+
+    $originOfX = $with-1;
+    $originOfY = 0;
+    $with_original = -$with;
+    $height_original = $height;
+
+    $desinationIMG = imagecreatetruecolor ($with, $height);
+
+    if (imagecopyresampled ($desinationIMG, $img, 0, 0, $originOfX, $originOfY, $with, $height, $with_original, $height_original))
+    {
+      return $desinationIMG;
+    }
+
+    return $img;
+  }
+
+  /**
+   * Method to rotate the images (thumb,detail,original) based on exif data
+   *
+   * @param   transMethod   will it be transformed by imagick (im) or GD (gd)
+   * @param   exifData      exif header of the uploaded image
+   * @param   imgType       image format type of the uploaded image
+   * @param   imgOrient     imagik: orientation of image
+   * @param   imgPaths      array of the three images (original, detail, thumbnail)
+   * @return  boolean       True on success, false otherwise.
+   * @since   3.4
+   *
+   */
+  protected function adjustImageOrientation($transMethod, $exifData, $imgType, $imgOrient, $imgPaths)
+  {
+    if($exifData && isset($exifData['Orientation']))
+    {
+      $orientation = $exifData['Orientation'];
+      if ($orientation != 1)
+      {
+        // rotate the images one by one
+        foreach ($imgPaths as $key => $path) {
+          // check, if imagemagick is available
+          if ($transMethod == 'im' && extension_loaded('imagick')) {
+            // use imagemagick to rotate the image
+            JLog::add('rotate image with imagick', JLog::DEBUG, 'joomgallery');
+            $imgToProcess = new imagick($path);
+            $imgToProcess->setResourceLimit(imagick::RESOURCETYPE_MEMORY, 1);
+            switch ($imgOrient) {
+              case imagick::ORIENTATION_TOPLEFT:
+                  break;
+              case imagick::ORIENTATION_TOPRIGHT:
+                  $imgToProcess->flopImage();
+                  break;
+              case imagick::ORIENTATION_BOTTOMRIGHT:
+                  $imgToProcess->rotateImage("#000", 180);
+                  break;
+              case imagick::ORIENTATION_BOTTOMLEFT:
+                  $imgToProcess->flopImage();
+                  $imgToProcess->rotateImage("#000", 180);
+                  break;
+              case imagick::ORIENTATION_LEFTTOP:
+                  $imgToProcess->flopImage();
+                  $imgToProcess->rotateImage("#000", -90);
+                  break;
+              case imagick::ORIENTATION_RIGHTTOP:
+                  $imgToProcess->rotateImage("#000", 90);
+                  break;
+              case imagick::ORIENTATION_RIGHTBOTTOM:
+                  $imgToProcess->flopImage();
+                  $imgToProcess->rotateImage("#000", 90);
+                  break;
+              case imagick::ORIENTATION_LEFTBOTTOM:
+                  $imgToProcess->rotateImage("#000", -90);
+                  break;
+              default: // Invalid orientation
+                  break;
+            }
+
+            $imgToProcess->setImageOrientation(imagick::ORIENTATION_TOPLEFT);
+            $imgToProcess->writeImage();
+          } else
+            {
+            // use GD 2 to rotate the image  !!needs lots of memory!!
+            JLog::add('rotate image with GD', JLog::DEBUG, 'joomgallery');
+            // select image type
+            if ($imgType == IMAGETYPE_JPEG)
+            {
+              $imgToProcess = imagecreatefromjpeg($path); // jpg
+            } elseif ($imgType == IMAGETYPE_PNG) {
+              $imgToProcess = imagecreatefrompng($path); // png
+            } elseif ($imgType == IMAGETYPE_GIF) {
+              $imgToProcess = imagecreatefromgif($path); // gif
+            } else {
+              $imgToProcess = imagecreatefrombmp($path); // bmp
+            }
+            if ($imgToProcess == false) {
+              return false;
+            }
+
+            // choose operations based on exif orientation
+            $reflection = false;
+            $angle = 0;
+            switch ($orientation) {
+              case 2:
+                $reflection = true;
+                break;
+              case 3:
+                $angle = 180;
+                break;
+              case 4:
+                $angle = 180;
+                $reflection = true; 
+                break;
+              case 5:
+                $angle = 270;
+                $reflection = true; 
+                break;
+              case 6:
+                $angle = 270;
+                break;
+              case 7:
+                $angle = 90;
+                $reflection = true; 
+                break;
+              case 8:
+                $angle = 90;
+                break;
+            }
+            // Rotate the image with the given angle
+            if ($angle) $imgToProcess = imagerotate($imgToProcess, $angle, 0);
+              if ($imgToProcess == false){
+                return false;
+              }
+            // Reflect the image if necessary
+            if ($reflection) $imgToProcess = $this->reflectImage($imgToProcess);
+
+            // write the rotated image
+            if ($imgType == IMAGETYPE_JPEG){
+              if (imagejpeg($imgToProcess, $path) == false){  // jpg
+                return false;
+              }
+            } elseif ($imgType == IMAGETYPE_PNG) {
+              if (imagepng($imgToProcess, $path) ==false){    // png
+                return false;
+              }
+            } elseif ($imgType == IMAGETYPE_GIF) {
+              if (imagegif($imgToProcess, $path) == false){   // gif
+                return false;
+              }
+            } else {
+              if (imagebmp($imgToProcess, $path) == false){   // bmp
+                return false;
+              }
+            }
+          }
+        }
+      }
+    }
+    return true;
   }
 }
