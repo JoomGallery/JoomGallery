@@ -203,10 +203,10 @@ class JoomUpload extends JObject
     public function getIfRedirect()
     {
       if ($this->debug || !empty($this->_warningoutput)) {
-        return true;
+        return false;
       }
 
-      return false;
+      return true;
     }
 
   /**
