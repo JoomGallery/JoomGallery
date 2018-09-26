@@ -44,7 +44,7 @@ JHtml::_('bootstrap.tooltip'); ?>
           </div>
         </div>
         <?php endif; ?>
-        <div class="control-group">
+        <div class="control-group form-vertical">
           <?php echo $this->form->getLabel('imgtext'); ?>
           <div class="controls">
             <?php echo $this->form->getInput('imgtext'); ?>
