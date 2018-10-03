@@ -1,6 +1,7 @@
 <?php defined('_JEXEC') or die('Direct Access to this location is not allowed.');
 JHtml::_('behavior.formvalidation');
-JHtml::_('bootstrap.tooltip'); ?>
+JHtml::_('bootstrap.tooltip');
+JHtml::_('formbehavior.chosen', 'select'); ?>
 <?php if(!empty($this->sidebar)): ?>
 <div id="j-sidebar-container" class="span2">
   <?php echo $this->sidebar; ?>
