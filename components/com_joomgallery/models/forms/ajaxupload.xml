@@ -57,6 +57,13 @@
         type="text"
         class="inputbox"
         label="COM_JOOMGALLERY_COMMON_AUTHOR"
+      />
+      <field
+        name="owner"
+        id="ajax-owner"
+        type="text"
+        class="inputbox"
+        label="COM_JOOMGALLERY_COMMON_OWNER"
         disabled="true"
         readonly="true"
       />

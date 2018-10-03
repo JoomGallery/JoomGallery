@@ -131,6 +131,8 @@ class JoomInterface
     $this->_config['showlastcomment'] = 0;
     // - Make use of hidden images and images in hidden categories
     $this->_config['showhidden']      = 0;
+    // - Show only introtext of description
+    $this->_config['showdescriptionintrotext'] = 1;
 
     // Store the config for being able to reset it later on (if useful)
     $this->storeConfig();
@@ -710,7 +712,7 @@ class JoomInterface
     }
     if ($this->getConfig('showimgdate'))
     {
-      $output .= '<li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_UPLOAD_DATE', '<br />'.JHTML::_('date', $obj->imgdate, JText::_($this->getConfig('dateformat')))).'</li>';
+      $output .= '<li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_UPLOAD_DATE', JHTML::_('date', $obj->imgdate, JText::_($this->getConfig('dateformat')))).'</li>';
     }
     if($this->getConfig('shownumcomments'))
     {
@@ -718,7 +720,14 @@ class JoomInterface
     }
     if($this->getConfig('showdescription')  && $obj->imgtext)
     {
-      $output .= '  <li>'. JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', $obj->imgtext).'</li>';
+      if($this->getConfig('showdescriptionintrotext') == 1)
+      {
+        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getIntrotext($obj->imgtext)).'</li>';
+      }
+      else
+      {
+        $output .= '  <li>'.JText::sprintf('COM_JOOMGALLERY_COMMON_DESCRIPTION_VAR', JoomHelper::getFulltext($obj->imgtext)).'</li>';
+      }
     }
     if($this->getConfig('showcmtdate') == 1 && !is_null($obj->cmtdate))
     {
