@@ -220,6 +220,14 @@ class JFormFieldFineuploader extends JFormField
     jQuery('#triggerUpload').click(function() {
       Joomla.removeMessages();
 
+<?php if(!$isMini):
+        echo $this->form->getField('imgtext')->save(); ?>
+
+      if(typeof tinymce !== "undefined") {
+        tinyMCE.triggerSave();
+      }
+<?php endif; ?>
+
       if(uploader._storedIds.length == 0) {
         alert('<?php echo JText::_('COM_JOOMGALLERY_COMMON_ALERT_YOU_MUST_SELECT_ONE_IMAGE', true); ?>');
         return false;

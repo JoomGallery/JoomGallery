@@ -50,7 +50,8 @@
         type="editor"
         class="inputbox"
         label="COM_JOOMGALLERY_UPLOAD_GENERIC_DESCRIPTION_OPTIONAL"
-        buttons="false"
+        buttons="true"
+        hide="pagebreak"
       />
       <field
         name="imgauthor"
