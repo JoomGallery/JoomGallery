@@ -442,7 +442,7 @@ class JoomGalleryModelCategory extends JoomGalleryModel
     if(empty($this->_category))
     {
       $query = $this->_db->getQuery(true)
-            ->select('cid, name, parent_id, description, password, owner, metakey, metadesc, params')
+            ->select('cid, name, parent_id, description, password, owner, metakey, metadesc, params, allow_download')
             ->from(_JOOM_TABLE_CATEGORIES)
             ->where('cid       = '.$this->_id)
             ->where('published = 1')
