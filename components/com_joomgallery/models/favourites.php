@@ -582,30 +582,23 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
 
     $files  = array();
 
-    if($this->_config->get('jg_downloadwithwatermark'))
+    // Get the 'image' model
+    $imageModel = parent::getInstance('image', 'joomgallerymodel');
+
+    // Get the temp path for storing the watermarked image temporarily
+    if(!JFolder::exists($this->_ambit->get('temp_path')))
     {
-      $include_watermark = true;
+      $this->setError(JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_TEMP_MISSING'));
 
-      // Get the 'image' model
-      $imageModel = parent::getInstance('image', 'joomgallerymodel');
-
-      // Get the temp path for storing the watermarked image temporarily
-      if(!JFolder::exists($this->_ambit->get('temp_path')))
-      {
-        $this->setError(JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_TEMP_MISSING'));
-
-        return false;
-      }
-      else
-      {
-        $tmppath = $this->_ambit->get('temp_path');
-      }
+      return false;
     }
     else
     {
-      $include_watermark = false;
+      $tmppath = $this->_ambit->get('temp_path');
     }
 
+    // save info for message
+    $messagebody = '';
     $categories = $this->_ambit->getCategoryStructure();
     foreach($rows as &$row)
     {
@@ -634,6 +627,24 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       $files[$row->id]['name'] = $row->imgfilename;
 
       // Watermark the image before if needed
+      // check category settings for download with watermark
+      $query = $this->_db->getQuery(true)
+          ->select('c.allow_watermark_download')
+          ->from(_JOOM_TABLE_IMAGES.' AS a')
+          ->innerJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
+          ->where('a.id         = '.$row->id);
+      $this->_db->setQuery($query);
+      $cat_allow_watermark_download = $this->_db->loadResult();
+
+      if($cat_allow_watermark_download == 1 || ($cat_allow_watermark_download == 0 && $this->_config->get('jg_downloadwithwatermark')))
+      {
+        $include_watermark = true;
+      }
+      else
+      {
+        $include_watermark = false;
+      }
+
       if($include_watermark)
       {
         // Get the image resource of watermarked image

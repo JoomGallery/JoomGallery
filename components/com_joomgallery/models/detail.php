@@ -503,7 +503,7 @@ class JoomGalleryModelDetail extends JoomGalleryModel
 
       // Get all the images data of that category
       $query->clear()
-            ->select('a.*, a.owner AS imgowner, c.metadesc AS catmetadesc, c.metakey AS catmetakey')
+            ->select('a.*, a.owner AS imgowner, c.metadesc AS catmetadesc, c.metakey AS catmetakey, c.allow_download as catallow_download, c.allow_comment as catallow_comment, c.allow_rating as catallow_rating')
             ->select(JoomHelper::getSQLRatingClause('a').' AS rating')
             ->from(_JOOM_TABLE_IMAGES.' AS a')
             ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')

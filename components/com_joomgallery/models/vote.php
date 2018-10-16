@@ -90,9 +90,30 @@ class JoomGalleryModelVote extends JoomGalleryModel
           ->where('c.cid        IN ('.implode(',', array_keys($categories)).')');
     $this->_db->setQuery($query);
     $owner = $this->_db->loadResult();
-    if(is_null($owner) || ($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id')))
+    // check if rating is allowed in this category
+    $query->clear()
+          ->select('c.allow_rating')
+          ->from(_JOOM_TABLE_IMAGES.' AS a')
+          ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
+          ->where('a.published  = 1')
+          ->where('a.approved   = 1')
+          ->where('a.id         = '.$this->_id)
+          ->where('a.access     IN ('.implode(',', $this->_user->getAuthorisedViewLevels()).')')
+          ->where('c.cid        IN ('.implode(',', array_keys($categories)).')');
+    $this->_db->setQuery($query);
+    $catallow_rating = $this->_db->loadResult();
+
+    if($catallow_rating == 1 && (is_null($owner) || ($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))))
     {
       $this->setError('Stop Hacking attempt!');
+
+      return false;
+    }
+
+    // No rating in this category allowed
+    if($catallow_rating == -1)
+    {
+      $this->setError(JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ALLOWED'));
 
       return false;
     }

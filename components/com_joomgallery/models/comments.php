@@ -91,15 +91,37 @@ class JoomGalleryModelComments extends JoomGalleryModel
           ->where('a.id = '.$this->_id)
           ->where('a.access IN ('.$authorised_viewlevels.')')
           ->where('c.access IN ('.$authorised_viewlevels.')');
-
     $this->_db->setQuery($query);
     $result = $this->_db->loadResult();
+
+    // check if commenting is allowed in this category
+    $query->clear()
+          ->select('c.allow_comment')
+          ->from(_JOOM_TABLE_IMAGES.' AS a')
+          ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
+          ->where('a.published = 1')
+          ->where('a.approved = 1')
+          ->where('a.id = '.$this->_id)
+          ->where('a.access IN ('.$authorised_viewlevels.')')
+          ->where('c.access IN ('.$authorised_viewlevels.')');
+    $this->_db->setQuery($query);
+    $catallow_comment = $this->_db->loadResult();
+
+
     if(   !$result
       ||  !$this->_config->get('jg_showcomment')
       || (!$this->_config->get('jg_anoncomment') && !$this->_user->get('id'))
       )
     {
       die('Hacking attempt, aborted!');
+    }
+
+    // No commenting allowed in this category
+    if($catallow_comment == -1)
+    {
+      $this->setError(JText::_('COM_JOOMGALLERY_DETAIL_COMMENTING_NOT_ALLOWED'));
+
+      return false;
     }
 
     $categories = $this->_ambit->getCategoryStructure();

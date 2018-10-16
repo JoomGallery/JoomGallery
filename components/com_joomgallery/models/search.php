@@ -107,7 +107,7 @@ class JoomGalleryModelSearch extends JoomGalleryModel
       $where .= ')';
 
       // General select clause of the query
-      $query->select('a.*, '.JoomHelper::getSQLRatingClause('a').' AS rating, u.username, ca.cid, ca.name AS name');
+      $query->select('a.*, '.JoomHelper::getSQLRatingClause('a').' AS rating, u.username, ca.cid, ca.name AS name, ca.allow_download AS allow_download');
 
       // Count comments of each image if required
       if($this->_config->get('jg_showcatcom'))

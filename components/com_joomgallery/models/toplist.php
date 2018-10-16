@@ -170,7 +170,7 @@ class JoomGalleryModelToplist extends JoomGalleryModel
       $authorisedViewLevels = implode(',', $this->_user->getAuthorisedViewLevels());
 
       $query = $this->_db->getQuery(true)
-            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating');
+            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating, ca.allow_download AS allow_download');
       if($this->_config->get('jg_showcatcom'))
       {
         $subquery = $this->_db->getQuery(true)
@@ -239,7 +239,7 @@ class JoomGalleryModelToplist extends JoomGalleryModel
       $authorisedViewLevels = implode(',', $this->_user->getAuthorisedViewLevels());
 
       $query = $this->_db->getQuery(true)
-            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating');
+            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating, ca.allow_download AS allow_download');
       if($this->_config->get('jg_showcatcom'))
       {
         $subquery = $this->_db->getQuery(true)
@@ -309,7 +309,7 @@ class JoomGalleryModelToplist extends JoomGalleryModel
       $authorisedViewLevels = implode(',', $this->_user->getAuthorisedViewLevels());
 
       $query = $this->_db->getQuery(true)
-            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating');
+            ->select('*, a.owner AS owner, '.JoomHelper::getSQLRatingClause('a').' AS rating, ca.allow_download AS allow_download');
       if($this->_config->get('jg_showcatcom'))
       {
         $subquery = $this->_db->getQuery(true)
