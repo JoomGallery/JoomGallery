@@ -91,75 +91,75 @@
     <field
       id="allow_download"
       name="allow_download"
-      type="radio"
+      type="list"
       class="btn-group"
       label="COM_JOOMGALLERY_CATMAN_ALLOW_DOWNLOAD"
       description="COM_JOOMGALLERY_CATMAN_ALLOW_DOWNLOAD_TIP"
     >
-      <option value="-1">
-        JNO</option>
       <option value="0">
-        JGLOBAL_USE_GLOBAL</option>
+        JNO</option>
+      <option value="-1">
+        COM_JOOMGALLERY_COMMON_USE_JG_CONFIGURATION</option>
       <option value="1">
         JYES</option>
     </field>
     <field
       id="allow_comment"
       name="allow_comment"
-      type="radio"
+      type="list"
       class="btn-group"
       label="COM_JOOMGALLERY_CATMAN_ALLOW_COMMENT"
       description="COM_JOOMGALLERY_CATMAN_ALLOW_COMMENT_TIP"
     >
-      <option value="-1">
-        JNO</option>
       <option value="0">
-        JGLOBAL_USE_GLOBAL</option>
+        JNO</option>
+      <option value="-1">
+        COM_JOOMGALLERY_COMMON_USE_JG_CONFIGURATION</option>
       <option value="1">
         JYES</option>
     </field>
     <field
       id="allow_rating"
       name="allow_rating"
-      type="radio"
+      type="list"
       class="btn-group"
       label="COM_JOOMGALLERY_CATMAN_ALLOW_RATING"
       description="COM_JOOMGALLERY_CATMAN_ALLOW_RATING_TIP"
     >
-      <option value="-1">
-        JNO</option>
       <option value="0">
-        JGLOBAL_USE_GLOBAL</option>
+        JNO</option>
+      <option value="-1">
+        COM_JOOMGALLERY_COMMON_USE_JG_CONFIGURATION</option>
       <option value="1">
         JYES</option>
     </field>
     <field
       id="allow_watermark"
       name="allow_watermark"
-      type="radio"
+      type="list"
       class="btn-group"
       label="COM_JOOMGALLERY_CATMAN_ALLOW_WATERMARK"
       description="COM_JOOMGALLERY_CATMAN_ALLOW_WATERMARK_TIP"
     >
-      <option value="-1">
-        JNO</option>
       <option value="0">
-        JGLOBAL_USE_GLOBAL</option>
+        JNO</option>
+      <option value="-1">
+        COM_JOOMGALLERY_COMMON_USE_JG_CONFIGURATION</option>
       <option value="1">
         JYES</option>
     </field>
     <field
       id="allow_watermark_download"
       name="allow_watermark_download"
-      type="radio"
+      type="list"
       class="btn-group"
       label="COM_JOOMGALLERY_CATMAN_ALLOW_WATERMARK_DOWNLOAD"
       description="COM_JOOMGALLERY_CATMAN_ALLOW_WATERMARK_DOWNLOAD_TIP"
     >
-      <option value="-1">
-        JNO</option>
       <option value="0">
-        JGLOBAL_USE_GLOBAL</option>
+        JNO</option>
+      <option value="-1">
+        COM_JOOMGALLERY_COMMON_USE_JG_CONFIGURATION</option>
       <option value="1">
         JYES</option>
     </field>

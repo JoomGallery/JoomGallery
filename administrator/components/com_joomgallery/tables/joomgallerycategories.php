@@ -62,15 +62,15 @@ class TableJoomgalleryCategories extends JTableNested
   /** @var int */
   public $exclude_search    = 0;
   /** @var int */
-  public $allow_download    = 0;
+  public $allow_download    = -1;
   /** @var int */
-  public $allow_comment     = 0;
+  public $allow_comment     = -1;
   /** @var int */
-  public $allow_rating      = 0;
+  public $allow_rating      = -1;
   /** @var int */
-  public $allow_watermark   = 0;
+  public $allow_watermark   = -1;
   /** @var int */
-  public $allow_watermark_download   = 0;
+  public $allow_watermark_download = -1;
 
   /**
    * Helper variable for checking whether

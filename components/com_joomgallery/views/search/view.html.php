@@ -142,17 +142,21 @@ class JoomGalleryViewSearch extends JoomGalleryView
 
       // Show download icon for that image/category
       $rows[$key]->show_download_icon = 0;
-      if( $row->allow_download >= 0 && $this->_config->get('jg_download') && $this->_config->get('jg_showsearchdownload'))
+      if($row->allow_download != 0)
       {
-        if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
+        if( ($row->allow_download == 1 || $this->_config->get('jg_download'))
+          && $this->_config->get('jg_showsearchdownload'))
         {
-          $rows[$key]->show_download_icon = 1;
-        }
-        else
-        {
-          if($this->_config->get('jg_download_hint'))
+          if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
           {
-            $rows[$key]->show_download_icon = -1;
+            $rows[$key]->show_download_icon = 1;
+          }
+          else
+          {
+            if($this->_config->get('jg_download_hint'))
+            {
+              $rows[$key]->show_download_icon = -1;
+            }
           }
         }
       }

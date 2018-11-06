@@ -103,7 +103,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
     $this->_db->setQuery($query);
     $catallow_rating = $this->_db->loadResult();
 
-    if($catallow_rating == 1 && (is_null($owner) || ($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))))
+    if(is_null($owner) || ($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id')))
     {
       $this->setError('Stop Hacking attempt!');
 
@@ -111,7 +111,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
     }
 
     // No rating in this category allowed
-    if($catallow_rating == -1)
+    if($catallow_rating == 0)
     {
       $this->setError(JText::_('COM_JOOMGALLERY_DETAIL_RATING_NOT_ALLOWED'));
 

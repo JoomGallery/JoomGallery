@@ -62,16 +62,16 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_catg` (
   `metadesc` text NOT NULL,
   `exclude_toplists` int(1) NOT NULL,
   `exclude_search` int(1) NOT NULL,
-  `allow_download` int(1) NOT NULL,
-  `allow_comment` int(1) NOT NULL,
-  `allow_rating` int(1) NOT NULL,
-  `allow_watermark` int(1) NOT NULL,
-  `allow_watermark_download` int(1) NOT NULL,
+  `allow_download` int(1) NOT NULL default -1,
+  `allow_comment` int(1) NOT NULL default -1,
+  `allow_rating` int(1) NOT NULL default -1,
+  `allow_watermark` int(1) NOT NULL default -1,
+  `allow_watermark_download` int(1) NOT NULL default -1,
   PRIMARY KEY (`cid`),
   INDEX idx_parent_id (`parent_id`)
 ) DEFAULT CHARSET=utf8;
 
-INSERT INTO `#__joomgallery_catg` VALUES ('1', '0', 'ROOT', 'root', '0', '0', '0', '0', NULL, '1', '1', '0', '0', '', '0', NULL, '0', '', '', '', '', 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `#__joomgallery_catg` VALUES ('1', '0', 'ROOT', 'root', '0', '0', '0', '0', NULL, '1', '1', '0', '0', '', '0', NULL, '0', '', '', '', '', 0, 0, -1, -1, -1, -1, -1);
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_comments` (
   `cmtid` int(11) NOT NULL auto_increment,
