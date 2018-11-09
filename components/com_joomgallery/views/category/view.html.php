@@ -681,20 +681,18 @@ class JoomGalleryViewCategory extends JoomGalleryView
     }
 
     // Download icon
-    if($cat->allow_download != 0)
+    if(  ($cat->allow_download == (-1) ? $this->_config->get('jg_download') : $cat->allow_download)
+      && $this->_config->get('jg_showcategorydownload'))
     {
-      if(($cat->allow_download == 1 || $this->_config->get('jg_download')) && $this->_config->get('jg_showcategorydownload'))
+      if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
       {
-        if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
+        $params->set('show_download_icon', 1);
+      }
+      else
+      {
+        if($this->_config->get('jg_download_hint'))
         {
-          $params->set('show_download_icon', 1);
-        }
-        else
-        {
-          if($this->_config->get('jg_download_hint'))
-          {
-            $params->set('show_download_icon', -1);
-          }
+          $params->set('show_download_icon', -1);
         }
       }
     }

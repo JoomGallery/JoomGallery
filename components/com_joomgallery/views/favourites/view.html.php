@@ -139,21 +139,18 @@ class JoomGalleryViewFavourites extends JoomGalleryView
 
       // Download Icon
       $rows[$key]->show_download_icon = false;
-      if($row->allow_download != 0)
+      if(  ($row->allow_download == (-1) ? $this->_config->get('jg_download') : $row->allow_download)
+        && $this->_config->get('jg_showfavouritesdownload'))
       {
-        if( ($row->allow_download == 1 || $this->_config->get('jg_download'))
-          && $this->_config->get('jg_showfavouritesdownload'))
+        if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
         {
-          if($this->_user->get('id') || $this->_config->get('jg_download_unreg'))
+          $rows[$key]->show_download_icon = 1;
+        }
+        else
+        {
+          if($this->_config->get('jg_download_hint'))
           {
-              $rows[$key]->show_download_icon = 1;
-          }
-          else
-          {
-            if($this->_config->get('jg_download_hint'))
-            {
-              $rows[$key]->show_download_icon = -1;
-            }
+            $rows[$key]->show_download_icon = -1;
           }
         }
       }

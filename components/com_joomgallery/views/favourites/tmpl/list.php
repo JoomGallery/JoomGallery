@@ -71,13 +71,13 @@ echo $this->loadTemplate('header'); ?>
             <?php echo JHtml::_('joomgallery.categorypath', $item->catid, true, ' &raquo; ', true, false, true); ?>
           </td>
           <td class="nowrap">
-<?php   if($this->params->get('show_download_icon') == 1): ?>
+<?php   if($item->show_download_icon == 1): ?>
             <div class="pull-left<?php echo JHtml::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?>">
               <a href="<?php echo JRoute::_('index.php?task=download&id='.$item->id); ?>">
                 <?php echo JHtml::_('joomgallery.icon', 'download.png', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?></a>
             </div>
 <?php   endif;
-        if($this->params->get('show_download_icon') == -1): ?>
+        if($item->show_download_icon == -1): ?>
             <div class="pull-left<?php echo JHtml::_('joomgallery.tip', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_LOGIN_TIPTEXT', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?>">
               <?php echo JHtml::_('joomgallery.icon', 'download_gr.png', 'COM_JOOMGALLERY_COMMON_DOWNLOAD_TIPCAPTION'); ?>
             </div>

@@ -656,8 +656,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
       }
 
       // Download icon
-      if(   $image->catallow_download == 1 
-        ||  ($image->catallow_download == -1 && $this->_config->get('jg_download'))
+      if(   ($image->catallow_download == (-1) ? $this->_config->get('jg_download') : $image->catallow_download)
         &&  $this->_config->get('jg_showdetaildownload')
         &&  ($image->orig_exists || $this->_config->get('jg_downloadfile') != 1)
         )

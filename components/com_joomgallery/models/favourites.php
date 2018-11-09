@@ -636,7 +636,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       $this->_db->setQuery($query);
       $cat_allow_watermark_download = $this->_db->loadResult();
 
-      if($cat_allow_watermark_download == 1 || ($cat_allow_watermark_download == 0 && $this->_config->get('jg_downloadwithwatermark')))
+      if(($cat_allow_watermark_download == (-1) ? $this->_config->get('jg_downloadwithwatermark') : $cat_allow_watermark_download))
       {
         $include_watermark = true;
       }

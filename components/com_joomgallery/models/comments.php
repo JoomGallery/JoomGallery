@@ -107,21 +107,13 @@ class JoomGalleryModelComments extends JoomGalleryModel
     $this->_db->setQuery($query);
     $catallow_comment = $this->_db->loadResult();
 
-
-    if(   !$result
+    if(   !($catallow_comment == (-1) ? $this->_config->get('jg_download') : $catallow_comment)
+      ||  !$result
       ||  !$this->_config->get('jg_showcomment')
       || (!$this->_config->get('jg_anoncomment') && !$this->_user->get('id'))
       )
     {
       die('Hacking attempt, aborted!');
-    }
-
-    // No commenting allowed in this category
-    if($catallow_comment == -1)
-    {
-      $this->setError(JText::_('COM_JOOMGALLERY_DETAIL_COMMENTING_NOT_ALLOWED'));
-
-      return false;
     }
 
     $categories = $this->_ambit->getCategoryStructure();
