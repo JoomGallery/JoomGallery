@@ -107,9 +107,8 @@ class JoomGalleryModelComments extends JoomGalleryModel
     $this->_db->setQuery($query);
     $catallow_comment = $this->_db->loadResult();
 
-    if(   !($catallow_comment == (-1) ? $this->_config->get('jg_download') : $catallow_comment)
-      ||  !$result
-      ||  !$this->_config->get('jg_showcomment')
+    if(   !$result
+      ||  !($catallow_comment == (-1) ? $this->_config->get('jg_showcomment') : $catallow_comment)
       || (!$this->_config->get('jg_anoncomment') && !$this->_user->get('id'))
       )
     {
