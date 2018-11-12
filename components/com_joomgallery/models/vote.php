@@ -90,7 +90,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
           ->where('c.cid        IN ('.implode(',', array_keys($categories)).')');
     $this->_db->setQuery($query);
 
-    $owner = null;
+    $owner           = null;
     $catallow_rating = -1;
 
     if(!empty($row = $this->_db->loadRow()))
