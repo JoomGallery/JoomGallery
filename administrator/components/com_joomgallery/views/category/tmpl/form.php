@@ -254,7 +254,7 @@
             </div>
           </div>
           <div class="span6">
-        <?php echo $this->loadTemplate('options'); ?>
+            <?php echo $this->loadTemplate('options'); ?>
           </div>
         </div>
       </div>

@@ -554,6 +554,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
           ->select('id')
           ->select('catid')
           ->select('imgfilename')
+          ->select('allow_watermark_download')
           ->from(_JOOM_TABLE_IMAGES.' AS a')
           ->from(_JOOM_TABLE_CATEGORIES.' AS c')
           ->where('id IN ('.$this->piclist.')')
@@ -585,20 +586,6 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
     // Get the 'image' model
     $imageModel = parent::getInstance('image', 'joomgallerymodel');
 
-    // Get the temp path for storing the watermarked image temporarily
-    if(!JFolder::exists($this->_ambit->get('temp_path')))
-    {
-      $this->setError(JText::_('COM_JOOMGALLERY_UPLOAD_ERROR_TEMP_MISSING'));
-
-      return false;
-    }
-    else
-    {
-      $tmppath = $this->_ambit->get('temp_path');
-    }
-
-    // save info for message
-    $messagebody = '';
     $categories = $this->_ambit->getCategoryStructure();
     foreach($rows as &$row)
     {
@@ -627,16 +614,7 @@ class JoomGalleryModelFavourites extends JoomGalleryModel
       $files[$row->id]['name'] = $row->imgfilename;
 
       // Watermark the image before if needed
-      // check category settings for download with watermark
-      $query = $this->_db->getQuery(true)
-          ->select('c.allow_watermark_download')
-          ->from(_JOOM_TABLE_IMAGES.' AS a')
-          ->innerJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-          ->where('a.id         = '.$row->id);
-      $this->_db->setQuery($query);
-      $cat_allow_watermark_download = $this->_db->loadResult();
-
-      if(($cat_allow_watermark_download == (-1) ? $this->_config->get('jg_downloadwithwatermark') : $cat_allow_watermark_download))
+      if(($row->allow_watermark_download == (-1) ? $this->_config->get('jg_downloadwithwatermark') : $row->allow_watermark_download))
       {
         $include_watermark = true;
       }

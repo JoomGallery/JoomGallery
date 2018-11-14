@@ -83,7 +83,7 @@ class JoomGalleryModelComments extends JoomGalleryModel
     $authorised_viewlevels = implode(',', $this->_user->getAuthorisedViewLevels());
 
     $query = $this->_db->getQuery(true)
-          ->select('c.cid')
+          ->select('c.cid, c.allow_comment')
           ->from(_JOOM_TABLE_IMAGES.' AS a')
           ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
           ->where('a.published = 1')
@@ -92,24 +92,18 @@ class JoomGalleryModelComments extends JoomGalleryModel
           ->where('a.access IN ('.$authorised_viewlevels.')')
           ->where('c.access IN ('.$authorised_viewlevels.')');
     $this->_db->setQuery($query);
-    $result = $this->_db->loadResult();
 
-    // check if commenting is allowed in this category
-    $query->clear()
-          ->select('c.allow_comment')
-          ->from(_JOOM_TABLE_IMAGES.' AS a')
-          ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-          ->where('a.published = 1')
-          ->where('a.approved = 1')
-          ->where('a.id = '.$this->_id)
-          ->where('a.access IN ('.$authorised_viewlevels.')')
-          ->where('c.access IN ('.$authorised_viewlevels.')');
-    $this->_db->setQuery($query);
-    $catallow_comment = $this->_db->loadResult();
+    $result           = null;
+    $catallow_comment = -1;
 
-    if(   !($catallow_comment == (-1) ? $this->_config->get('jg_download') : $catallow_comment)
-      ||  !$result
-      ||  !$this->_config->get('jg_showcomment')
+    if(!empty($row = $this->_db->loadRow()))
+    {
+      $result           = $row[0];
+      $catallow_comment = $row[1];
+    }
+
+    if(   !$result
+      ||  !($catallow_comment == (-1) ? $this->_config->get('jg_showcomment') : $catallow_comment)
       || (!$this->_config->get('jg_anoncomment') && !$this->_user->get('id'))
       )
     {

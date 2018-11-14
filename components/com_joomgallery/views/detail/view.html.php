@@ -892,7 +892,7 @@ class JoomGalleryViewDetail extends JoomGalleryView
       }
 
       // Rating
-      if($image->catallow_rating == 1 || ($image->catallow_rating == -1 && $this->_config->get('jg_showrating')))
+      if($image->catallow_rating == (-1) ? $this->_config->get('jg_showrating') : $image->catallow_rating)
       {
         if($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))
         {
@@ -982,50 +982,41 @@ class JoomGalleryViewDetail extends JoomGalleryView
         }
       }
 
-      // commenting area
-      // check if commenting allowed
-      if($image->catallow_comment == 0)
+      if($image->catallow_comment == (-1) ? $this->_config->get('jg_showcomment') : $image->catallow_comment)
       {
-        $params->set('show_comments_block', 0);
-      }
-      else
-      {
-        if($image->catallow_comment == 1 || $this->_config->get('jg_showcomment'))
+        $params->set('show_comments_block', 1);
+
+        // Check whether user is allowed to comment
+        if(      $this->_config->get('jg_anoncomment')
+            || (!$this->_config->get('jg_anoncomment') && $this->_user->get('id'))
+          )
         {
-          $params->set('show_comments_block', 1);
+          $params->set('commenting_allowed', 1);
 
-          // Check whether user is allowed to comment
-          if(      $this->_config->get('jg_anoncomment')
-              || (!$this->_config->get('jg_anoncomment') && $this->_user->get('id'))
-            )
+          $plugins          = $this->_mainframe->triggerEvent('onJoomGetCaptcha');
+          $event->captchas  = implode('', $plugins);
+
+          $this->_doc->addScriptDeclaration('    var jg_use_code = '.$params->get('use_easycaptcha', 0).';');
+
+          if($this->_config->get('jg_bbcodesupport'))
           {
-            $params->set('commenting_allowed', 1);
-
-            $plugins          = $this->_mainframe->triggerEvent('onJoomGetCaptcha');
-            $event->captchas  = implode('', $plugins);
-
-            $this->_doc->addScriptDeclaration('    var jg_use_code = '.$params->get('use_easycaptcha', 0).';');
-
-            if($this->_config->get('jg_bbcodesupport'))
-            {
-              $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
-            }
-            else
-            {
-              $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
-            }
-
-            if($this->_config->get('jg_smiliesupport'))
-            {
-              $params->set('smiley_support', 1);
-              $smileys = JoomHelper::getSmileys();
-              $this->assignRef('smileys', $smileys);
-            }
-
-            JText::script('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_ALERT_ENTER_NAME_EMAIL');
-            JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_COMMENT');
-            JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_CODE');
+            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_ON'));
           }
+          else
+          {
+            $params->set('bbcode_status', JText::_('COM_JOOMGALLERY_DETAIL_BBCODE_OFF'));
+          }
+
+          if($this->_config->get('jg_smiliesupport'))
+          {
+            $params->set('smiley_support', 1);
+            $smileys = JoomHelper::getSmileys();
+            $this->assignRef('smileys', $smileys);
+          }
+
+          JText::script('COM_JOOMGALLERY_DETAIL_SENDTOFRIEND_ALERT_ENTER_NAME_EMAIL');
+          JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_COMMENT');
+          JText::script('COM_JOOMGALLERY_DETAIL_COMMENTS_ALERT_ENTER_CODE');
         }
 
         // Check whether user is allowed to read comments

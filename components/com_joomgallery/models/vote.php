@@ -80,7 +80,7 @@ class JoomGalleryModelVote extends JoomGalleryModel
     // Check for hacking attempt
     $categories = $this->_ambit->getCategoryStructure();
     $query = $this->_db->getQuery(true)
-          ->select('a.owner')
+          ->select('a.owner, c.allow_rating')
           ->from(_JOOM_TABLE_IMAGES.' AS a')
           ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
           ->where('a.published  = 1')
@@ -89,19 +89,15 @@ class JoomGalleryModelVote extends JoomGalleryModel
           ->where('a.access     IN ('.implode(',', $this->_user->getAuthorisedViewLevels()).')')
           ->where('c.cid        IN ('.implode(',', array_keys($categories)).')');
     $this->_db->setQuery($query);
-    $owner = $this->_db->loadResult();
-    // check if rating is allowed in this category
-    $query->clear()
-          ->select('c.allow_rating')
-          ->from(_JOOM_TABLE_IMAGES.' AS a')
-          ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-          ->where('a.published  = 1')
-          ->where('a.approved   = 1')
-          ->where('a.id         = '.$this->_id)
-          ->where('a.access     IN ('.implode(',', $this->_user->getAuthorisedViewLevels()).')')
-          ->where('c.cid        IN ('.implode(',', array_keys($categories)).')');
-    $this->_db->setQuery($query);
-    $catallow_rating = $this->_db->loadResult();
+
+    $owner           = null;
+    $catallow_rating = -1;
+
+    if(!empty($row = $this->_db->loadRow()))
+    {
+      $owner = $row[0];
+      $catallow_rating = $row[1];
+    }
 
     if(  !($catallow_rating == (-1) ? $this->_config->get('jg_showrating') : $catallow_rating)
       || (is_null($owner) || ($this->_config->get('jg_votingonlyreg') && !$this->_user->get('id'))))

@@ -64,15 +64,23 @@ class JoomGalleryViewImage extends JoomGalleryView
       // Downloading
       if($download)
       {
-        // check if download is allowed
+        // Get category settings
+        $cat_allow_download           = -1;
+        $cat_allow_watermark_download = -1;
+
         $this->_db = JFactory::getDBO();
         $query = $this->_db->getQuery(true)
-            ->select('c.allow_download')
-            ->from(_JOOM_TABLE_IMAGES.' AS a')
-            ->leftJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-            ->where('a.id         = '.JRequest::getInt('id'));
+              ->select('c.allow_download, c.allow_watermark_download')
+              ->from(_JOOM_TABLE_IMAGES . ' AS a')
+              ->leftJoin(_JOOM_TABLE_CATEGORIES . ' AS c ON c.cid = a.catid')
+              ->where('a.id = ' . JRequest::getInt('id'));
         $this->_db->setQuery($query);
-        $cat_allow_download = $this->_db->loadResult();
+
+        if(!empty($row = $this->_db->loadRow()))
+        {
+          $cat_allow_download           = $row[0];
+          $cat_allow_watermark_download = $row[1];
+        }
 
         // Is the download allowed for the user group of the current user and in this category?
         if(   !($cat_allow_download == (-1) ? $this->_config->get('jg_download') : $cat_allow_download)
@@ -102,16 +110,6 @@ class JoomGalleryViewImage extends JoomGalleryView
         }
 
         // Include watermark when downloading image?
-        // check category settings
-        $this->_db = JFactory::getDBO();
-        $query = $this->_db->getQuery(true)
-            ->select('c.allow_watermark_download')
-            ->from(_JOOM_TABLE_IMAGES.' AS a')
-            ->innerJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-            ->where('a.id         = '.JRequest::getInt('id'));
-        $this->_db->setQuery($query);
-        $cat_allow_watermark_download = $this->_db->loadResult();
-
         if(($cat_allow_watermark_download == (-1) ? $this->_config->get('jg_downloadwithwatermark') : $cat_allow_watermark_download))
         {
           $include_watermark = true;
@@ -156,13 +154,13 @@ class JoomGalleryViewImage extends JoomGalleryView
         }
 
         // Include watermark when displaying image in the detail view?
-        // check category settings
+        // Check category settings
         $this->_db = JFactory::getDBO();
         $query = $this->_db->getQuery(true)
-            ->select('c.allow_watermark')
-            ->from(_JOOM_TABLE_IMAGES.' AS a')
-            ->innerJoin(_JOOM_TABLE_CATEGORIES.' AS c ON c.cid = a.catid')
-            ->where('a.id         = '.JRequest::getInt('id'));
+              ->select('c.allow_watermark')
+              ->from(_JOOM_TABLE_IMAGES . ' AS a')
+              ->innerJoin(_JOOM_TABLE_CATEGORIES . ' AS c ON c.cid = a.catid')
+              ->where('a.id = ' . JRequest::getInt('id'));
         $this->_db->setQuery($query);
         $cat_allow_watermark = $this->_db->loadResult();
 
