@@ -52,7 +52,7 @@ class JFormFieldJoomCategory extends JFormField
       {
         $class .= ' ';
       }
-      $class .= 'required';
+      $class .= 'required chzn-done';
     }
     if($this->element['validate'] && (string) $this->element['validate'] == 'joompositivenumeric')
     {
