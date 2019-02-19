@@ -96,7 +96,7 @@ class JFormFieldJoomordering extends JFormField
       var originalOrder   = '.$originalOrder.';
       var originalParent  = '.$originalParent.';
       var orders          = new Array();'.$script.'
-      writeDynaList( \'class="inputbox" name="'.$this->name.'" id="'.$this->id.'"'.$disabled.' size="1"\', orders, originalParent, originalParent, originalOrder );
+      writeDynaList( \'class="inputbox" name="'.$this->name.'" id="'.$this->id.'"'.$disabled.' size="1"\', orders, originalParent, originalParent, originalOrder, document.currentScript.parentNode);
       jQuery(document).ready(function() {
         document.getElementById(\''.$parent_id.'\').addEvent(\'change\', function() {
           var catid = document.getElementById(\''.$parent_id.'\').value;
