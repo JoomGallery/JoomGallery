@@ -18,7 +18,7 @@
               <img src="<?php echo $this->_ambit->getIcon('flags/de.png'); ?>" border="0" align="top" width="16" height="11" alt="german" />&nbsp;
             </td>
             <td>
-              <a href='http://www.joomgallery.net/' target='_blank'>http://www.joomgallery.net</a>
+              <a href='https://www.joomgalleryfriends.net/' target='_blank'>https://www.joomgalleryfriends.net/</a>
             </td>
           </tr>
           <tr>
@@ -27,7 +27,7 @@
               <img src="<?php echo $this->_ambit->getIcon('flags/gb.png'); ?>" border="0" align="top" width="16" height="11" alt="english" />&nbsp;
             </td>
             <td >
-              <a href='http://www.en.joomgallery.net/' target='_blank'>http://www.en.joomgallery.net/</a>
+              <a href='https://www.en.joomgalleryfriends.net/' target='_blank'>https://www.en.joomgalleryfriends.net/</a>
             </td>
           </tr>
           <tr>
@@ -36,7 +36,7 @@
               <img src="<?php echo $this->_ambit->getIcon('flags/de.png'); ?>" border="0" align="top" width="16" height="11" alt="german" />&nbsp;
             </td>
             <td>
-              <a href='http://www.forum.joomgallery.net/' target='_blank'>http://www.forum.joomgallery.net/</a>
+              <a href='https://www.forum.joomgalleryfriends.net/' target='_blank'>https://www.forum.joomgalleryfriends.net/</a>
             </td>
           </tr>
           <tr>
@@ -45,7 +45,7 @@
               <img src="<?php echo $this->_ambit->getIcon('flags/gb.png'); ?>" border="0" align="top" width="16" height="11" alt="english" />&nbsp;
             </td>
             <td>
-              <a href='http://www.forum.en.joomgallery.net/' target='_blank'>http://www.forum.en.joomgallery.net/</a>
+              <a href='https://www.forum.en.joomgalleryfriends.net/' target='_blank'>https://www.forum.en.joomgalleryfriends.net/</a>
             </td>
           </tr>
           <tr>
@@ -65,10 +65,10 @@
       <div class="well well-small">
         <div class="module-title nav-header"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM'); ?></div>
         <div class="text-center">
-          <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="http://en.joomgallery.net/team.html" target="_blank">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGallery" target="_blank">GitHub</a>'); ?></p>
+          <p><?php echo JText::sprintf('COM_JOOMGALLERY_HLPIFO_TEAM_TEXT', '<a href="https://en.joomgalleryfriends.net/team.html" target="_blank">JoomGallery::ProjectTeam</a>', '<a href="https://github.com/JoomGalleryfriends" target="_blank">GitHub</a>'); ?></p>
           <p><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS'); ?></p>
           <p><small class="muted"><?php echo JText::_('COM_JOOMGALLERY_HLPIFO_TEAM_CONTRIBUTORS_HINT'); ?></small></p>
-          <a href="https://github.com/JoomGallery" target="_blank"><img width="200" src="<?php echo $this->_ambit->getIcon('others/GitHub_Logo.png'); ?>" alt="GitHub Logo"></a></div>
+          <a href="https://github.com/JoomGalleryfriends" target="_blank"><img width="200" src="<?php echo $this->_ambit->getIcon('others/GitHub_Logo.png'); ?>" alt="GitHub Logo"></a></div>
       </div>
     </div>
   </div>
@@ -124,7 +124,7 @@
         </div>
         <div class="center">
           <?php echo JText::_('COM_JOOMGALLERY_HLPIFO_SPONSORS'); ?>
-          <a href="mailto:joom@joomgallery.net">joom@joomgallery.net</a>
+          <a href="mailto:team@joomgalleryfriends.net">team@joomgalleryfriends.net</a>
         </div>
       </div>
     </div>
