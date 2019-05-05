@@ -47,8 +47,8 @@ class JoomExtensions
       $subdomain = 'en.';
     }
 
-    $site   = 'http://www.'.$subdomain.'joomgallery.net';
-    $site2  = 'http://'.$subdomain.'joomgallery.net';
+    $site   = 'https://www.'.$subdomain.'joomgalleryfriends.net';
+    $site2  = 'https://'.$subdomain.'joomgalleryfriends.net';
     $rssurl = $site.'/components/com_newversion/rss/extensions3.rss';
 
     // Get RSS parsed object

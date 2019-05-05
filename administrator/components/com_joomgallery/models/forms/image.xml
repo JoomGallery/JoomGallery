@@ -17,7 +17,6 @@
       label="COM_JOOMGALLERY_IMGMAN_IMAGE_ID"
       size="20"
       readonly="true"
-      disabled="true"
     />
     <field
       name="asset_id"

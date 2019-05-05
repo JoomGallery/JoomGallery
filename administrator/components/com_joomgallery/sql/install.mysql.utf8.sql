@@ -385,7 +385,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_countstop` (
   `cspicid` int(11) NOT NULL default 0,
-  `csip` varchar(20) NOT NULL,
+  `csip` varchar(45) NOT NULL default '',
   `cssessionid` varchar(200),
   `cstime` DATETIME,
   INDEX idx_cspicid (`cspicid`)

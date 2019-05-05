@@ -28,7 +28,7 @@ class Com_JoomGalleryInstallerScript
    *
    * @var string
    */
-  private $version = '3.3.4';
+  private $version = '3.3.5';
 
   /**
    * Preflight method
@@ -102,7 +102,7 @@ class Com_JoomGalleryInstallerScript
     $row->params    = 'cache=1
     cache_time=15
     moduleclass_sfx=
-    rssurl=http://www.'.$subdomain.'joomgallery.net/feed/rss.html
+    rssurl=https://www.'.$subdomain.'joomgalleryfriends.net/?format=feed&amp;type=rss
     rssrtl=0
     rsstitle=1
     rssdesc=0
@@ -245,11 +245,16 @@ class Com_JoomGalleryInstallerScript
     // Files
     $delete_files = array();
 
-    // Cache file of the newsfeed for the update checker
+    // Cache file of the newsfeed for the update checker JoomGallery < 3.3.5
     $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('http://www.joomgallery.net/components/com_newversion/rss/extensions2.rss').'.spc';
     $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('http://www.en.joomgallery.net/components/com_newversion/rss/extensions2.rss').'.spc';
     $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('http://www.joomgallery.net/components/com_newversion/rss/extensions3.rss').'.spc';
     $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('http://www.en.joomgallery.net/components/com_newversion/rss/extensions3.rss').'.spc';
+    // Cache file of the newsfeed for the update checker JoomGallery >= 3.3.5
+    $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('https://www.joomgalleryfriends.net/components/com_newversion/rss/extensions2.rss').'.spc';
+    $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('https://www.en.joomgalleryfriends.net/components/com_newversion/rss/extensions2.rss').'.spc';
+    $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('https://www.joomgalleryfriends.net/components/com_newversion/rss/extensions3.rss').'.spc';
+    $delete_files[] = JPATH_ADMINISTRATOR.'/cache/'.md5('https://www.en.joomgalleryfriends.net/components/com_newversion/rss/extensions3.rss').'.spc';
 
     // Zip file of latest auto update with cURL
     $delete_files[] = JPATH_ADMINISTRATOR.'/components/com_joomgallery/temp/update.zip';

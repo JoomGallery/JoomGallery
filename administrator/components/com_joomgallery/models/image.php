@@ -464,7 +464,9 @@ class JoomGalleryModelImage extends JoomGalleryModel
                                             $this->_config->get('jg_thumbwidth'),
                                             $this->_config->get('jg_thumbheight'),
                                             $this->_config->get('jg_thumbcreation'),
-                                            $this->_config->get('jg_thumbquality')
+                                            $this->_config->get('jg_thumbquality'),
+                                            false,
+                                            $this->_config->get('jg_cropposition')
                                             );
             break;
           case 'img':
@@ -476,7 +478,8 @@ class JoomGalleryModelImage extends JoomGalleryModel
                                             false,
                                             $this->_config->get('jg_thumbcreation'),
                                             $this->_config->get('jg_picturequality'),
-                                            true
+                                            true,
+                                            0
                                             );
             break;
           default:

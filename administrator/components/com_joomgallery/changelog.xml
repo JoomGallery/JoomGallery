@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.3.5" published="20190405">
+    <entries date="20190325">
+      <logentry type="^">change update server to new website</logentry>
+    </entries>
+    <entries date="20190220">
+      <logentry type="#">Fix form field joomordering PR#173</logentry>
+    </entries>
+    <entries date="20181124">
+      <logentry type="^">Chosen select for ajaxupload PR#170</logentry>
+    </entries>
+    <entries date="20180904">
+      <logentry type="#">Fix saving images in back end image manager PR#167</logentry>
+    </entries>
+    <entries date="20180716">
+      <logentry type="#">Fix count warning PR#160</logentry>
+    </entries>
+    <entries date="20180428">
+      <logentry type="#">Fix typo</logentry>
+    </entries>
+    <entries date="20180227">
+      <logentry type="#">Fix rowcount for class jg row</logentry>
+    </entries>
+    <entries date="20180224">
+      <logentry type="#">Fix of replacing image files in back end image view</logentry>
+    </entries>
+    <entries date="20180218">
+      <logentry type="#">Fix deleting of categories containing images in maintenance manager</logentry>
+    </entries>
+    <entries date="20180128">
+      <logentry type="#">Fix creating a new configuration in extented configuration manager</logentry>
+    </entries>
+  </release>
   <release version="3.3.4" published="20180121">
     <entries date="20180121">
       <logentry type="#">Adding a modal header and footer to image selection field popup</logentry>
