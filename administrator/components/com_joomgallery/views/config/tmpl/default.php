@@ -262,6 +262,7 @@ JHTML::_('joomconfig.start', 'page9');
     JHTML::_('joomconfig.row', 'jg_namedanoncomment', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_NAMED_ANONYM', $this->_config->jg_namedanoncomment, $this->display);
     JHTML::_('joomconfig.row', 'jg_anonapprovecom', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_APPROVE_NEEDED_ANONYM', $this->_config->get('jg_anonapprovecom'), $this->display);
     JHTML::_('joomconfig.row', 'jg_approvecom', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_APPROVE_NEEDED', $this->_config->jg_approvecom);
+    JHTML::_('joomconfig.row', 'jg_storecommentip', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_STORE_IP', $this->_config->jg_storecommentip);
     JHTML::_('joomconfig.row', 'jg_bbcodesupport', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_BBCODE', $this->_config->jg_bbcodesupport);
     JHTML::_('joomconfig.row', 'jg_smiliesupport', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_SMILIES', $this->_config->jg_smiliesupport);
     JHTML::_('joomconfig.row', 'jg_anismilie', 'yesno', 'COM_JOOMGALLERY_CONFIG_UR_CM_ANISMILIES', $this->_config->jg_anismilie);

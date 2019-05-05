@@ -275,12 +275,12 @@ class JFormFieldFineuploader extends JFormField
       }
       <?php if(!$isMini): ?>
       uploader.requestParams.imgtext = jQuery('#<?php echo $prefix; ?>imgtext').val();
+      uploader.requestParams.imgauthor = jQuery('#<?php echo $prefix; ?>imgauthor').val();
       uploader.requestParams.debug = jQuery('#<?php echo $prefix; ?>debug').prop('checked') ? 1 : 0;
       <?php   if($app->isSite()): ?>
       uploader.requestParams.published = jQuery('#<?php echo $prefix; ?>published').val();
       <?php   else: ?>
       uploader.requestParams.published = jQuery('#<?php echo $prefix; ?>published0').prop('checked') ? 0 : 1;
-      uploader.requestParams.imgauthor = jQuery('#<?php echo $prefix; ?>imgauthor').val();
       uploader.requestParams.access = jQuery('#<?php echo $prefix; ?>access').val();
       <?php   endif;
             else: ?>

@@ -1127,12 +1127,12 @@ abstract class JHtmlJoomGallery
 <div class="center">
   <p>
     <br />
-    <a href="http://www.joomgallery.net" target="_blank">
+    <a href="https://www.joomgalleryfriends.net" target="_blank">
       <img src="<?php echo $ambit->getIcon('powered_by.gif'); ?>"  class="jg-poweredby" alt="Powered by JoomGallery" />
     </a>
   </p>
   By:
-  <a href="mailto:team@joomgallery.net">
+  <a href="mailto:team@joomgalleryfriends.net">
     JoomGallery::ProjectTeam
   </a>
   <br />

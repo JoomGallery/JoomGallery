@@ -71,7 +71,7 @@ INSERT INTO `#__joomgallery_catg` VALUES ('1', '0', 'ROOT', 'root', '0', '0', '0
 CREATE TABLE IF NOT EXISTS `#__joomgallery_comments` (
   `cmtid` int(11) NOT NULL auto_increment,
   `cmtpic` int(11) NOT NULL default '0',
-  `cmtip` varchar(15) NOT NULL default '',
+  `cmtip` varchar(45) NOT NULL default '',
   `userid` int(11) UNSIGNED NOT NULL default '0',
   `cmtname` varchar(50) NOT NULL default '',
   `cmttext` text NOT NULL,
@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_namedanoncomment` int(1) NOT NULL,
   `jg_anonapprovecom` int(1) NOT NULL,
   `jg_approvecom` int(1) NOT NULL,
+  `jg_storecommentip` int(1) NOT NULL,
   `jg_bbcodesupport` int(1) NOT NULL,
   `jg_smiliesupport` int(1) NOT NULL,
   `jg_anismilie` int(1) NOT NULL,
@@ -385,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_countstop` (
   `cspicid` int(11) NOT NULL default 0,
-  `csip` varchar(20) NOT NULL,
+  `csip` varchar(45) NOT NULL default '',
   `cssessionid` varchar(200),
   `cstime` DATETIME,
   INDEX idx_cspicid (`cspicid`)
@@ -577,6 +578,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_namedanoncomment*/ 1,
   /*jg_anonapprovecom*/   1,
   /*jg_approvecom*/       0,
+  /*jg_storecommentip*/   0,
   /*jg_bbcodesupport*/    1,
   /*jg_smiliesupport*/    1,
   /*jg_anismilie*/        0,
