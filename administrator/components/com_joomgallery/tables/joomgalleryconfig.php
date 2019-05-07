@@ -116,6 +116,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_namedanoncomment;
   var $jg_anonapprovecom;
   var $jg_approvecom;
+  var $jg_storecommentip;
   var $jg_bbcodesupport;
   var $jg_smiliesupport;
   var $jg_anismilie;
