@@ -2244,7 +2244,9 @@ class JoomUpload extends JObject
       $this->debug        = true;
       return false;
     }
-
+	 
+    $this->_mainframe->triggerEvent('onContentAfterSave', array(_JOOM_OPTION.'.registerimage', &$row, false));
+ 
     return true;
   }
 
