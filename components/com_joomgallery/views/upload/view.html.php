@@ -146,12 +146,20 @@ class JoomGalleryViewUpload extends JoomGalleryView
       $this->uploads[key($this->uploads)]['active'] = true;
     }
 
+	$model = $this->getModel();
+	
     JForm::addFormPath(JPATH_COMPONENT.'/models/forms');
     $this->single_form  = JForm::getInstance(_JOOM_OPTION.'.upload', 'upload');
     $this->ajax_form    = JForm::getInstance(_JOOM_OPTION.'.ajaxupload', 'ajaxupload');
     $this->batch_form   = JForm::getInstance(_JOOM_OPTION.'.batchupload', 'batchupload');
     $this->applet_form  = JForm::getInstance(_JOOM_OPTION.'.jupload', 'jupload');
     $this->single_form->setFieldAttribute('arrscreenshot', 'quantity', $inputcounter);
+	
+    $model->preprocessForm($this->single_form, null);
+    $model->preprocessForm($this->ajax_form, null);
+    $model->preprocessForm($this->batch_form, null);
+    $model->preprocessForm($this->applet_form, null);
+	
 
     $this->_doc->addScriptDeclaration('    var jg_filenamewithjs = '.($this->_config->get('jg_filenamewithjs') ? 'true' : 'false').';');
     $this->_doc->addScript($this->_ambit->getScript('upload.js'));

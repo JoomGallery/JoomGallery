@@ -6,7 +6,7 @@
   <copyright>This component is released under the GNU/GPL License</copyright>
   <authorEmail>team@joomgallery.net</authorEmail>
   <authorUrl>http://www.joomgallery.net</authorUrl>
-  <version>3.3.4</version>
+  <version>3.4</version>
   <description>JoomGallery 3 is a native Joomla! 3.x gallery component</description>
   <files folder="components/com_joomgallery">
     <folder>controllers</folder>

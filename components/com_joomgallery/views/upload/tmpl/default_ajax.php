@@ -12,6 +12,19 @@
   </div>
 </div>
 <form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="AjaxUploadForm" id="AjaxUploadForm" enctype="multipart/form-data" class="form-validate form-horizontal" onsubmit="">
+
+    <?php 
+	////////////
+	// Load Fields loaded via plugin joomadditionalimagefields
+	$this->fieldSets = $this->single_form->getFieldsets();
+    $this->assignRef('form',  $this->single_form);
+	if(count($this->fieldSets) > 0) : 
+	
+				echo $this->loadTemplate('additional'); 
+			 
+	endif; 
+	////////////
+	?>
   <div class="control-group">
     <div class="control-label">
       <?php echo $this->ajax_form->getLabel('catid'); ?>

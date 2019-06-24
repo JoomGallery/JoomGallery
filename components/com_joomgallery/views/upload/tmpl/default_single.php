@@ -1,5 +1,19 @@
 <?php defined('_JEXEC') or die('Direct Access to this location is not allowed.'); ?>
 <form action="<?php echo JRoute::_('index.php?type=single'); ?>" method="post" name="adminForm" id="SingleUploadForm" enctype="multipart/form-data" class="form-validate form-horizontal" onsubmit="if(this.task.value == 'upload.upload' && !document.formvalidator.isValid(document.id('SingleUploadForm'))){alert('<?php echo JText::_('JGLOBAL_VALIDATION_FORM_FAILED', true); ?>');return false;} return joomOnSubmit();">
+
+    <?php 
+	////////////
+	// Load Fields loaded via plugin joomadditionalimagefields
+	$this->fieldSets = $this->single_form->getFieldsets();
+    $this->assignRef('form',  $this->single_form);
+	if(count($this->fieldSets) > 0) : 
+	
+				echo $this->loadTemplate('additional'); 
+			 
+	endif; 
+	////////////
+	?>
+
   <div class="control-group">
     <div class="control-label">
       <?php echo $this->single_form->getLabel('catid'); ?>

@@ -469,12 +469,11 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
 
     JArrayHelper::toInteger($cids);
 
-    $query = $this->_db->getQuery(true);
-
     if($refids)
     {
       // Get selected image IDs
-      $query->select('refid')
+      $query = $this->_db->getQuery(true)
+            ->select('refid')
             ->from($this->_db->qn(_JOOM_TABLE_MAINTENANCE))
             ->where('id IN ('.implode(',', $cids).')')
             ->where('type = 0');
@@ -792,6 +791,7 @@ class JoomGalleryModelMaintenance extends JoomGalleryModel
       {
         // Category deleted
         $count++;
+        $row->reorder('parent_id = '.$row->parent_id);
 
         // Delete the category in the maintenance table
         $query = $this->_db->getQuery(true)

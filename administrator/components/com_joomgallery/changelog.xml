@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="3.4" published="">
+    <entries date="20190611" modder="Lab5.ch">
+      <logentry type="#">Integrated Support for Plugin joomadditionalimagefields in the Frontend Upload Forms</logentry>
+      <logentry type="#">Little Fix : Changed attribute disabled to 'false' for field 'cid' in image.xml (in backend), because of Error onSave in Joomla! 3.9.2 and above  </logentry>
+    </entries>
+  </release>
   <release version="3.3.4" published="20180121">
     <entries date="20180121">
       <logentry type="#">Adding a modal header and footer to image selection field popup</logentry>
