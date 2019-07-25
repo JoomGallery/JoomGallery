@@ -183,7 +183,13 @@ class JoomGalleryModelNametags extends JoomGalleryModel
     $row->nxvalue = $xvalue;
     $row->nyvalue = $yvalue;
     $row->by      = $by;
-    $row->nuserip = $_SERVER['REMOTE_ADDR'];
+    $row->nuserip = '';
+
+    if($this->_config->jg_storenametagip)
+    {
+      $row->nuserip   = $this->_mainframe->input->server->getString('REMOTE_ADDR', '');
+    }
+
     $row->ndate   = $date->toSQL();
     $row->nzindex = $zindex;
 

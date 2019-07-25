@@ -674,6 +674,7 @@ JHTML::_('joomconfig.start', 'page20');
     JHTML::_('joomconfig.row', 'jg_nameshields_others', 'yesno', 'COM_JOOMGALLERY_CONFIG_DV_NT_OTHERS', $this->_config->jg_nameshields_others);
     JHTML::_('joomconfig.row', 'jg_nameshields_unreg', 'yesno', 'COM_JOOMGALLERY_CONFIG_DV_NT_GUEST_VISIBLE', $this->_config->jg_nameshields_unreg, $this->display);
     JHTML::_('joomconfig.row', 'jg_show_nameshields_unreg', 'yesno', 'COM_JOOMGALLERY_CONFIG_DV_NT_GUEST_INFORMATION', $this->_config->jg_show_nameshields_unreg, $this->display);
+    JHTML::_('joomconfig.row', 'jg_storenametagip', 'yesno', 'COM_JOOMGALLERY_CONFIG_DV_NT_STORE_IP', $this->_config->jg_storenametagip);
     JHTML::_('joomconfig.row', 'jg_nameshields_height', 'text', 'COM_JOOMGALLERY_CONFIG_DV_NT_HEIGHT', $this->_config->jg_nameshields_height);
     JHTML::_('joomconfig.row', 'jg_nameshields_width', 'text', 'COM_JOOMGALLERY_CONFIG_DV_NT_WIDTH', $this->_config->jg_nameshields_width);
 JHTML::_('joomconfig.end');
