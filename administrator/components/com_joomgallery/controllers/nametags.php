@@ -68,4 +68,30 @@ class JoomGalleryControllerNametags extends JoomGalleryController
 
     $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=nametags'), JText::_('COM_JOOMGALLERY_MAIMAN_MSG_NAMETAGS_SYNCHRONIZED'));
   }
+
+  /**
+   * Deletes the stored IP addresses of all nametags.
+   *
+   * @return  void
+   * @since   3.4
+   */
+  public function deleteip()
+  {
+    $query = $this->_db->getQuery(true)
+          ->update(_JOOM_TABLE_NAMESHIELDS)
+          ->set('nuserip='."''");
+
+    $this->_db->setQuery($query);
+
+    if(!$this->_db->execute())
+    {
+      // Redirect to maintenance manager because this task is usually launched there
+      $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=nametags'), $this->_db->getErrorMsg(), 'error');
+
+      return;
+    }
+
+    // Redirect to maintenance manager because this task is usually launched there
+    $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=nametags'), JText::_('COM_JOOMGALLERY_MAIMAN_NT_MSG_NAMETAGS_IPS_DELETED'));
+  }
 }
