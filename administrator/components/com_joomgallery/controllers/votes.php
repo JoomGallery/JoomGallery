@@ -104,4 +104,30 @@ class JoomGalleryControllerVotes extends JoomGalleryController
 
     $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=votes'), JText::_('COM_JOOMGALLERY_MAIMAN_MSG_USERVOTES_SYNCHRONIZED'));
   }
+
+  /**
+   * Deletes the stored IP addresses of all votes.
+   *
+   * @return  void
+   * @since   3.4
+   */
+  public function deleteip()
+  {
+    $query = $this->_db->getQuery(true)
+          ->update(_JOOM_TABLE_VOTES)
+          ->set('userip='."''");
+
+    $this->_db->setQuery($query);
+
+    if(!$this->_db->execute())
+    {
+      // Redirect to maintenance manager because this task is usually launched there
+      $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=votes'), $this->_db->getErrorMsg(), 'error');
+
+      return;
+    }
+
+    // Redirect to maintenance manager because this task is usually launched there
+    $this->setRedirect($this->_ambit->getRedirectUrl('maintenance&tab=votes'), JText::_('COM_JOOMGALLERY_MAIMAN_VT_MSG_VOTES_IPS_DELETED'));
+  }
 }
