@@ -695,7 +695,7 @@ abstract class JoomMigration
               ->select('COUNT(*)')
               ->from($table);
         $db->setQuery($query);
-        
+
         $count = $db->loadResult();
 
         if($count == 0)
@@ -1942,7 +1942,7 @@ abstract class JoomMigration
     }
     if(!isset($row->nuserip))
     {
-      $row->cmtip = '127.0.0.1';
+      $row->nuserip = '127.0.0.1';
     }
     if(!isset($row->ndate) || is_numeric($row->ndate))
     {

@@ -806,7 +806,7 @@ class JoomInterface
     $return     = '';
     //$return    .= "\n".'<div class="gallerytab">'."\n";
     $return    .= '<div class="jg_row jg_row1">';
-    $rowcount   = 0;
+    $rowcount   = 1;
     $itemcount  = 0;
 
     foreach($rows as $row)

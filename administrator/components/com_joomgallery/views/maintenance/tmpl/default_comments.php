@@ -13,6 +13,16 @@
   <div class="well">
     <div class="row-fluid">
       <div class="span2 center">
+        <button type="submit" class="btn" onclick="document.adminFormComments.task.value = 'deleteip';"><?php echo JText::_('COM_JOOMGALLERY_MAIMAN_CM_DELETE_COMMENTS_IP'); ?></button>
+      </div>
+      <div class="span10">
+        <?php echo JText::_('COM_JOOMGALLERY_MAIMAN_CM_DELETE_COMMENTS_IP_LONG'); ?>
+      </div>
+    </div>
+  </div>
+  <div class="well">
+    <div class="row-fluid">
+      <div class="span2 center">
         <button type="submit" class="btn" onclick="document.adminFormComments.task.value = 'reset';"><?php echo JText::_('COM_JOOMGALLERY_MAIMAN_CM_RESET_COMMENTS'); ?></button>
       </div>
       <div class="span10">

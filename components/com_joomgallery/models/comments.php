@@ -224,7 +224,13 @@ class JoomGalleryModelComments extends JoomGalleryModel
     $row  = $this->getTable('joomgallerycomments');
 
     $row->cmtpic    = $this->_id;
-    $row->cmtip     = $_SERVER['REMOTE_ADDR'];
+    $row->cmtip     = '';
+
+    if($this->_config->jg_storecommentip)
+    {
+      $row->cmtip   = $this->_mainframe->input->server->getString('REMOTE_ADDR', '');
+    }
+
     $row->userid    = $this->_user->get('id');
     $row->cmtname   = $name;
     $row->cmttext   = $text;

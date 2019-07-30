@@ -61,7 +61,7 @@
       if($this->params->get('show_credits', 0)): ?>
   <div class="jg_clearboth"></div>
   <div align="center" class="jg_poweredbydiv">
-    <a href="http://www.joomgallery.net" target="_blank">
+    <a href="https://www.joomgalleryfriends.net" target="_blank">
       <img src="<?php echo $this->_ambit->getIcon('powered_by.gif'); ?>" class="jg_poweredby" alt="Powered by JoomGallery" />
     </a>
   </div>

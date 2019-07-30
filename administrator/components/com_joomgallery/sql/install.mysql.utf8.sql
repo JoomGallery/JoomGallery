@@ -71,7 +71,7 @@ INSERT INTO `#__joomgallery_catg` VALUES ('1', '0', 'ROOT', 'root', '0', '0', '0
 CREATE TABLE IF NOT EXISTS `#__joomgallery_comments` (
   `cmtid` int(11) NOT NULL auto_increment,
   `cmtpic` int(11) NOT NULL default '0',
-  `cmtip` varchar(15) NOT NULL default '',
+  `cmtip` varchar(45) NOT NULL default '',
   `userid` int(11) UNSIGNED NOT NULL default '0',
   `cmtname` varchar(50) NOT NULL default '',
   `cmttext` text NOT NULL,
@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_namedanoncomment` int(1) NOT NULL,
   `jg_anonapprovecom` int(1) NOT NULL,
   `jg_approvecom` int(1) NOT NULL,
+  `jg_storecommentip` int(1) NOT NULL,
   `jg_bbcodesupport` int(1) NOT NULL,
   `jg_smiliesupport` int(1) NOT NULL,
   `jg_anismilie` int(1) NOT NULL,
@@ -334,6 +335,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
   `jg_nameshields_others` int(1) NOT NULL,
   `jg_nameshields_unreg` int(1) NOT NULL,
   `jg_show_nameshields_unreg` int(1) NOT NULL,
+  `jg_storenametagip` int(1) NOT NULL,
   `jg_nameshields_height` int(3) NOT NULL,
   `jg_nameshields_width` int(3) NOT NULL,
   `jg_slideshow` int(1) NOT NULL,
@@ -384,7 +386,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_config` (
 
 CREATE TABLE IF NOT EXISTS `#__joomgallery_countstop` (
   `cspicid` int(11) NOT NULL default 0,
-  `csip` varchar(20) NOT NULL,
+  `csip` varchar(45) NOT NULL default '',
   `cssessionid` varchar(200),
   `cstime` DATETIME,
   INDEX idx_cspicid (`cspicid`)
@@ -421,7 +423,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_nameshields` (
   `nxvalue` int(11) NOT NULL default '0',
   `nyvalue` int(11) NOT NULL default '0',
   `by` int(11) NOT NULL default '0',
-  `nuserip` varchar(15) NOT NULL default '0',
+  `nuserip` varchar(45) NOT NULL default '0',
   `ndate` datetime NOT NULL,
   `nzindex` int(11) NOT NULL default '0',
   PRIMARY KEY  (`nid`),
@@ -453,7 +455,7 @@ CREATE TABLE IF NOT EXISTS `#__joomgallery_votes` (
   `voteid` int(11) NOT NULL auto_increment,
   `picid` int(11) NOT NULL default '0',
   `userid` int(11) UNSIGNED NOT NULL default '0',
-  `userip` varchar(15) NOT NULL default '0',
+  `userip` varchar(45) NOT NULL default '',
   `datevoted` datetime NOT NULL,
   `vote` int(11) NOT NULL default '0',
   PRIMARY KEY (`voteid`),
@@ -576,6 +578,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_namedanoncomment*/ 1,
   /*jg_anonapprovecom*/   1,
   /*jg_approvecom*/       0,
+  /*jg_storecommentip*/   0,
   /*jg_bbcodesupport*/    1,
   /*jg_smiliesupport*/    1,
   /*jg_anismilie*/        0,
@@ -764,6 +767,7 @@ INSERT IGNORE INTO `#__joomgallery_config`
   /*jg_nameshields_others*/     1,
   /*jg_nameshields_unreg*/      1,
   /*jg_show_nameshields_unreg*/ 0,
+  /*jg_storenametagip*/         0,
   /*jg_nameshields_height*/     10,
   /*jg_nameshields_width*/      6,
 

@@ -17,8 +17,10 @@
               <span><?php echo $comment->author; ?></span>
 <?php         if($this->params->get('manager_logged')): ?>
               <div class="jg_cmticons">
+<?php           if(!empty($comment->cmtip)): ?>
                 <a href="http://www.db.ripe.net/whois?form_type=simple&full_query_string=&searchtext=<?php echo $comment->cmtip;?>&do_search=Search" target="_blank">
                   <img src="<?php echo $this->_ambit->get('icon_url').'ip.gif'; ?>" alt="<?php echo $comment->cmtip; ?>" title="<?php echo $comment->cmtip; ?>" hspace="3" border="0" /></a>
+<?php           endif; ?>
                 <a href="<?php echo JRoute::_('index.php?task=comments.remove&id='.$this->image->id.'&cmtid='.$comment->cmtid); ?>">
                   <img src="<?php echo $this->_ambit->get('icon_url').'del.gif'; ?>" alt="<?php echo JText::_('COM_JOOMGALLERY_DETAIL_ALT_DELETE_COMMENT'); ?>" hspace="3" border="0" /></a>
               </div>

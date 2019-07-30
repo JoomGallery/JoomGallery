@@ -116,6 +116,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_namedanoncomment;
   var $jg_anonapprovecom;
   var $jg_approvecom;
+  var $jg_storecommentip;
   var $jg_bbcodesupport;
   var $jg_smiliesupport;
   var $jg_anismilie;
@@ -269,6 +270,7 @@ class TableJoomgalleryConfig extends JTable
   var $jg_nameshields_others;
   var $jg_nameshields_unreg;
   var $jg_show_nameshields_unreg;
+  var $jg_storenametagip;
   var $jg_nameshields_height;
   var $jg_nameshields_width;
   var $jg_slideshow;
